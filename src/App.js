@@ -5,6 +5,8 @@ import Applications from './components/Applications';
 import JobPost from './components/JobPost';
 import SemanticAnalysis from './components/SemanticAnalysis';
 import TechnicalAssessment from './components/TechnicalAssessment';
+import TechnicalInterview from './components/TechnicalInterview';
+import HRInterview from './components/HRInterview';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -198,6 +200,16 @@ export default function RecruitmentSystem() {
                 />
             ) : currentPage === 'technical-assessment' ? (
                 <TechnicalAssessment
+                    applications={applications}
+                    onBack={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'technical-interview' ? (
+                <TechnicalInterview
+                    applications={applications}
+                    onBack={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'hr-interview' ? (
+                <HRInterview
                     applications={applications}
                     onBack={() => setCurrentPage('home')}
                 />
