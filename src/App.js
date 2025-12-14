@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Briefcase, Share2, Brain, ClipboardCheck, Video, Users, Award, List, ChevronRight, Plus } from 'lucide-react';
+import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
 import JobPost from './components/JobPost';
+import SemanticAnalysis from './components/SemanticAnalysis';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -188,6 +189,11 @@ export default function RecruitmentSystem() {
                     applications={applications}
                     onUpdateApplication={handleUpdateApplication}
                     onBackToDashboard={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'semantic-analysis' ? (
+                <SemanticAnalysis
+                    applications={applications}
+                    onBack={() => setCurrentPage('home')}
                 />
             ) : currentPage === 'applications' ? (
                 <Applications applications={applications} onBackToDashboard={() => setCurrentPage('home')} />
