@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Briefcase, Share2, Brain, ClipboardCheck, Video, Users, Award, List, ChevronRight, Plus } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
+import JobPost from './components/JobPost';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -13,26 +14,72 @@ export default function RecruitmentSystem() {
             jobTitle: 'Senior Software Engineer',
             posted: '2025-10-15',
             cvs: 45,
+            newToday: 8,
             semantic: 30,
             assessment: 22,
             techInterview: 10,
             hrInterview: 7,
             finalCandidates: 3,
             status: 'In Progress',
-            requisition: {},
+            requisition: {
+                selectedPlatforms: ['LinkedIn', 'Indeed'],
+                postingStartDate: '2025-10-15',
+                postingEndDate: '2025-10-30',
+            },
         },
         {
             id: 2,
             jobTitle: 'Data Scientist',
             posted: '2025-10-01',
             cvs: 32,
+            newToday: 3,
             semantic: 25,
             assessment: 25,
             techInterview: 8,
             hrInterview: 5,
             finalCandidates: 2,
             status: 'Final Stage',
-            requisition: {},
+            requisition: {
+                selectedPlatforms: ['LinkedIn'],
+                postingStartDate: '2025-10-01',
+                postingEndDate: '2025-10-18',
+            },
+        },
+        {
+            id: 3,
+            jobTitle: 'Product Designer',
+            posted: '2025-11-20',
+            cvs: 18,
+            newToday: 4,
+            semantic: 18,
+            assessment: 0,
+            techInterview: 0,
+            hrInterview: 0,
+            finalCandidates: 0,
+            status: 'CV Collection',
+            requisition: {
+                selectedPlatforms: ['LinkedIn', 'Glassdoor'],
+                postingStartDate: '2025-11-20',
+                postingEndDate: '2025-12-05',
+            },
+        },
+        {
+            id: 4,
+            jobTitle: 'DevOps Engineer',
+            posted: '2025-11-28',
+            cvs: 0,
+            newToday: 0,
+            semantic: 0,
+            assessment: 0,
+            techInterview: 0,
+            hrInterview: 0,
+            finalCandidates: 0,
+            status: 'Submitted',
+            requisition: {
+                selectedPlatforms: ['Indeed'],
+                postingStartDate: '2025-11-28',
+                postingEndDate: '2025-12-10',
+            },
         },
     ]);
 
@@ -111,6 +158,10 @@ export default function RecruitmentSystem() {
         ]);
     };
 
+    const handleUpdateApplication = (id, patch) => {
+        setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+    };
+
     return (
         <div>
             {showJobRequisition ? (
@@ -132,6 +183,12 @@ export default function RecruitmentSystem() {
                 </div>
             ) : currentPage === 'home' ? (
                 renderHome()
+            ) : currentPage === 'job-post' ? (
+                <JobPost
+                    applications={applications}
+                    onUpdateApplication={handleUpdateApplication}
+                    onBackToDashboard={() => setCurrentPage('home')}
+                />
             ) : currentPage === 'applications' ? (
                 <Applications applications={applications} onBackToDashboard={() => setCurrentPage('home')} />
             ) : (
