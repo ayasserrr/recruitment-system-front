@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
@@ -14,13 +14,35 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Phases from './components/Phases';
 import Navbar from './components/Navbar';
+import Settings from './components/Settings';
+import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import './App.css';
 
-export default function RecruitmentSystem() {
+function RecruitmentSystemContent() {
+    const { isDarkMode, toggleDarkMode } = useDarkMode();
     const [currentPage, setCurrentPage] = useState('landing');
-    const [showJobRequisition, setShowJobRequisition] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+
+    // Initialize auth state from localStorage on component mount
+    useEffect(() => {
+        try {
+            const savedLoginState = localStorage.getItem('isLoggedIn');
+            const savedUser = localStorage.getItem('currentUser');
+
+            console.log('Checking localStorage:', { savedLoginState, savedUser });
+
+            if (savedLoginState === 'true' && savedUser) {
+                setIsLoggedIn(true);
+                setCurrentUser(JSON.parse(savedUser));
+                setCurrentPage('phases');
+                console.log('Restored login state from localStorage');
+            }
+        } catch (error) {
+            console.error('Error reading from localStorage:', error);
+        }
+    }, []); // Empty dependency array means this runs only once on mount
+
     const [applications, setApplications] = useState([
         {
             id: 1,
@@ -112,6 +134,9 @@ export default function RecruitmentSystem() {
     const handleLogin = (user) => {
         setIsLoggedIn(true);
         setCurrentUser(user);
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        console.log('Login: Saved to localStorage:', { user, isLoggedIn: 'true' });
         setCurrentPage('phases');
     };
 
@@ -130,12 +155,16 @@ export default function RecruitmentSystem() {
     const handleLogout = () => {
         setIsLoggedIn(false);
         setCurrentUser(null);
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
         setCurrentPage('landing');
     };
 
     const handleNavigateToPhase = (phaseId) => {
         if (phaseId === 'job-requisition') {
-            setShowJobRequisition(true);
+            setCurrentPage('job-requisition');
+        } else if (phaseId === 'settings') {
+            setCurrentPage('settings');
         } else {
             setCurrentPage(phaseId);
         }
@@ -160,13 +189,7 @@ export default function RecruitmentSystem() {
                     {menuItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => {
-                                if (item.id === 'job-requisition') {
-                                    setShowJobRequisition(true);
-                                } else {
-                                    setCurrentPage(item.id);
-                                }
-                            }}
+                            onClick={() => setCurrentPage(item.id)}
                             className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 text-left border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-2"
                         >
                             <div className={`${item.color} w-16 h-16 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -233,11 +256,22 @@ export default function RecruitmentSystem() {
             )}
 
             {/* Authenticated Pages with Navbar */}
-            {isLoggedIn && currentPage !== 'landing' && currentPage !== 'login' && (
+            {isLoggedIn && currentPage !== 'landing' && currentPage !== 'login' && currentPage !== 'settings' && (
                 <Navbar
                     currentUser={currentUser}
                     onLogout={handleLogout}
                     onNavigateHome={handleNavigateHome}
+                    onNavigateToPhase={handleNavigateToPhase}
+                />
+            )}
+
+            {/* Settings Page */}
+            {currentPage === 'settings' && (
+                <Settings
+                    currentUser={currentUser}
+                    onBack={() => setCurrentPage('phases')}
+                    onDarkModeToggle={toggleDarkMode}
+                    isDarkMode={isDarkMode}
                 />
             )}
 
@@ -246,11 +280,11 @@ export default function RecruitmentSystem() {
                 <Phases onNavigateToPhase={handleNavigateToPhase} />
             )}
 
-            {/* Job Requisition Modal */}
-            {showJobRequisition ? (
+            {/* Job Requisition Page */}
+            {currentPage === 'job-requisition' && (
                 <div>
                     <button
-                        onClick={() => setShowJobRequisition(false)}
+                        onClick={() => setCurrentPage('phases')}
                         className="m-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
@@ -258,15 +292,16 @@ export default function RecruitmentSystem() {
                     </button>
                     <MultiStepForm
                         onSubmitRequisition={handleRequisitionSubmitted}
-                        onDone={() => {
-                            setShowJobRequisition(false);
-                            setCurrentPage('phases');
-                        }}
+                        onDone={() => setCurrentPage('phases')}
                     />
                 </div>
-            ) : currentPage === 'home' ? (
-                renderHome()
-            ) : currentPage === 'job-post' ? (
+            )}
+
+            {/* Home Page */}
+            {currentPage === 'home' && renderHome()}
+
+            {/* Job Post Page */}
+            {currentPage === 'job-post' && (
                 <JobPost
                     applications={applications}
                     onUpdateApplication={handleUpdateApplication}
@@ -274,40 +309,72 @@ export default function RecruitmentSystem() {
                     onViewCVs={() => setCurrentPage('applications')}
                     onOpenSemanticAnalysis={() => setCurrentPage('semantic-analysis')}
                 />
-            ) : currentPage === 'semantic-analysis' ? (
+            )}
+
+            {/* Semantic Analysis Page */}
+            {currentPage === 'semantic-analysis' && (
                 <SemanticAnalysis
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'technical-assessment' ? (
+            )}
+
+            {/* Technical Assessment Page */}
+            {currentPage === 'technical-assessment' && (
                 <TechnicalAssessment
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'technical-interview' ? (
+            )}
+
+            {/* Technical Interview Page */}
+            {currentPage === 'technical-interview' && (
                 <TechnicalInterview
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'hr-interview' ? (
+            )}
+
+            {/* HR Interview Page */}
+            {currentPage === 'hr-interview' && (
                 <HRInterview
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'final-ranking' ? (
+            )}
+
+            {/* Final Ranking Page */}
+            {currentPage === 'final-ranking' && (
                 <FinalRanking
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'shortlist' ? (
+            )}
+
+            {/* Shortlist Page */}
+            {currentPage === 'shortlist' && (
                 <Shortlist
                     onBack={() => setCurrentPage('phases')}
                 />
-            ) : currentPage === 'applications' ? (
+            )}
+
+            {/* Applications Page */}
+            {currentPage === 'applications' && (
                 <Applications applications={applications} onBackToDashboard={() => setCurrentPage('phases')} />
-            ) : currentPage === 'analytics' ? (
+            )}
+
+            {/* Analytics Page */}
+            {currentPage === 'analytics' && (
                 <Analytics onBack={() => setCurrentPage('phases')} />
-            ) : null}
+            )}
         </div>
+    );
+}
+
+export default function RecruitmentSystem() {
+    return (
+        <DarkModeProvider>
+            <RecruitmentSystemContent />
+        </DarkModeProvider>
     );
 }

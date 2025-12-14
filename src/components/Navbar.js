@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown } from 'lucide-react';
 
-export default function Navbar({ currentUser, onLogout, onNavigateHome }) {
+export default function Navbar({ currentUser, onLogout, onNavigateHome, onNavigateToPhase }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -52,7 +52,10 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome }) {
                             {/* Dropdown Menu */}
                             {isDropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                                    <button className="w-full flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <button
+                                        onClick={() => onNavigateToPhase('settings')}
+                                        className="w-full flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                                    >
                                         <Settings className="w-4 h-4" />
                                         <span>Settings</span>
                                     </button>
