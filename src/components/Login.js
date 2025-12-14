@@ -259,11 +259,11 @@ export default function Login({ onLoginSuccess, onBackClick }) {
 
                 {/* Footer */}
                 <div className="mt-6 text-center">
-                    <p className="text-gray-600">
+                    <p className="text-base-600">
                         Don't have an account?{' '}
                         <button
                             onClick={() => setActiveTab('signup')}
-                            className="text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-accent-600 hover:text-accent-700 font-medium"
                         >
                             Sign up
                         </button>
