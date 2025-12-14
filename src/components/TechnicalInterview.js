@@ -242,28 +242,30 @@ export default function TechnicalInterview({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 to-slate-100 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {onBack && (
                                 <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-slate-600" />
+                                    <ArrowLeft className="w-6 h-6 text-base-600" />
                                 </button>
                             )}
-                            <Video className="w-12 h-12 text-red-600 mr-4" />
+                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-14 h-14 rounded-lg mr-4">
+                                <Video className="w-8 h-8 text-white" />
+                            </div>
                             <div>
-                                <h1 className="text-4xl font-bold text-slate-800">Technical Interviews</h1>
-                                <p className="text-slate-600">Evaluate candidates' technical expertise and problem-solving skills</p>
+                                <h1 className="text-4xl font-bold text-base-900">Technical Interviews</h1>
+                                <p className="text-base-600">Evaluate candidates' technical expertise and problem-solving skills</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Application Selector */}
-                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                    <h2 className="text-xl font-bold text-slate-800 mb-4">Select Application</h2>
+                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                    <h2 className="text-xl font-bold text-base-900 mb-4">Select Application</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {applications.map(app => {
                             const interview = interviewData.find(i => i.id === app.id);
@@ -273,12 +275,12 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
                                         ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
-                                        : 'border-slate-200 hover:border-accent-300'
+                                        : 'border-base-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
-                                        <h3 className="font-bold text-slate-800">{app.jobTitle}</h3>
-                                        <div className="text-sm text-slate-600 mt-1">
+                                        <h3 className="font-bold text-base-900">{app.jobTitle}</h3>
+                                        <div className="text-sm text-base-600 mt-1">
                                             <div>Candidates Ready: {app.assessment || 0}</div>
                                             <div>Interview Status: {interview?.status || 'pending'}</div>
                                             <div>Completed: {interview?.completed || 0}</div>
@@ -294,11 +296,11 @@ export default function TechnicalInterview({ applications, onBack }) {
                     <>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-white rounded-xl shadow-lg p-6">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold bg-gradient-to-r from-base-600 to-accent-600 bg-clip-text text-transparent mb-2">{interviewStats.totalScheduled}</div>
-                                        <div className="text-sm text-slate-600">Total Scheduled</div>
+                                        <div className="text-sm text-base-600">Total Scheduled</div>
                                     </div>
                                     <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-base-400 to-accent-400 flex items-center justify-center">
                                         <Calendar className="w-6 h-6 text-white" />
@@ -306,47 +308,49 @@ export default function TechnicalInterview({ applications, onBack }) {
                                 </div>
                             </div>
 
-                            <div className="bg-white rounded-xl shadow-lg p-6">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-green-600 mb-2">{interviewStats.totalCompleted}</div>
-                                        <div className="text-sm text-slate-600">Completed</div>
+                                        <div className="text-3xl font-bold text-accent-600 mb-2">{interviewStats.totalCompleted}</div>
+                                        <div className="text-sm text-base-600">Completed</div>
                                     </div>
-                                    <CheckCircle className="w-10 h-10 text-green-400" />
+                                    <CheckCircle className="w-10 h-10 text-accent-400" />
                                 </div>
                             </div>
 
-                            <div className="bg-white rounded-xl shadow-lg p-6">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-orange-600 mb-2">{interviewStats.totalPending}</div>
-                                        <div className="text-sm text-slate-600">Pending</div>
+                                        <div className="text-3xl font-bold text-accent-600 mb-2">{interviewStats.totalPending}</div>
+                                        <div className="text-sm text-base-600">Pending</div>
                                     </div>
-                                    <Clock className="w-10 h-10 text-orange-400" />
+                                    <Clock className="w-10 h-10 text-accent-400" />
                                 </div>
                             </div>
 
-                            <div className="bg-white rounded-xl shadow-lg p-6">
+                            <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-slate-600 mb-2">{interviewStats.avgScoreOverall}</div>
-                                        <div className="text-sm text-slate-600">Avg Score</div>
+                                        <div className="text-3xl font-bold text-base-600 mb-2">{interviewStats.avgScoreOverall}</div>
+                                        <div className="text-sm text-base-600">Avg Score</div>
                                     </div>
-                                    <TrendingUp className="w-10 h-10 text-slate-400" />
+                                    <TrendingUp className="w-10 h-10 text-accent-400" />
                                 </div>
                             </div>
                         </div>
 
                         {/* Interview Progress */}
                         {selectedInterview && (
-                            <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
                                 <div className="flex items-start justify-between mb-6">
                                     <div>
                                         <div className="flex items-center mb-2">
-                                            <Video className="w-8 h-8 text-red-600 mr-3" />
-                                            <h3 className="text-xl font-bold text-slate-800">{selectedInterview.jobTitle}</h3>
+                                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3">
+                                                <Video className="w-5 h-5 text-white" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-base-900">{selectedInterview.jobTitle}</h3>
                                         </div>
-                                        <div className="flex items-center space-x-4 text-sm text-slate-600">
+                                        <div className="flex items-center space-x-4 text-sm text-base-600">
                                             <span>{selectedInterview.duration}</span>
                                             <span>•</span>
                                             <span>Interviewers: {selectedInterview.interviewers.join(', ')}</span>
@@ -361,25 +365,25 @@ export default function TechnicalInterview({ applications, onBack }) {
 
                                 <div className="space-y-6">
                                     <div className="grid grid-cols-3 gap-4">
-                                        <div className="bg-blue-50 p-4 rounded-lg">
-                                            <p className="text-sm text-slate-600 mb-1">Scheduled</p>
-                                            <p className="text-2xl font-bold text-blue-600">{selectedInterview.scheduled}</p>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <p className="text-sm text-base-600 mb-1">Scheduled</p>
+                                            <p className="text-2xl font-bold text-accent-600">{selectedInterview.scheduled}</p>
                                         </div>
-                                        <div className="bg-green-50 p-4 rounded-lg">
-                                            <p className="text-sm text-slate-600 mb-1">Completed</p>
-                                            <p className="text-2xl font-bold text-green-600">{selectedInterview.completed}</p>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <p className="text-sm text-base-600 mb-1">Completed</p>
+                                            <p className="text-2xl font-bold text-accent-600">{selectedInterview.completed}</p>
                                         </div>
-                                        <div className="bg-orange-50 p-4 rounded-lg">
-                                            <p className="text-sm text-slate-600 mb-1">Pending</p>
-                                            <p className="text-2xl font-bold text-orange-600">{selectedInterview.pending}</p>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <p className="text-sm text-base-600 mb-1">Pending</p>
+                                            <p className="text-2xl font-bold text-accent-600">{selectedInterview.pending}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <p className="text-sm text-slate-600 mb-2">
-                                            Next Interview: <span className="font-semibold text-slate-800">{selectedInterview.nextInterview}</span>
+                                        <p className="text-sm text-base-600 mb-2">
+                                            Next Interview: <span className="font-semibold text-base-900">{selectedInterview.nextInterview}</span>
                                         </p>
-                                        <div className="w-full bg-slate-200 rounded-full h-3">
+                                        <div className="w-full bg-base-200 rounded-full h-3">
                                             <div
                                                 className="bg-gradient-to-r from-base-600 to-accent-600 h-3 rounded-full transition-all duration-500"
                                                 style={{ width: `${selectedInterview.scheduled > 0 ? (selectedInterview.completed / selectedInterview.scheduled) * 100 : 0}%` }}
@@ -395,7 +399,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                             <Video className="w-4 h-4 mr-2" />
                                             Schedule Interview
                                         </button>
-                                        <button className="flex-1 border border-accent-600 text-accent-600 hover:bg-accent-50 py-2 rounded-lg font-semibold transition-colors text-sm">
+                                        <button className="flex-1 border border-base-600 text-base-600 hover:bg-base-50 py-2 rounded-lg font-semibold transition-colors text-sm">
                                             View Candidates
                                         </button>
                                     </div>
@@ -405,28 +409,28 @@ export default function TechnicalInterview({ applications, onBack }) {
 
                         {/* Candidate Results */}
                         {candidateResults.length > 0 && (
-                            <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                                <h3 className="text-xl font-bold text-slate-800 mb-6">Technical Interview Results</h3>
+                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                                <h3 className="text-xl font-bold text-base-900 mb-6">Technical Interview Results</h3>
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
                                         <thead>
-                                            <tr className="border-b border-slate-200">
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Candidate</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Technical</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Problem Solving</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">System Design</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Coding</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Overall</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Status</th>
-                                                <th className="text-left py-4 px-4 text-slate-600 font-semibold">Actions</th>
+                                            <tr className="border-b border-base-200">
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Candidate</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Technical</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Problem Solving</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">System Design</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Coding</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Overall</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Status</th>
+                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {candidateResults.map((candidate) => (
-                                                <tr key={candidate.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                                <tr key={candidate.id} className="border-b border-base-100 hover:bg-base-50 transition-colors">
                                                     <td className="py-4 px-4">
-                                                        <div className="font-semibold text-slate-800">{candidate.name}</div>
-                                                        <div className="text-sm text-slate-600">{candidate.interviewer} • {candidate.date}</div>
+                                                        <div className="font-semibold text-base-900">{candidate.name}</div>
+                                                        <div className="text-sm text-base-600">{candidate.interviewer} • {candidate.date}</div>
                                                     </td>
                                                     <td className="py-4 px-4">
                                                         <div className={`font-bold ${getScoreColor(candidate.technicalScore)}`}>
@@ -500,10 +504,12 @@ export default function TechnicalInterview({ applications, onBack }) {
                         )}
                     </>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-                        <Video className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-slate-700 mb-2">Select an Application</h3>
-                        <p className="text-slate-500">Choose an application from the list above to view technical interview results</p>
+                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-12 text-center">
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-100 to-accent-100 w-20 h-20 rounded-lg mx-auto mb-4">
+                            <Video className="w-10 h-10 text-base-400" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-base-700 mb-2">Select an Application</h3>
+                        <p className="text-base-500">Choose an application from the list above to view technical interview results</p>
                     </div>
                 )}
 
@@ -513,19 +519,19 @@ export default function TechnicalInterview({ applications, onBack }) {
                         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-slate-800">Interview Feedback</h2>
+                                    <h2 className="text-2xl font-bold text-base-900">Interview Feedback</h2>
                                     <button
                                         onClick={() => setShowFeedbackModal(null)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
                                     >
-                                        <ChevronRight className="w-5 h-5 text-slate-600 rotate-180" />
+                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Candidate Header */}
-                                    <div className="text-center pb-6 border-b border-slate-200">
-                                        <h3 className="text-2xl font-bold text-slate-800">{showFeedbackModal.name}</h3>
+                                    <div className="text-center pb-6 border-b border-base-200">
+                                        <h3 className="text-2xl font-bold text-base-900">{showFeedbackModal.name}</h3>
                                         <div className="flex items-center justify-center mt-3">
                                             <span className={`text-3xl font-bold ${getScoreColor(showFeedbackModal.overall)} mr-4`}>
                                                 {showFeedbackModal.overall}
@@ -538,35 +544,35 @@ export default function TechnicalInterview({ applications, onBack }) {
 
                                     {/* Score Breakdown */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="bg-red-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-red-800 mb-4">Technical Skills</h4>
-                                            <div className="text-2xl font-bold text-red-600 mb-2">{showFeedbackModal.technicalScore}</div>
-                                            <div className="text-sm text-red-700">Technical knowledge and expertise</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                                            <h4 className="font-bold text-base-900 mb-4">Technical Skills</h4>
+                                            <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.technicalScore}</div>
+                                            <div className="text-sm text-base-700">Technical knowledge and expertise</div>
                                         </div>
 
-                                        <div className="bg-blue-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-blue-800 mb-4">Problem Solving</h4>
-                                            <div className="text-2xl font-bold text-blue-600 mb-2">{showFeedbackModal.problemSolving}</div>
-                                            <div className="text-sm text-blue-700">Analytical thinking and approach</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                                            <h4 className="font-bold text-base-900 mb-4">Problem Solving</h4>
+                                            <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.problemSolving}</div>
+                                            <div className="text-sm text-base-700">Analytical thinking and approach</div>
                                         </div>
 
-                                        <div className="bg-green-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-green-800 mb-4">System Design</h4>
-                                            <div className="text-2xl font-bold text-green-600 mb-2">{showFeedbackModal.systemDesign}</div>
-                                            <div className="text-sm text-green-700">Architecture and scalability understanding</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                                            <h4 className="font-bold text-base-900 mb-4">System Design</h4>
+                                            <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.systemDesign}</div>
+                                            <div className="text-sm text-base-700">Architecture and scalability understanding</div>
                                         </div>
 
-                                        <div className="bg-purple-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-purple-800 mb-4">Coding Skills</h4>
-                                            <div className="text-2xl font-bold text-purple-600 mb-2">{showFeedbackModal.coding}</div>
-                                            <div className="text-sm text-purple-700">Code quality and implementation</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                                            <h4 className="font-bold text-base-900 mb-4">Coding Skills</h4>
+                                            <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.coding}</div>
+                                            <div className="text-sm text-base-700">Code quality and implementation</div>
                                         </div>
                                     </div>
 
                                     {/* Feedback Summary */}
-                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-accent-200">
-                                        <h4 className="font-bold text-slate-800 mb-3">Interview Summary</h4>
-                                        <div className="space-y-2 text-slate-700">
+                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-base-200">
+                                        <h4 className="font-bold text-base-900 mb-3">Interview Summary</h4>
+                                        <div className="space-y-2 text-base-700">
                                             <p>• Interview conducted by {showFeedbackModal.interviewer} on {showFeedbackModal.date}</p>
                                             <p>• Overall performance: {showFeedbackModal.overall >= 8 ? 'Excellent' : showFeedbackModal.overall >= 7 ? 'Good' : 'Needs Improvement'}</p>
                                             <p>• {showFeedbackModal.feedback}</p>
@@ -575,43 +581,43 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     </div>
 
                                     {/* Detailed Assessment */}
-                                    <div className="bg-slate-50 rounded-xl p-6">
-                                        <h4 className="font-bold text-slate-800 mb-3">Detailed Assessment</h4>
+                                    <div className="bg-base-50 rounded-xl p-6">
+                                        <h4 className="font-bold text-base-900 mb-3">Detailed Assessment</h4>
                                         <div className="space-y-3">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600">Technical Depth</span>
+                                                <span className="text-base-600">Technical Depth</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-slate-200 rounded-full h-2 mr-3">
+                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
                                                         <div
-                                                            className="bg-red-600 h-2 rounded-full"
+                                                            className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.technicalScore * 10}%` }}
                                                         />
                                                     </div>
-                                                    <span className="font-semibold text-red-600">{showFeedbackModal.technicalScore}/10</span>
+                                                    <span className="font-semibold text-accent-600">{showFeedbackModal.technicalScore}/10</span>
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600">Problem Solving</span>
+                                                <span className="text-base-600">Problem Solving</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-slate-200 rounded-full h-2 mr-3">
+                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
                                                         <div
-                                                            className="bg-blue-600 h-2 rounded-full"
+                                                            className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.problemSolving * 10}%` }}
                                                         />
                                                     </div>
-                                                    <span className="font-semibold text-blue-600">{showFeedbackModal.problemSolving}/10</span>
+                                                    <span className="font-semibold text-accent-600">{showFeedbackModal.problemSolving}/10</span>
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600">Communication</span>
+                                                <span className="text-base-600">Communication</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-slate-200 rounded-full h-2 mr-3">
+                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
                                                         <div
-                                                            className="bg-purple-600 h-2 rounded-full"
+                                                            className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.communication * 10}%` }}
                                                         />
                                                     </div>
-                                                    <span className="font-semibold text-purple-600">{showFeedbackModal.communication}/10</span>
+                                                    <span className="font-semibold text-accent-600">{showFeedbackModal.communication}/10</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -621,11 +627,11 @@ export default function TechnicalInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowFeedbackModal(null)}
-                                        className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
+                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                                    <button className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-lg font-semibold transition-colors">
                                         Schedule HR Interview
                                     </button>
                                 </div>
@@ -640,47 +646,47 @@ export default function TechnicalInterview({ applications, onBack }) {
                         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-slate-800">Candidate CV</h2>
+                                    <h2 className="text-2xl font-bold text-base-900">Candidate CV</h2>
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
                                     >
-                                        <ChevronRight className="w-5 h-5 text-slate-600 rotate-180" />
+                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <div className="text-center pb-6 border-b border-slate-200">
-                                        <h3 className="text-xl font-bold text-slate-800">{mockCV.name}</h3>
-                                        <div className="text-slate-600 mt-2">
+                                    <div className="text-center pb-6 border-b border-base-200">
+                                        <h3 className="text-xl font-bold text-base-900">{mockCV.name}</h3>
+                                        <div className="text-base-600 mt-2">
                                             <div>{mockCV.email}</div>
                                             <div>{mockCV.phone}</div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-slate-700 mb-2">Professional Summary</h4>
-                                        <p className="text-slate-600">{mockCV.summary}</p>
+                                        <h4 className="font-semibold text-base-700 mb-2">Professional Summary</h4>
+                                        <p className="text-base-600">{mockCV.summary}</p>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <h4 className="font-semibold text-slate-700 mb-2">Experience</h4>
-                                            <p className="text-slate-600">{mockCV.experience}</p>
+                                            <h4 className="font-semibold text-base-700 mb-2">Experience</h4>
+                                            <p className="text-base-600">{mockCV.experience}</p>
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-slate-700 mb-2">Education</h4>
-                                            <p className="text-slate-600">{mockCV.education}</p>
+                                            <h4 className="font-semibold text-base-700 mb-2">Education</h4>
+                                            <p className="text-base-600">{mockCV.education}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-slate-700 mb-2">Key Projects</h4>
+                                        <h4 className="font-semibold text-base-700 mb-2">Key Projects</h4>
                                         <ul className="space-y-2">
                                             {mockCV.projects.map((project, index) => (
                                                 <li key={index} className="flex items-start">
-                                                    <ChevronRight className="w-4 h-4 text-red-600 mr-2 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-slate-600">{project}</span>
+                                                    <ChevronRight className="w-4 h-4 text-accent-600 mr-2 mt-0.5 flex-shrink-0" />
+                                                    <span className="text-base-600">{project}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -690,7 +696,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
+                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
                                     >
                                         Close
                                     </button>
@@ -711,14 +717,14 @@ export default function TechnicalInterview({ applications, onBack }) {
                                                 alert(`${mockCV.name} is already in your shortlist.`);
                                             }
                                         }}
-                                        className="px-6 py-3 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-colors"
+                                        className="px-6 py-3 bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white rounded-lg font-semibold transition-colors"
                                     >
                                         <Star className="w-5 h-5 mr-2" />
                                         Add to Shortlist
                                     </button>
                                     <button
                                         onClick={downloadCV}
-                                        className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                                        className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-lg font-semibold transition-colors"
                                     >
                                         Download CV
                                     </button>
