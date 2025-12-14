@@ -155,17 +155,17 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-slate-100 p-6 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between gap-4 mb-8">
                     <div>
-                        <h1 className="text-4xl font-bold text-slate-800 mb-2">Job Posting</h1>
-                        <p className="text-slate-600">Select an application to track posting progress and CV collection</p>
+                        <h1 className="text-4xl font-bold text-base-900 mb-2">Job Posting</h1>
+                        <p className="text-base-600">Select an application to track posting progress and CV collection</p>
                     </div>
                     <button
                         type="button"
                         onClick={onBackToDashboard}
-                        className="text-emerald-700 hover:text-emerald-900 font-semibold flex items-center"
+                        className="text-base-600 hover:text-base-800 font-semibold flex items-center"
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
                         Back to Dashboard
@@ -174,16 +174,18 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl shadow-xl p-6">
+                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6">
                             <div className="flex items-center mb-4">
-                                <Briefcase className="w-8 h-8 text-emerald-600 mr-3" />
-                                <h2 className="text-2xl font-bold text-slate-800">Applications</h2>
+                                <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3">
+                                    <Briefcase className="w-5 h-5 text-white" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-base-900">Applications</h2>
                             </div>
 
                             {applications.length === 0 ? (
-                                <div className="border border-dashed border-slate-200 rounded-xl p-6 text-center">
-                                    <p className="text-slate-700 font-semibold">No applications yet</p>
-                                    <p className="text-slate-500 mt-1">Submit a Job Requisition to create an application.</p>
+                                <div className="border border-dashed border-base-200 rounded-xl p-6 text-center">
+                                    <p className="text-base-700 font-semibold">No applications yet</p>
+                                    <p className="text-base-500 mt-1">Submit a Job Requisition to create an application.</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
@@ -193,32 +195,32 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                                             key={app.id}
                                             onClick={() => setSelectedId(app.id)}
                                             className={`w-full text-left border-2 rounded-xl p-4 transition-colors ${selectedId === app.id
-                                                ? 'border-emerald-500 bg-emerald-50'
-                                                : 'border-slate-200 hover:border-emerald-300'
+                                                ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                                : 'border-base-200 hover:border-accent-300'
                                                 }`}
                                         >
                                             <div className="flex items-start justify-between gap-3">
                                                 <div>
-                                                    <div className="font-bold text-slate-800">{app.jobTitle}</div>
-                                                    <div className="text-sm text-slate-600">Posted: {app.posted}</div>
+                                                    <div className="font-bold text-base-900">{app.jobTitle}</div>
+                                                    <div className="text-sm text-base-600">Posted: {app.posted}</div>
                                                 </div>
-                                                <div className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+                                                <div className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-base-100 to-accent-100 text-base-700">
                                                     {app.status || 'Submitted'}
                                                 </div>
                                             </div>
 
                                             <div className="mt-3 grid grid-cols-3 gap-2">
-                                                <div className="bg-slate-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-slate-600">CVs</div>
-                                                    <div className="text-lg font-bold text-slate-800">{app.cvs || 0}</div>
+                                                <div className="bg-base-50 p-3 rounded-lg">
+                                                    <div className="text-xs text-base-600">CVs</div>
+                                                    <div className="text-lg font-bold text-base-900">{app.cvs || 0}</div>
                                                 </div>
-                                                <div className="bg-purple-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-slate-600">Semantic Ready</div>
-                                                    <div className="text-lg font-bold text-purple-600">{app.semantic || 0}</div>
+                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-3 rounded-lg">
+                                                    <div className="text-xs text-base-600">Semantic Ready</div>
+                                                    <div className="text-lg font-bold text-accent-600">{app.semantic || 0}</div>
                                                 </div>
-                                                <div className="bg-emerald-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-slate-600">Platforms</div>
-                                                    <div className="text-lg font-bold text-emerald-700">{app.requisition?.selectedPlatforms?.length || 0}</div>
+                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-3 rounded-lg">
+                                                    <div className="text-xs text-base-600">Platforms</div>
+                                                    <div className="text-lg font-bold text-base-700">{app.requisition?.selectedPlatforms?.length || 0}</div>
                                                 </div>
                                             </div>
                                         </button>
@@ -230,9 +232,9 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
 
                     <div className="lg:col-span-2">
                         {!selectedApplication ? (
-                            <div className="bg-white rounded-2xl shadow-xl p-8">
-                                <h3 className="text-2xl font-bold text-slate-800">Posting Progress</h3>
-                                <p className="text-slate-600 mt-2">Choose an application from the left to view its posting progress.</p>
+                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
+                                <h3 className="text-2xl font-bold text-base-900">Posting Progress</h3>
+                                <p className="text-base-600 mt-2">Choose an application from the left to view its posting progress.</p>
                             </div>
                         ) : (
                             <PostingProgress
@@ -279,65 +281,65 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
     const semanticReady = viewedCandidates > 0 ? viewedCandidates : totalCandidates;
 
     return (
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-slate-800">Posting Progress</h3>
-                <div className="text-sm text-slate-600">Started: {started} • Job: {application.jobTitle}</div>
+                <h3 className="text-2xl font-bold text-base-900">Posting Progress</h3>
+                <div className="text-sm text-base-600">Started: {started} • Job: {application.jobTitle}</div>
             </div>
 
             <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                    <div className="text-xs font-semibold text-slate-600">Posting Platforms</div>
-                    <div className="mt-1 font-bold text-slate-800">{platformText}</div>
+                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
+                    <div className="text-xs font-semibold text-base-600">Posting Platforms</div>
+                    <div className="mt-1 font-bold text-base-900">{platformText}</div>
                 </div>
-                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                    <div className="text-xs font-semibold text-slate-600">CV Collection Window</div>
-                    <div className="mt-1 font-bold text-slate-800">{windowText}</div>
+                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
+                    <div className="text-xs font-semibold text-base-600">CV Collection Window</div>
+                    <div className="mt-1 font-bold text-base-900">{windowText}</div>
                 </div>
-                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                    <div className="text-xs font-semibold text-slate-600">Posting Status</div>
-                    <div className="mt-1 font-bold text-slate-800">{application.status || 'Submitted'}</div>
+                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
+                    <div className="text-xs font-semibold text-base-600">Posting Status</div>
+                    <div className="mt-1 font-bold text-base-900">{application.status || 'Submitted'}</div>
                 </div>
             </div>
 
             <div className="relative mb-8">
-                <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-slate-200"></div>
+                <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-base-500 to-accent-500"></div>
                 <div className="space-y-6">
                     {progress.map((item) => (
                         <div key={item.id} className="relative flex items-start">
                             <div
                                 className={`z-10 flex items-center justify-center w-12 h-12 rounded-full mr-6 ${item.status === 'completed'
-                                    ? 'bg-green-100 border-2 border-green-500'
+                                    ? 'bg-gradient-to-r from-base-100 to-accent-100 border-2 border-accent-500'
                                     : item.status === 'active'
-                                        ? 'bg-blue-100 border-2 border-blue-500 animate-pulse'
-                                        : 'bg-slate-100 border-2 border-slate-300'
+                                        ? 'bg-gradient-to-r from-base-100 to-accent-100 border-2 border-base-500 animate-pulse'
+                                        : 'bg-base-100 border-2 border-base-300'
                                     }`}
                             >
                                 {getStatusIcon(item.status)}
                             </div>
                             <div
-                                className={`flex-1 p-4 rounded-lg cursor-pointer transition-all hover:shadow-md ${item.status === 'completed'
-                                    ? 'bg-green-50'
+                                className={`flex-1 p-4 rounded-lg cursor-pointer transition-all hover:shadow-md hover:shadow-base-200 ${item.status === 'completed'
+                                    ? 'bg-gradient-to-br from-base-50 to-accent-50'
                                     : item.status === 'active'
-                                        ? 'bg-blue-50'
-                                        : 'bg-slate-50'
+                                        ? 'bg-gradient-to-br from-base-50 to-accent-50'
+                                        : 'bg-base-50'
                                     }`}
                                 onClick={() => onStepClick(item.id)}
                             >
                                 <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-bold text-slate-800 text-lg">{item.step}</h4>
+                                    <h4 className="font-bold text-base-900 text-lg">{item.step}</h4>
                                     <div className={`px-3 py-1 rounded-full text-xs font-semibold ${statusPill(item.status)}`}>
                                         {item.status === 'completed' ? 'Completed' : item.status === 'active' ? 'Active' : 'Pending'}
                                     </div>
                                 </div>
 
-                                <div className="text-sm text-slate-600 mb-2">
+                                <div className="text-sm text-base-600 mb-2">
                                     {item.date && item.time ? `${item.date} • ${item.time}` : 'Scheduled'}
                                 </div>
 
                                 {item.note && (
-                                    <div className="flex items-center text-sm text-slate-600 mb-2">
-                                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                                    <div className="flex items-center text-sm text-base-600 mb-2">
+                                        <CheckCircle className="w-4 h-4 text-accent-500 mr-2" />
                                         {item.note}
                                     </div>
                                 )}
@@ -345,7 +347,7 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                 {item.platforms && (
                                     <div className="flex flex-wrap gap-2 mb-2">
                                         {item.platforms.map((platform, i) => (
-                                            <span key={i} className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-medium">
+                                            <span key={i} className="px-2 py-1 bg-gradient-to-r from-base-200 to-accent-200 text-base-700 rounded text-xs font-medium">
                                                 {platform}
                                             </span>
                                         ))}
@@ -354,17 +356,17 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
 
                                 {typeof item.count === 'number' && (
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center text-blue-600 font-semibold">
+                                        <div className="flex items-center text-base-600 font-semibold">
                                             <Users className="w-4 h-4 mr-2" />
                                             {item.count} CVs received
                                             {item.newToday ? (
-                                                <span className="ml-3 px-2 py-1 bg-green-100 text-green-700 rounded text-xs">+{item.newToday} today</span>
+                                                <span className="ml-3 px-2 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded text-xs">+{item.newToday} today</span>
                                             ) : null}
                                         </div>
                                         <button
                                             type="button"
                                             onClick={() => onViewCVs?.(item)}
-                                            className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                                            className="text-sm text-base-600 hover:text-base-800 font-medium flex items-center"
                                         >
                                             <Eye className="w-4 h-4 mr-1" />
                                             View
@@ -373,7 +375,7 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                 )}
 
                                 {item.scheduledDate && (
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-sm text-base-600">
                                         Scheduled for: <span className="font-semibold">{item.scheduledDate}</span>
                                     </div>
                                 )}
@@ -383,67 +385,67 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                 </div>
             </div>
 
-            <div className="border-t border-slate-200 pt-6">
-                <h4 className="text-lg font-bold text-slate-800 mb-4">Posting Statistics</h4>
+            <div className="border-t border-base-200 pt-6">
+                <h4 className="text-lg font-bold text-base-900 mb-4">Posting Statistics</h4>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {totalCandidates > 0 && (
-                        <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="text-2xl font-bold text-blue-600">{totalCandidates}</div>
-                                    <div className="text-sm text-slate-600">CVs Received</div>
+                                    <div className="text-2xl font-bold text-base-600">{totalCandidates}</div>
+                                    <div className="text-sm text-base-600">CVs Received</div>
                                 </div>
-                                <Users className="w-8 h-8 text-blue-400" />
+                                <Users className="w-8 h-8 text-accent-400" />
                             </div>
                         </div>
                     )}
 
                     {newToday > 0 && (
-                        <div className="bg-emerald-50 p-4 rounded-lg">
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="text-2xl font-bold text-emerald-700">{newToday}</div>
-                                    <div className="text-sm text-slate-600">New Today</div>
+                                    <div className="text-2xl font-bold text-accent-600">{newToday}</div>
+                                    <div className="text-sm text-base-600">New Today</div>
                                 </div>
-                                <Upload className="w-8 h-8 text-emerald-400" />
+                                <Upload className="w-8 h-8 text-accent-400" />
                             </div>
                         </div>
                     )}
 
                     {viewedCandidates > 0 && (
-                        <div className="bg-purple-50 p-4 rounded-lg">
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="text-2xl font-bold text-purple-600">{viewedCandidates}</div>
-                                    <div className="text-sm text-slate-600">Ready for Semantic</div>
+                                    <div className="text-2xl font-bold text-accent-600">{viewedCandidates}</div>
+                                    <div className="text-sm text-base-600">Ready for Semantic</div>
                                 </div>
-                                <Eye className="w-8 h-8 text-purple-400" />
+                                <Eye className="w-8 h-8 text-accent-400" />
                             </div>
                         </div>
                     )}
 
-                    <div className="bg-slate-100 p-4 rounded-lg">
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-lg shadow-sm shadow-base-200">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-2xl font-bold text-slate-600">{completion}%</div>
-                                <div className="text-sm text-slate-600">Completion</div>
+                                <div className="text-2xl font-bold text-base-600">{completion}%</div>
+                                <div className="text-sm text-base-600">Completion</div>
                             </div>
-                            <Clock className="w-8 h-8 text-slate-400" />
+                            <Clock className="w-8 h-8 text-accent-400" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-200">
+            <div className="mt-6 p-4 bg-gradient-to-r from-base-50 to-accent-50 rounded-lg border border-base-200 shadow-sm shadow-base-200">
                 <div className="flex items-center justify-between gap-4">
                     <div>
-                        <h5 className="font-bold text-slate-800">Next Step: {nextPhaseTitle}</h5>
-                        <p className="text-sm text-slate-600">{semanticReady} candidates ready for semantic analysis & ranking</p>
+                        <h5 className="font-bold text-base-900">Next Step: {nextPhaseTitle}</h5>
+                        <p className="text-sm text-base-600">{semanticReady} candidates ready for semantic analysis & ranking</p>
                     </div>
                     <button
                         type="button"
                         onClick={() => onOpenSemanticAnalysis?.()}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
+                        className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
                     >
                         <Eye className="w-4 h-4 mr-2" />
                         Open Semantic Analysis

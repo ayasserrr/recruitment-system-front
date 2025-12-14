@@ -47,11 +47,19 @@ export default function JobDetailsForm({ formData, updateFormData }) {
     };
 
     const handleArrayInput = (field, value) => {
-        const items = value
-            .split(',')
-            .map((item) => item.trim())
-            .filter((item) => item);
-        updateFormData({ [field]: items });
+        // Store the raw value for editing, parse on blur or submit
+        updateFormData({ [field]: value });
+    };
+
+    const parseArrayField = (value) => {
+        // Parse both commas and newlines as separators
+        if (typeof value === 'string') {
+            return value
+                .split(/[,\\n]/)
+                .map((item) => item.trim())
+                .filter((item) => item);
+        }
+        return Array.isArray(value) ? value : [];
     };
 
     const handleResponsibilitiesChange = (value) => {
@@ -207,28 +215,29 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Required Skills *
                         </label>
-                        <input
-                            type="text"
-                            value={formData.requiredSkills?.join(', ') || ''}
+                        <textarea
+                            value={typeof formData.requiredSkills === 'string' ? formData.requiredSkills : (Array.isArray(formData.requiredSkills) ? formData.requiredSkills.join(', ') : '')}
                             onChange={(e) => handleArrayInput('requiredSkills', e.target.value)}
-                            placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma separated)"
+                            placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma or line separated)"
+                            rows="3"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
-                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas</p>
+                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas or press Enter for new line</p>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Preferred Skills
                         </label>
-                        <input
-                            type="text"
-                            value={formData.preferredSkills?.join(', ') || ''}
+                        <textarea
+                            value={typeof formData.preferredSkills === 'string' ? formData.preferredSkills : (Array.isArray(formData.preferredSkills) ? formData.preferredSkills.join(', ') : '')}
                             onChange={(e) => handleArrayInput('preferredSkills', e.target.value)}
-                            placeholder="e.g., GraphQL, Docker, AWS"
+                            placeholder="e.g., GraphQL, Docker, AWS (comma or line separated)"
+                            rows="3"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
+                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas or press Enter for new line</p>
                     </div>
                 </div>
             </div>
@@ -412,13 +421,14 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Languages Required
                         </label>
-                        <input
-                            type="text"
-                            value={formData.languages?.join(', ') || ''}
+                        <textarea
+                            value={typeof formData.languages === 'string' ? formData.languages : (Array.isArray(formData.languages) ? formData.languages.join(', ') : '')}
                             onChange={(e) => handleArrayInput('languages', e.target.value)}
-                            placeholder="e.g., English (Fluent), Arabic"
+                            placeholder="e.g., English (Fluent), Arabic (comma or line separated)"
+                            rows="3"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
+                        <p className="mt-1 text-sm text-gray-500">Separate languages with commas or press Enter for new line</p>
                     </div>
 
                     <div>
