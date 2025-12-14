@@ -159,8 +159,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             <div className="bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl p-8 text-white">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold mb-2">Review & Submit Job Requisition</h2>
-                        <p className="text-base-100">Review all details before creating the job posting</p>
+                        <h2 className="text-3xl font-bold mb-2 text-white">Review & Submit Job Requisition</h2>
+                        <p className="text-white">Review all details before creating the job posting</p>
                     </div>
                     <CheckCircle className="w-12 h-12" />
                 </div>
@@ -258,19 +258,24 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
             {/* Timeline Preview */}
             <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-6">Recruitment Timeline</h3>
+                <div className="flex items-center mb-6">
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <ClipboardList className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Recruitment Timeline</h3>
+                </div>
 
                 {timeline.length === 0 ? (
                     <p className="text-sm text-gray-600">Set a Posting Start Date to preview timeline.</p>
                 ) : (
                     <div className="relative">
-                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-200"></div>
+                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-base-500 to-accent-500"></div>
 
                         <div className="space-y-8 relative">
                             {timeline.map((item, index) => (
                                 <div key={index} className="flex items-start">
                                     <div
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 z-10 ${index === 0 ? 'bg-blue-600' : 'bg-blue-200'
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 z-10 ${index === 0 ? 'bg-gradient-to-r from-base-600 to-accent-600' : 'bg-gradient-to-r from-base-200 to-accent-200'
                                             }`}
                                     >
                                         {index === 0 ? (
@@ -313,7 +318,7 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     <button
                         type="button"
                         onClick={onSubmit}
-                        className="flex-1 flex items-center justify-center bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex-1 flex items-center justify-center bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
                     >
                         <Send className="w-5 h-5 mr-3" />
                         Submit Job Requisition
