@@ -137,6 +137,110 @@ export default function HRInterview({ applications, onBack }) {
         ]
     };
 
+    // Download CV functionality
+    const downloadCV = () => {
+        const cvData = {
+            name: mockCV.name,
+            email: mockCV.email,
+            phone: mockCV.phone,
+            experience: mockCV.experience,
+            education: mockCV.education,
+            summary: mockCV.summary,
+            projects: mockCV.projects,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${mockCV.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Schedule interview functionality
+    const scheduleInterview = () => {
+        const candidateName = 'John Doe'; // Replace with actual candidate data
+        const interviewDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const interviewTime = '2:00 PM';
+
+        const calendarData = {
+            title: `HR Interview - ${candidateName}`,
+            date: interviewDate,
+            time: interviewTime,
+            duration: '45 minutes',
+            type: 'HR Interview',
+            candidate: candidateName,
+            interviewer: 'HR Team',
+            location: 'Virtual - Zoom',
+            notes: 'Discuss cultural fit and team collaboration'
+        };
+
+        const dataStr = JSON.stringify(calendarData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `hr-interview-schedule-${candidateName.replace(' ', '-')}-${interviewDate}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Export report functionality
+    const exportReport = () => {
+        const reportData = {
+            reportType: 'HR Interview Summary',
+            candidates: [
+                {
+                    name: 'John Doe',
+                    culturalFit: 88,
+                    communication: 85,
+                    teamwork: 90,
+                    overall: 87,
+                    recommendation: 'Strongly Recommend'
+                }
+            ],
+            totalInterviews: 1,
+            averageScore: 87,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `hr-interview-report-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Proceed to Final Ranking
+    const proceedToFinalRanking = () => {
+        const selectedCandidates = [
+            {
+                name: 'John Doe',
+                hrScore: 87,
+                status: 'Passed HR Interview'
+            }
+        ];
+
+        const dataStr = JSON.stringify(selectedCandidates, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `candidates-for-final-ranking-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
@@ -283,7 +387,7 @@ export default function HRInterview({ applications, onBack }) {
 
                                     <div className="flex space-x-3">
                                         <button
-                                            onClick={() => alert('Schedule interview functionality would be implemented here')}
+                                            onClick={scheduleInterview}
                                             className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
                                         >
                                             <Users className="w-4 h-4 mr-2" />
@@ -377,14 +481,14 @@ export default function HRInterview({ applications, onBack }) {
 
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
-                                        onClick={() => alert('Export report functionality would be implemented here')}
+                                        onClick={exportReport}
                                         className="px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-lg font-semibold hover:bg-pink-50 transition-colors flex items-center"
                                     >
                                         <FileText className="w-5 h-5 mr-2" />
                                         Export Report
                                     </button>
                                     <button
-                                        onClick={() => alert('Proceeding to Final Ranking for selected candidates')}
+                                        onClick={proceedToFinalRanking}
                                         className="px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors"
                                     >
                                         Proceed to Final Ranking
@@ -588,7 +692,10 @@ export default function HRInterview({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors">
+                                    <button
+                                        onClick={downloadCV}
+                                        className="px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors"
+                                    >
                                         Download CV
                                     </button>
                                 </div>

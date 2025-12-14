@@ -96,6 +96,91 @@ export default function SemanticAnalysis({ applications, onBack }) {
         ]
     };
 
+    // Download report functionality
+    const downloadReport = () => {
+        const reportData = {
+            jobTitle: selectedApp?.jobTitle || 'Unknown',
+            candidates: candidates.map((c, index) => ({
+                rank: index + 1,
+                name: c.name,
+                score: c.score,
+                match: c.match,
+                skills: c.skills
+            })),
+            stats: {
+                totalCandidates: stats.totalCandidates,
+                processed: stats.processed,
+                highMatch: stats.highMatch,
+                mediumMatch: stats.mediumMatch,
+                lowMatch: stats.lowMatch,
+                avgScore: stats.avgScore
+            },
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `semantic-analysis-report-${selectedApp?.jobTitle || 'report'}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Download CV functionality
+    const downloadCV = (candidate) => {
+        const cvData = {
+            name: candidate.name,
+            email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`,
+            phone: '+1 (555) 123-4567',
+            experience: '5+ years',
+            education: 'Bachelor\'s in Computer Science',
+            summary: 'Experienced software engineer with strong technical skills and a proven track record of delivering high-quality solutions.',
+            projects: [
+                'Led development of microservices architecture serving 1M+ users',
+                'Implemented machine learning pipeline reducing processing time by 40%',
+                'Built real-time analytics dashboard with React and Node.js'
+            ],
+            score: candidate.score,
+            match: candidate.match,
+            skills: candidate.skills,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Proceed to Technical Assessment
+    const proceedToTechnicalAssessment = () => {
+        const selectedCandidates = candidates.filter(c => c.score >= 70).map(c => ({
+            name: c.name,
+            score: c.score,
+            match: c.match,
+            skills: c.skills,
+            status: 'Ready for Assessment'
+        }));
+
+        const dataStr = JSON.stringify(selectedCandidates, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `candidates-for-technical-assessment-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
@@ -336,14 +421,14 @@ export default function SemanticAnalysis({ applications, onBack }) {
                             {/* Action Buttons */}
                             <div className="mt-8 flex justify-end space-x-4">
                                 <button
-                                    onClick={() => alert('Export report functionality would be implemented here')}
+                                    onClick={downloadReport}
                                     className="px-6 py-3 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors flex items-center"
                                 >
                                     <Download className="w-5 h-5 mr-2" />
                                     Export Report
                                 </button>
                                 <button
-                                    onClick={() => alert('Proceeding to Technical Assessment for selected candidates')}
+                                    onClick={proceedToTechnicalAssessment}
                                     className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
                                 >
                                     Proceed to Technical Assessment
@@ -419,7 +504,10 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                                    <button
+                                        onClick={() => downloadCV(showCVModal)}
+                                        className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                                    >
                                         Download CV
                                     </button>
                                 </div>

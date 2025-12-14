@@ -203,7 +203,7 @@ export default function FinalRanking({ applications, onBack }) {
 
     const filteredCandidates = useMemo(() => {
         let filtered = finalRanking;
-        
+
         if (selectedFilter !== 'all') {
             filtered = filtered.filter(candidate => {
                 if (selectedFilter === 'top') return candidate.recommendation === 'Strongly Recommend';
@@ -341,6 +341,128 @@ export default function FinalRanking({ applications, onBack }) {
                 }
             }
         };
+    };
+
+    // Download report functionality
+    const downloadReport = () => {
+        const reportData = {
+            candidates: filteredCandidates.map((c, index) => ({
+                rank: index + 1,
+                name: c.name,
+                overallScore: c.overallScore,
+                semantic: c.semantic,
+                technical: c.technical,
+                hrInterview: c.hrInterview,
+                techInterview: c.techInterview,
+                status: c.status,
+                recommendation: c.recommendation,
+                hireProbability: c.hireProbability
+            })),
+            stats: {
+                totalCandidates: finalRanking.length,
+                filteredCandidates: filteredCandidates.length,
+                selectedFilter: selectedFilter,
+                sortBy: sortBy
+            },
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `final-ranking-report-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Download CV functionality
+    const downloadCV = (candidate) => {
+        const report = generateFullReport(candidate);
+        const cvData = {
+            personalInfo: report.personalInfo,
+            overallPerformance: report.overallPerformance,
+            stageBreakdown: report.stageBreakdown,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Download PDF functionality
+    const downloadPDF = (candidate) => {
+        const report = generateFullReport(candidate);
+        const pdfData = {
+            ...report,
+            generatedDate: new Date().toISOString(),
+            format: 'PDF'
+        };
+
+        const dataStr = JSON.stringify(pdfData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `candidate-report-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Extend offer functionality
+    const extendOffer = (candidate) => {
+        const offerData = {
+            candidateName: candidate.name,
+            position: selectedApp?.jobTitle || 'Senior Software Engineer',
+            salary: '$120,000 - $150,000',
+            startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            offerType: 'Full-time',
+            benefits: ['Health Insurance', '401(k)', 'Remote Work Options', 'Professional Development'],
+            status: 'Offer Extended',
+            offerDate: new Date().toISOString(),
+            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        };
+
+        const dataStr = JSON.stringify(offerData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `offer-letter-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Make final selection functionality
+    const makeFinalSelection = () => {
+        const topCandidates = filteredCandidates.slice(0, 3).map(c => ({
+            name: c.name,
+            overallScore: c.overallScore,
+            rank: filteredCandidates.indexOf(c) + 1,
+            recommendation: c.recommendation,
+            status: 'Selected for Final Consideration'
+        }));
+
+        const dataStr = JSON.stringify(topCandidates, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `final-selection-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
     };
 
     return (
@@ -555,7 +677,7 @@ export default function FinalRanking({ applications, onBack }) {
                                     </div>
 
                                     <button
-                                        onClick={() => alert('Export report functionality would be implemented here')}
+                                        onClick={downloadReport}
                                         className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
                                     >
                                         <Download className="w-5 h-5 mr-2" />
@@ -717,7 +839,7 @@ export default function FinalRanking({ applications, onBack }) {
                                                     Schedule Follow-up
                                                 </button>
                                                 <button
-                                                    onClick={() => alert(`Extending offer to ${candidate.name}`)}
+                                                    onClick={() => extendOffer(candidate)}
                                                     className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
                                                 >
                                                     <CheckCircle className="w-5 h-5 mr-2" />
@@ -804,7 +926,7 @@ export default function FinalRanking({ applications, onBack }) {
                                 Save for Later
                             </button>
                             <button
-                                onClick={() => alert('Making final selection for top candidates')}
+                                onClick={makeFinalSelection}
                                 className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all flex items-center"
                             >
                                 <CheckCircle className="w-6 h-6 mr-3" />
@@ -880,7 +1002,10 @@ export default function FinalRanking({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 transition-colors">
+                                    <button
+                                        onClick={() => downloadCV(showCVModal)}
+                                        className="px-6 py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
+                                    >
                                         Download CV
                                     </button>
                                 </div>
@@ -1019,11 +1144,17 @@ export default function FinalRanking({ applications, onBack }) {
                                                 >
                                                     Close Report
                                                 </button>
-                                                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center">
+                                                <button
+                                                    onClick={() => downloadPDF(showFullReportModal)}
+                                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center"
+                                                >
                                                     <Download className="w-5 h-5 mr-2" />
                                                     Download PDF
                                                 </button>
-                                                <button className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center">
+                                                <button
+                                                    onClick={() => extendOffer(showFullReportModal)}
+                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center"
+                                                >
                                                     <CheckCircle className="w-5 h-5 mr-2" />
                                                     Extend Offer
                                                 </button>
@@ -1036,6 +1167,6 @@ export default function FinalRanking({ applications, onBack }) {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }

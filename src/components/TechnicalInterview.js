@@ -137,6 +137,110 @@ export default function TechnicalInterview({ applications, onBack }) {
         ]
     };
 
+    // Download CV functionality
+    const downloadCV = () => {
+        const cvData = {
+            name: mockCV.name,
+            email: mockCV.email,
+            phone: mockCV.phone,
+            experience: mockCV.experience,
+            education: mockCV.education,
+            summary: mockCV.summary,
+            projects: mockCV.projects,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${mockCV.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Schedule interview functionality
+    const scheduleInterview = () => {
+        const candidateName = 'John Doe'; // Replace with actual candidate data
+        const interviewDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        const interviewTime = '10:00 AM';
+
+        const calendarData = {
+            title: `Technical Interview - ${candidateName}`,
+            date: interviewDate,
+            time: interviewTime,
+            duration: '60 minutes',
+            type: 'Technical Interview',
+            candidate: candidateName,
+            interviewer: 'Technical Team',
+            location: 'Virtual - Zoom',
+            notes: 'Discuss technical skills and problem-solving abilities'
+        };
+
+        const dataStr = JSON.stringify(calendarData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `interview-schedule-${candidateName.replace(' ', '-')}-${interviewDate}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Export report functionality
+    const exportReport = () => {
+        const reportData = {
+            reportType: 'Technical Interview Summary',
+            candidates: [
+                {
+                    name: 'John Doe',
+                    technicalScore: 85,
+                    problemSolving: 88,
+                    communication: 82,
+                    overall: 85,
+                    recommendation: 'Recommend'
+                }
+            ],
+            totalInterviews: 1,
+            averageScore: 85,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `technical-interview-report-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Proceed to HR Interview
+    const proceedToHRInterview = () => {
+        const selectedCandidates = [
+            {
+                name: 'John Doe',
+                technicalScore: 85,
+                status: 'Passed Technical Interview'
+            }
+        ];
+
+        const dataStr = JSON.stringify(selectedCandidates, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `candidates-for-hr-interview-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-red-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
@@ -283,7 +387,7 @@ export default function TechnicalInterview({ applications, onBack }) {
 
                                     <div className="flex space-x-3">
                                         <button
-                                            onClick={() => alert('Schedule interview functionality would be implemented here')}
+                                            onClick={scheduleInterview}
                                             className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
                                         >
                                             <Video className="w-4 h-4 mr-2" />
@@ -377,14 +481,14 @@ export default function TechnicalInterview({ applications, onBack }) {
 
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
-                                        onClick={() => alert('Export report functionality would be implemented here')}
+                                        onClick={exportReport}
                                         className="px-6 py-3 border-2 border-red-600 text-red-600 rounded-lg font-semibold hover:bg-red-50 transition-colors flex items-center"
                                     >
                                         <FileText className="w-5 h-5 mr-2" />
                                         Export Report
                                     </button>
                                     <button
-                                        onClick={() => alert('Proceeding to HR Interview for selected candidates')}
+                                        onClick={proceedToHRInterview}
                                         className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
                                     >
                                         Proceed to HR Interview
@@ -588,7 +692,10 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                                    <button
+                                        onClick={downloadCV}
+                                        className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                                    >
                                         Download CV
                                     </button>
                                 </div>

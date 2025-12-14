@@ -137,6 +137,116 @@ export default function TechnicalAssessment({ applications, onBack }) {
 
     const selectedAssessment = assessmentData.find(a => a.id === selectedAppId);
 
+    // Download report functionality
+    const downloadReport = () => {
+        const reportData = {
+            jobTitle: selectedApp?.jobTitle || 'Unknown',
+            candidates: candidateRanking.map(c => ({
+                name: c.name,
+                score: c.score,
+                technical: c.technical,
+                problemSolving: c.problemSolving,
+                timeSpent: c.timeSpent,
+                status: c.status,
+                codingScore: c.codingScore,
+                theoryScore: c.theoryScore,
+                completed: c.completed
+            })),
+            assessmentStats: {
+                totalAssessments: assessmentStats.totalAssessments,
+                activeAssessments: assessmentStats.activeAssessments,
+                completedCandidates: assessmentStats.completedCandidates,
+                avgScoreOverall: assessmentStats.avgScoreOverall
+            },
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `technical-assessment-report-${selectedApp?.jobTitle || 'report'}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Download CV functionality
+    const downloadCV = (candidate) => {
+        const cvData = {
+            name: candidate.name,
+            email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`,
+            phone: '+1 (555) 123-4567',
+            experience: '5+ years',
+            education: 'Bachelor\'s in Computer Science',
+            summary: 'Experienced software engineer with strong technical skills and proven track record in technical assessments.',
+            projects: [
+                'Built scalable microservices architecture',
+                'Developed machine learning pipeline',
+                'Led technical team of 5 engineers'
+            ],
+            score: candidate.score,
+            technical: candidate.technical,
+            problemSolving: candidate.problemSolving,
+            timeSpent: candidate.timeSpent,
+            status: candidate.status,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Send reminders functionality
+    const sendReminders = () => {
+        const reminderData = {
+            type: 'Assessment Reminders',
+            recipients: ['candidate1@email.com', 'candidate2@email.com'],
+            message: 'Reminder: Complete your technical assessment by the deadline',
+            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            assessmentType: 'Technical Assessment',
+            sentDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(reminderData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `assessment-reminders-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
+    // Proceed to Technical Interview
+    const proceedToTechnicalInterview = () => {
+        const selectedCandidates = candidateRanking.filter(c => c.score >= 70).map(c => ({
+            name: c.name,
+            score: c.score,
+            technical: c.technical,
+            status: 'Passed Assessment'
+        }));
+
+        const dataStr = JSON.stringify(selectedCandidates, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `candidates-for-technical-interview-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
@@ -299,7 +409,7 @@ export default function TechnicalAssessment({ applications, onBack }) {
 
                                     <div className="flex space-x-4">
                                         <button
-                                            onClick={() => alert('Send reminders functionality would be implemented here')}
+                                            onClick={sendReminders}
                                             className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center"
                                         >
                                             <Send className="w-5 h-5 mr-2" />
@@ -322,9 +432,9 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                         <div key={candidate.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                                             <div className="flex items-center">
                                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold mr-4 ${index === 0 ? 'bg-yellow-100 text-yellow-600' :
-                                                        index === 1 ? 'bg-slate-100 text-slate-600' :
-                                                            index === 2 ? 'bg-orange-100 text-orange-600' :
-                                                                'bg-slate-50 text-slate-500'
+                                                    index === 1 ? 'bg-slate-100 text-slate-600' :
+                                                        index === 2 ? 'bg-orange-100 text-orange-600' :
+                                                            'bg-slate-50 text-slate-500'
                                                     }`}>
                                                     #{index + 1}
                                                 </div>
@@ -412,8 +522,7 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                                         </span>
                                                     </td>
                                                     <td className="py-4 px-4">
-                                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${candidate.status === 'passed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                                            }`}>
+                                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${candidate.status === 'passed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                             {candidate.status === 'passed' ? 'Passed' : 'Failed'}
                                                         </span>
                                                     </td>
@@ -441,14 +550,14 @@ export default function TechnicalAssessment({ applications, onBack }) {
 
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
-                                        onClick={() => alert('Download report functionality would be implemented here')}
+                                        onClick={downloadReport}
                                         className="px-6 py-3 border-2 border-orange-600 text-orange-600 rounded-lg font-semibold hover:bg-orange-50 transition-colors flex items-center"
                                     >
-                                        <Download className="w-5 h-5 mr-2" />
-                                        Download Report
+                                        <FileText className="w-5 h-5 mr-2" />
+                                        Export Report
                                     </button>
                                     <button
-                                        onClick={() => alert('Proceeding to Technical Interview for selected candidates')}
+                                        onClick={proceedToTechnicalInterview}
                                         className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
                                     >
                                         Proceed to Technical Interview
@@ -525,7 +634,10 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+                                    <button
+                                        onClick={() => downloadCV(showCVModal)}
+                                        className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                                    >
                                         Download CV
                                     </button>
                                 </div>
@@ -670,8 +782,11 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors">
-                                        Schedule Interview
+                                    <button
+                                        onClick={sendReminders}
+                                        className="px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                                    >
+                                        Send Reminders
                                     </button>
                                 </div>
                             </div>
