@@ -146,13 +146,13 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-accent-50' : 'border-gray-200 hover:border-accent-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                                         {React.createElement(iconComponents[option.icon], {
-                                            className: 'w-6 h-6 text-white',
+                                            className: 'w-5 h-5 text-white',
                                         })}
                                     </div>
                                     <div>

@@ -195,14 +195,14 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                 key={option.id}
                                 onClick={() => handleAssessmentSelect(option.id)}
                                 className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200 hover:border-accent-300'
+                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mb-3 shadow-md mr-4">
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                                         {React.createElement(iconComponents[option.icon], {
-                                            className: 'w-6 h-6 text-white',
+                                            className: 'w-5 h-5 text-white',
                                         })}
                                     </div>
                                     <div>
@@ -214,20 +214,20 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
                                         <li key={index} className="flex items-center text-sm text-gray-600">
-                                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                                            <div className="w-1.5 h-1.5 bg-gradient-to-r from-base-500 to-accent-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
 
                                 {isSelected && (
-                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                                        <p className="text-sm text-blue-800 font-medium">
+                                    <div className="mt-4 p-3 bg-gradient-to-r from-base-100 to-accent-100 rounded-lg border border-accent-300">
+                                        <p className="text-sm font-medium bg-gradient-to-r from-base-700 to-accent-700 bg-clip-text text-transparent">
                                             {option.id === 'ai-generated'
-                                                ? 'AI will generate assessment based on job description'
+                                                ? '✓ AI will generate assessment based on job description'
                                                 : option.id === 'custom'
-                                                    ? 'You can add custom questions below'
-                                                    : 'Select from available templates'}
+                                                    ? '✓ You can add custom questions below'
+                                                    : '✓ Select from available templates'}
                                         </p>
                                     </div>
                                 )}
@@ -240,8 +240,8 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             {formData.assessmentType === 'ai-generated' && (
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
-                            <ClipboardList className="w-5 h-5 text-white" />
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3 flex-shrink-0">
+                            <ClipboardList className="w-4 h-4 text-white" />
                         </div>
                         <h3 className="text-lg font-bold text-gray-800">Assessment Questions</h3>
                     </div>
@@ -256,8 +256,8 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center">
-                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
-                                <ClipboardList className="w-5 h-5 text-white" />
+                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3 flex-shrink-0">
+                                <ClipboardList className="w-4 h-4 text-white" />
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold text-gray-800">Custom Assessment Builder</h3>

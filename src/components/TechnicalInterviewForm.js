@@ -120,9 +120,9 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                                         {React.createElement(iconComponents[option.icon], {
-                                            className: 'w-6 h-6 text-white',
+                                            className: 'w-5 h-5 text-white',
                                         })}
                                     </div>
                                     <div>
