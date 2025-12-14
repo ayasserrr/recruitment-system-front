@@ -454,7 +454,7 @@ export default function FinalRanking({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -462,26 +462,23 @@ export default function FinalRanking({ applications, onBack }) {
                         <div className="flex items-center">
                             {onBack && (
                                 <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-slate-600" />
+                                    <ArrowLeft className="w-6 h-6 text-base-600" />
                                 </button>
                             )}
-                            <div className="relative">
-                                <Award className="w-16 h-16 text-yellow-600" />
-                                <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                    <Crown className="w-4 h-4 text-white" />
-                                </div>
+                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-16 h-16 rounded-lg mr-4">
+                                <Trophy className="w-8 h-8 text-white" />
                             </div>
-                            <div className="ml-6">
-                                <h1 className="text-4xl font-bold text-slate-800">Final Candidate Ranking</h1>
-                                <p className="text-slate-600">Comprehensive evaluation and ranking of top candidates</p>
+                            <div>
+                                <h1 className="text-4xl font-bold text-base-900">Final Candidate Ranking</h1>
+                                <p className="text-base-600">Comprehensive evaluation and ranking of top candidates</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Application Selector */}
-                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                    <h2 className="text-xl font-bold text-slate-800 mb-4">Select Application</h2>
+                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                    <h2 className="text-xl font-bold text-base-900 mb-4">Select Application</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {applications.map(app => {
                             const finalCandidates = app.hrInterview || 0;
@@ -490,13 +487,13 @@ export default function FinalRanking({ applications, onBack }) {
                                     key={app.id}
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                        ? 'border-yellow-500 bg-yellow-50'
-                                        : 'border-slate-200 hover:border-yellow-300'
+                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : 'border-base-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
-                                        <h3 className="font-bold text-slate-800">{app.jobTitle}</h3>
-                                        <div className="text-sm text-slate-600 mt-1">
+                                        <h3 className="font-bold text-base-900">{app.jobTitle}</h3>
+                                        <div className="text-sm text-base-600 mt-1">
                                             <div>Final Candidates: {finalCandidates}</div>
                                             <div>Top Score: {finalCandidates > 0 ? Math.round(85 + Math.random() * 10) : 'N/A'}</div>
                                             <div>Status: {finalCandidates > 0 ? 'Ready' : 'Pending'}</div>
@@ -512,115 +509,115 @@ export default function FinalRanking({ applications, onBack }) {
                     <>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-yellow-200">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-yellow-600 mb-2">{hiringStats.finalists}</div>
-                                        <div className="text-sm text-slate-600">Final Candidates</div>
+                                        <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.finalists}</div>
+                                        <div className="text-sm text-base-600">Final Candidates</div>
                                     </div>
-                                    <Trophy className="w-10 h-10 text-yellow-400" />
+                                    <Trophy className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-slate-500">Selected from {hiringStats.totalCandidates} applicants</div>
+                                <div className="mt-3 text-xs text-base-500">Selected from {hiringStats.totalCandidates} applicants</div>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-green-200">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-green-600 mb-2">{hiringStats.topScore}</div>
-                                        <div className="text-sm text-slate-600">Top Score</div>
+                                        <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.topScore}</div>
+                                        <div className="text-sm text-base-600">Top Score</div>
                                     </div>
-                                    <Star className="w-10 h-10 text-green-400" />
+                                    <Star className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-slate-500">Overall maximum score achieved</div>
+                                <div className="mt-3 text-xs text-base-500">Overall maximum score achieved</div>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-blue-200">
+                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-blue-600 mb-2">{hiringStats.avgOverallScore}</div>
-                                        <div className="text-sm text-slate-600">Average Score</div>
+                                        <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.avgOverallScore}</div>
+                                        <div className="text-sm text-base-600">Average Score</div>
                                     </div>
-                                    <TrendingUp className="w-10 h-10 text-blue-400" />
+                                    <TrendingUp className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-slate-500">Across all final candidates</div>
+                                <div className="mt-3 text-xs text-base-500">Across all final candidates</div>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-purple-200">
+                            <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-2xl shadow-lg shadow-base-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-purple-600 mb-2">{hiringStats.offerAcceptanceRate}%</div>
-                                        <div className="text-sm text-slate-600">Acceptance Rate</div>
+                                        <div className="text-3xl font-bold text-base-600 mb-2">{hiringStats.offerAcceptanceRate}%</div>
+                                        <div className="text-sm text-base-600">Acceptance Rate</div>
                                     </div>
-                                    <Heart className="w-10 h-10 text-purple-400" />
+                                    <Heart className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-slate-500">Estimated offer acceptance probability</div>
+                                <div className="mt-3 text-xs text-base-500">Estimated offer acceptance probability</div>
                             </div>
                         </div>
 
                         {/* Stage Performance */}
-                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-                                <BarChart className="w-6 h-6 mr-3 text-yellow-600" />
+                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                            <h2 className="text-2xl font-bold text-base-900 mb-6 flex items-center">
+                                <BarChart className="w-6 h-6 mr-3 text-accent-600" />
                                 Stage Performance Analysis
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
                                     <div className="flex items-center mb-4">
-                                        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Sparkles className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-bold text-purple-600">{stageScores.semantic.avg}</div>
-                                            <div className="text-sm text-slate-600">Semantic Analysis</div>
+                                            <div className="text-2xl font-bold text-accent-600">{stageScores.semantic.avg}</div>
+                                            <div className="text-sm text-base-600">Semantic Analysis</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-sm text-base-600">
                                         Range: {stageScores.semantic.min} - {stageScores.semantic.max}
                                     </div>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl">
+                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
                                     <div className="flex items-center mb-4">
-                                        <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Target className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-bold text-orange-600">{stageScores.technical.avg}</div>
-                                            <div className="text-sm text-slate-600">Technical Test</div>
+                                            <div className="text-2xl font-bold text-accent-600">{stageScores.technical.avg}</div>
+                                            <div className="text-sm text-base-600">Technical Test</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-sm text-base-600">
                                         Range: {stageScores.technical.min} - {stageScores.technical.max}
                                     </div>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl">
+                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
                                     <div className="flex items-center mb-4">
-                                        <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Award className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-bold text-red-600">{stageScores.techInterview.avg}/10</div>
-                                            <div className="text-sm text-slate-600">Tech Interview</div>
+                                            <div className="text-2xl font-bold text-accent-600">{stageScores.techInterview.avg}/10</div>
+                                            <div className="text-sm text-base-600">Tech Interview</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-sm text-base-600">
                                         Range: {stageScores.techInterview.min} - {stageScores.techInterview.max}/10
                                     </div>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-xl">
+                                <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl">
                                     <div className="flex items-center mb-4">
-                                        <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center mr-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Users className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-bold text-pink-600">{stageScores.hrInterview.avg}/10</div>
-                                            <div className="text-sm text-slate-600">HR Interview</div>
+                                            <div className="text-2xl font-bold text-base-600">{stageScores.hrInterview.avg}/10</div>
+                                            <div className="text-sm text-base-600">HR Interview</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-sm text-base-600">
                                         Range: {stageScores.hrInterview.min} - {stageScores.hrInterview.max}/10
                                     </div>
                                 </div>
@@ -628,20 +625,20 @@ export default function FinalRanking({ applications, onBack }) {
                         </div>
 
                         {/* Filters and Controls */}
-                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-blue-200 p-6 mb-8">
                             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-slate-800">Final Candidates Ranking</h2>
-                                    <p className="text-slate-600">Ranked by overall performance across all stages</p>
+                                    <h2 className="text-2xl font-bold text-base-900">Final Candidates Ranking</h2>
+                                    <p className="text-base-600">Ranked by overall performance across all stages</p>
                                 </div>
 
                                 <div className="flex items-center space-x-4 mt-4 md:mt-0">
                                     <div className="flex items-center space-x-2">
-                                        <Filter className="w-5 h-5 text-slate-600" />
+                                        <Filter className="w-5 h-5 text-base-600" />
                                         <select
                                             value={selectedFilter}
                                             onChange={(e) => setSelectedFilter(e.target.value)}
-                                            className="border border-slate-300 rounded-lg px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
                                         >
                                             <option value="all">All Candidates</option>
                                             <option value="top">Top Candidates</option>
@@ -651,11 +648,11 @@ export default function FinalRanking({ applications, onBack }) {
                                     </div>
 
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-slate-600">Sort by:</span>
+                                        <span className="text-base-600">Sort by:</span>
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="border border-slate-300 rounded-lg px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                            className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
                                         >
                                             <option value="overallScore">Overall Score</option>
                                             <option value="technical">Technical Score</option>
@@ -666,7 +663,7 @@ export default function FinalRanking({ applications, onBack }) {
 
                                     <button
                                         onClick={downloadReport}
-                                        className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
+                                        className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
                                     >
                                         <Download className="w-5 h-5 mr-2" />
                                         Export Report
@@ -749,30 +746,30 @@ export default function FinalRanking({ applications, onBack }) {
 
                                         {/* Score Breakdown */}
                                         <div className="mb-6">
-                                            <h4 className="text-lg font-semibold text-slate-700 mb-4">Stage Performance Breakdown</h4>
+                                            <h4 className="text-lg font-semibold text-base-900 mb-4">Stage Performance Breakdown</h4>
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl">
-                                                    <div className="text-sm text-slate-600 mb-1">Semantic Analysis</div>
-                                                    <div className="text-2xl font-bold text-purple-600">{candidate.semantic}</div>
-                                                    <div className="text-xs text-slate-500">Match Score</div>
+                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
+                                                    <div className="text-sm text-base-600 mb-1">Semantic Analysis</div>
+                                                    <div className="text-2xl font-bold text-accent-600">{candidate.semantic}</div>
+                                                    <div className="text-xs text-base-500">Match Score</div>
                                                 </div>
 
-                                                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl">
-                                                    <div className="text-sm text-slate-600 mb-1">Technical Test</div>
-                                                    <div className="text-2xl font-bold text-orange-600">{candidate.technical}</div>
-                                                    <div className="text-xs text-slate-500">Technical Score</div>
+                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
+                                                    <div className="text-sm text-base-600 mb-1">Technical Test</div>
+                                                    <div className="text-2xl font-bold text-accent-600">{candidate.technical}</div>
+                                                    <div className="text-xs text-base-500">Technical Score</div>
                                                 </div>
 
-                                                <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl">
-                                                    <div className="text-sm text-slate-600 mb-1">Tech Interview</div>
-                                                    <div className="text-2xl font-bold text-red-600">{candidate.techInterview}</div>
-                                                    <div className="text-xs text-slate-500">/10 Rating</div>
+                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
+                                                    <div className="text-sm text-base-600 mb-1">Tech Interview</div>
+                                                    <div className="text-2xl font-bold text-accent-600">{candidate.techInterview}</div>
+                                                    <div className="text-xs text-base-500">/10 Rating</div>
                                                 </div>
 
-                                                <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-xl">
-                                                    <div className="text-sm text-slate-600 mb-1">HR Interview</div>
-                                                    <div className="text-2xl font-bold text-pink-600">{candidate.hrInterview}</div>
-                                                    <div className="text-xs text-slate-500">/10 Rating</div>
+                                                <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-xl">
+                                                    <div className="text-sm text-base-600 mb-1">HR Interview</div>
+                                                    <div className="text-2xl font-bold text-base-600">{candidate.hrInterview}</div>
+                                                    <div className="text-xs text-base-500">/10 Rating</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -780,12 +777,12 @@ export default function FinalRanking({ applications, onBack }) {
                                         {/* Skills and Notes */}
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                                             <div>
-                                                <h4 className="text-lg font-semibold text-slate-700 mb-3">Key Skills</h4>
+                                                <h4 className="text-lg font-semibold text-base-900 mb-3">Key Skills</h4>
                                                 <div className="flex flex-wrap gap-2">
                                                     {candidate.skills.map((skill, skillIndex) => (
                                                         <span
                                                             key={skillIndex}
-                                                            className="px-4 py-2 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-lg font-medium hover:from-slate-200 hover:to-slate-300 transition-all"
+                                                            className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded-lg font-medium hover:from-base-200 hover:to-accent-200 transition-all"
                                                         >
                                                             {skill}
                                                         </span>
@@ -794,13 +791,13 @@ export default function FinalRanking({ applications, onBack }) {
                                             </div>
 
                                             <div>
-                                                <h4 className="text-lg font-semibold text-slate-700 mb-3">Evaluation Notes</h4>
-                                                <p className="text-slate-600 bg-slate-50 p-4 rounded-lg">{candidate.notes}</p>
+                                                <h4 className="text-lg font-semibold text-base-900 mb-3">Evaluation Notes</h4>
+                                                <p className="text-base-600 bg-base-50 p-4 rounded-lg">{candidate.notes}</p>
                                             </div>
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex flex-wrap justify-between items-center pt-6 border-t border-slate-200">
+                                        <div className="flex flex-wrap justify-between items-center pt-6 border-t border-base-200">
                                             <div className="flex items-center space-x-4">
                                                 <button
                                                     onClick={() => {
@@ -819,21 +816,21 @@ export default function FinalRanking({ applications, onBack }) {
                                                             alert(`${candidate.name} is already in your shortlist.`);
                                                         }
                                                     }}
-                                                    className="text-yellow-600 hover:text-yellow-800 font-semibold flex items-center"
+                                                    className="text-accent-600 hover:text-accent-800 font-semibold flex items-center"
                                                 >
                                                     <Star className="w-5 h-5 mr-2" />
                                                     Add to Shortlist
                                                 </button>
                                                 <button
                                                     onClick={() => setShowCVModal(candidate)}
-                                                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                                                    className="text-base-600 hover:text-base-800 font-semibold flex items-center"
                                                 >
                                                     <FileText className="w-5 h-5 mr-2" />
                                                     View CV
                                                 </button>
                                                 <button
                                                     onClick={() => setShowFullReportModal(candidate)}
-                                                    className="text-purple-600 hover:text-purple-800 font-semibold flex items-center"
+                                                    className="text-accent-600 hover:text-accent-800 font-semibold flex items-center"
                                                 >
                                                     <FileText className="w-5 h-5 mr-2" />
                                                     Full Report
@@ -843,13 +840,13 @@ export default function FinalRanking({ applications, onBack }) {
                                             <div className="flex items-center space-x-4 mt-4 md:mt-0">
                                                 <button
                                                     onClick={() => scheduleFollowUp(candidate)}
-                                                    className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-colors"
+                                                    className="border-2 border-base-300 text-base-600 hover:bg-base-50 px-6 py-3 rounded-lg font-semibold transition-colors"
                                                 >
                                                     Schedule Follow-up
                                                 </button>
                                                 <button
                                                     onClick={() => extendOffer(candidate)}
-                                                    className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
+                                                    className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
                                                 >
                                                     <CheckCircle className="w-5 h-5 mr-2" />
                                                     Extend Offer
@@ -861,25 +858,25 @@ export default function FinalRanking({ applications, onBack }) {
                             </div>
 
                             {/* Comparative Analysis */}
-                            <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                                <h2 className="text-2xl font-bold text-slate-800 mb-6">Comparative Analysis</h2>
+                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                                <h2 className="text-2xl font-bold text-base-900 mb-6">Comparative Analysis</h2>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     {/* Score Distribution */}
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-700 mb-4">Score Distribution</h3>
+                                        <h3 className="text-lg font-semibold text-base-900 mb-4">Score Distribution</h3>
                                         <div className="space-y-4">
                                             {filteredCandidates.map((candidate) => (
                                                 <div key={candidate.id} className="flex items-center">
-                                                    <div className="w-32 text-sm font-medium text-slate-700">{candidate.name}</div>
+                                                    <div className="w-32 text-sm font-medium text-base-700">{candidate.name}</div>
                                                     <div className="flex-1 ml-4">
                                                         <div className="relative h-8 rounded-lg overflow-hidden">
-                                                            <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-200"></div>
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-base-100 to-base-200"></div>
                                                             <div
-                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-amber-600 transition-all duration-1000"
+                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-1000"
                                                                 style={{ width: `${candidate.overallScore}%` }}
                                                             />
-                                                            <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-800">
+                                                            <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-base-900">
                                                                 {candidate.overallScore}
                                                             </div>
                                                         </div>
@@ -891,34 +888,34 @@ export default function FinalRanking({ applications, onBack }) {
 
                                     {/* Recommendations Summary */}
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-700 mb-4">Recommendation Summary</h3>
+                                        <h3 className="text-lg font-semibold text-base-900 mb-4">Recommendation Summary</h3>
                                         <div className="grid grid-cols-3 gap-4">
-                                            <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-green-600 mb-2">
+                                            <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-accent-600 mb-2">
                                                     {filteredCandidates.filter(c => c.recommendation === 'Strongly Recommend').length}
                                                 </div>
-                                                <div className="text-sm text-slate-600">Strongly Recommend</div>
+                                                <div className="text-sm text-base-600">Strongly Recommend</div>
                                             </div>
-                                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-blue-600 mb-2">
+                                            <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-accent-600 mb-2">
                                                     {filteredCandidates.filter(c => c.recommendation === 'Recommend').length}
                                                 </div>
-                                                <div className="text-sm text-slate-600">Recommend</div>
+                                                <div className="text-sm text-base-600">Recommend</div>
                                             </div>
-                                            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-orange-600 mb-2">
+                                            <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-base-600 mb-2">
                                                     {filteredCandidates.filter(c => c.recommendation === 'Consider').length}
                                                 </div>
-                                                <div className="text-sm text-slate-600">Consider</div>
+                                                <div className="text-sm text-base-600">Consider</div>
                                             </div>
                                         </div>
 
-                                        <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200">
+                                        <div className="mt-6 p-4 bg-gradient-to-r from-base-50 to-accent-50 rounded-xl border border-base-200">
                                             <div className="flex items-center">
-                                                <CheckCircle className="w-6 h-6 text-yellow-600 mr-3" />
+                                                <CheckCircle className="w-6 h-6 text-accent-600 mr-3" />
                                                 <div>
-                                                    <h4 className="font-bold text-slate-800">Ready for Hiring Decision</h4>
-                                                    <p className="text-sm text-slate-600">
+                                                    <h4 className="font-bold text-base-900">Ready for Hiring Decision</h4>
+                                                    <p className="text-sm text-base-600">
                                                         All {filteredCandidates.length} candidates have completed all evaluation stages and are ready for final hiring decisions.
                                                     </p>
                                                 </div>
@@ -932,13 +929,13 @@ export default function FinalRanking({ applications, onBack }) {
                             <div className="flex justify-end space-x-4">
                                 <button
                                     onClick={() => alert('Ranking saved for later!')}
-                                    className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors"
+                                    className="px-8 py-4 border-2 border-base-300 text-base-600 rounded-xl font-semibold hover:bg-base-50 transition-colors"
                                 >
                                     Save for Later
                                 </button>
                                 <button
                                     onClick={makeFinalSelection}
-                                    className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all flex items-center"
+                                    className="px-8 py-4 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-xl font-semibold transition-all flex items-center"
                                 >
                                     <CheckCircle className="w-6 h-6 mr-3" />
                                     Make Final Selection

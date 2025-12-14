@@ -155,18 +155,18 @@ export default function Shortlist({ onBack }) {
 
         if (!foundApplication) {
             return (
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+                <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
                     <div className="max-w-7xl mx-auto">
                         <button
                             onClick={() => setSelectedApplication(null)}
-                            className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                            className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
                         >
                             <ArrowLeft className="w-5 h-5 mr-2" />
                             Back to Applications
                         </button>
-                        <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-                            <h3 className="text-xl font-semibold text-slate-700 mb-2">Application Not Found</h3>
-                            <p className="text-slate-500">The selected application could not be found.</p>
+                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-12 text-center">
+                            <h3 className="text-xl font-semibold text-base-700 mb-2">Application Not Found</h3>
+                            <p className="text-base-500">The selected application could not be found.</p>
                         </div>
                     </div>
                 </div>
@@ -174,42 +174,44 @@ export default function Shortlist({ onBack }) {
         }
 
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+            <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => setSelectedApplication(null)}
-                        className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                        className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
                     >
                         <ArrowLeft className="w-5 h-5 mr-2" />
                         Back to Applications
                     </button>
 
-                    <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8 mb-8">
                         <div className="flex items-center justify-between mb-6">
                             <div>
-                                <h1 className="text-3xl font-bold text-slate-800 mb-2">{foundApplication.jobTitle}</h1>
-                                <p className="text-slate-600">Phase: {foundPhase.phaseName} • Posted: {foundApplication.posted}</p>
+                                <h1 className="text-3xl font-bold text-base-900 mb-2">{foundApplication.jobTitle}</h1>
+                                <p className="text-base-600">Phase: {foundPhase.phaseName} • Posted: {foundApplication.posted}</p>
                             </div>
                             <div className="text-center">
-                                <div className="text-3xl font-bold text-blue-600">{foundApplication.shortlistedCVs.length}</div>
-                                <div className="text-sm text-slate-600">Shortlisted CVs</div>
+                                <div className="text-3xl font-bold text-accent-600">{foundApplication.shortlistedCVs.length}</div>
+                                <div className="text-sm text-base-600">Shortlisted CVs</div>
                             </div>
                         </div>
 
                         {foundApplication.shortlistedCVs.length === 0 ? (
                             <div className="text-center py-12">
-                                <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                                <h3 className="text-xl font-semibold text-slate-600 mb-2">No Shortlisted CVs</h3>
-                                <p className="text-slate-500">No CVs have been shortlisted for this application yet.</p>
+                                <div className="flex items-center justify-center bg-gradient-to-r from-base-100 to-accent-100 w-20 h-20 rounded-lg mx-auto mb-4">
+                                    <Users className="w-10 h-10 text-base-400" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-base-700 mb-2">No Shortlisted CVs</h3>
+                                <p className="text-base-500">No CVs have been shortlisted for this application yet.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {foundApplication.shortlistedCVs.map((cv) => (
-                                    <div key={cv.id} className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
+                                    <div key={cv.id} className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6 border border-base-200">
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
-                                                <h3 className="text-xl font-bold text-slate-800 mb-1">{cv.name}</h3>
-                                                <p className="text-sm text-slate-600">{cv.email} • {cv.phone}</p>
+                                                <h3 className="text-xl font-bold text-base-900 mb-1">{cv.name}</h3>
+                                                <p className="text-sm text-base-600">{cv.email} • {cv.phone}</p>
                                             </div>
                                             <div className="text-right">
                                                 <div className={`text-2xl font-bold ${getScoreColor(cv.score)}`}>{cv.score}%</div>
@@ -222,7 +224,7 @@ export default function Shortlist({ onBack }) {
                                         <div className="mb-4">
                                             <div className="flex flex-wrap gap-2">
                                                 {(cv.skills || []).map((skill, index) => (
-                                                    <span key={index} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                                    <span key={index} className="text-xs bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 px-2 py-1 rounded-full">
                                                         {skill}
                                                     </span>
                                                 ))}
@@ -230,39 +232,39 @@ export default function Shortlist({ onBack }) {
                                         </div>
 
                                         <div className="mb-4">
-                                            <p className="text-sm text-slate-600 mb-2">
+                                            <p className="text-sm text-base-600 mb-2">
                                                 <span className="font-semibold">Experience:</span> {cv.experience} •
                                                 <span className="font-semibold"> Education:</span> {cv.education}
                                             </p>
-                                            <p className="text-sm text-slate-600 line-clamp-2">{cv.summary}</p>
+                                            <p className="text-sm text-base-600 line-clamp-2">{cv.summary}</p>
                                         </div>
 
                                         <div className="mb-4">
-                                            <p className="text-xs text-slate-500 mb-1">
+                                            <p className="text-xs text-base-500 mb-1">
                                                 Shortlisted from: <span className="font-semibold">{cv.shortlistedFrom}</span>
                                             </p>
-                                            <p className="text-xs text-slate-500">
+                                            <p className="text-xs text-base-500">
                                                 Shortlisted on: {cv.shortlistedDate}
                                             </p>
                                         </div>
 
-                                        <div className="flex justify-between items-center pt-4 border-t border-slate-200">
+                                        <div className="flex justify-between items-center pt-4 border-t border-base-200">
                                             <div className="flex space-x-2">
                                                 <button
                                                     onClick={() => setShowCVModal(cv)}
-                                                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center text-sm"
+                                                    className="text-accent-600 hover:text-accent-800 font-semibold flex items-center text-sm"
                                                 >
                                                     <Eye className="w-4 h-4 mr-1" />
                                                     View CV
                                                 </button>
-                                                <button onClick={() => downloadCV(cv)} className="text-green-600 hover:text-green-800 font-semibold flex items-center text-sm">
+                                                <button onClick={() => downloadCV(cv)} className="text-base-600 hover:text-base-800 font-semibold flex items-center text-sm">
                                                     <Download className="w-4 h-4 mr-1" />
                                                     Download
                                                 </button>
                                             </div>
                                             <button
                                                 onClick={() => removeFromShortlist(foundApplication.id, cv.id)}
-                                                className="text-red-600 hover:text-red-800 font-semibold flex items-center text-sm"
+                                                className="text-base-600 hover:text-base-800 font-semibold flex items-center text-sm"
                                             >
                                                 <X className="w-4 h-4 mr-1" />
                                                 Remove
@@ -281,10 +283,10 @@ export default function Shortlist({ onBack }) {
                         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-8">
                                 <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold text-slate-800">{showCVModal.name}'s CV</h2>
+                                    <h2 className="text-2xl font-bold text-base-900">{showCVModal.name}'s CV</h2>
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="text-slate-500 hover:text-slate-700"
+                                        className="text-base-500 hover:text-base-700"
                                     >
                                         <X className="w-6 h-6" />
                                     </button>
@@ -292,26 +294,26 @@ export default function Shortlist({ onBack }) {
 
                                 <div className="space-y-6">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Contact Information</h3>
-                                        <div className="bg-slate-50 p-4 rounded-lg">
-                                            <p className="text-slate-600"><strong>Email:</strong> {showCVModal.email}</p>
-                                            <p className="text-slate-600"><strong>Phone:</strong> {showCVModal.phone}</p>
-                                            <p className="text-slate-600"><strong>Experience:</strong> {showCVModal.experience}</p>
-                                            <p className="text-slate-600"><strong>Education:</strong> {showCVModal.education}</p>
+                                        <h3 className="text-lg font-semibold text-base-900 mb-2">Contact Information</h3>
+                                        <div className="bg-base-50 p-4 rounded-lg">
+                                            <p className="text-base-600"><strong>Email:</strong> {showCVModal.email}</p>
+                                            <p className="text-base-600"><strong>Phone:</strong> {showCVModal.phone}</p>
+                                            <p className="text-base-600"><strong>Experience:</strong> {showCVModal.experience}</p>
+                                            <p className="text-base-600"><strong>Education:</strong> {showCVModal.education}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Professional Summary</h3>
-                                        <div className="bg-slate-50 p-4 rounded-lg">
-                                            <p className="text-slate-600">{showCVModal.summary}</p>
+                                        <h3 className="text-lg font-semibold text-base-900 mb-2">Professional Summary</h3>
+                                        <div className="bg-base-50 p-4 rounded-lg">
+                                            <p className="text-base-600">{showCVModal.summary}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Key Projects</h3>
-                                        <div className="bg-slate-50 p-4 rounded-lg">
-                                            <ul className="list-disc list-inside text-slate-600 space-y-2">
+                                        <h3 className="text-lg font-semibold text-base-900 mb-2">Key Projects</h3>
+                                        <div className="bg-base-50 p-4 rounded-lg">
+                                            <ul className="list-disc list-inside text-base-600 space-y-2">
                                                 {(showCVModal.projects || []).map((project, index) => (
                                                     <li key={index}>{project}</li>
                                                 ))}
@@ -320,10 +322,10 @@ export default function Shortlist({ onBack }) {
                                     </div>
 
                                     <div>
-                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Skills</h3>
+                                        <h3 className="text-lg font-semibold text-base-900 mb-2">Skills</h3>
                                         <div className="flex flex-wrap gap-2">
                                             {(showCVModal.skills || []).map((skill, index) => (
-                                                <span key={index} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                                <span key={index} className="bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 px-3 py-1 rounded-full text-sm">
                                                     {skill}
                                                 </span>
                                             ))}
@@ -339,41 +341,41 @@ export default function Shortlist({ onBack }) {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
             <div className="max-w-7xl mx-auto">
                 <button
                     onClick={onBack}
-                    className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                    className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
                 >
                     <ArrowLeft className="w-5 h-5 mr-2" />
                     Back to Dashboard
                 </button>
 
                 <div className="text-center mb-8">
-                    <div className="flex items-center justify-center mb-4">
-                        <Star className="w-16 h-16 text-yellow-500" />
+                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-20 h-20 rounded-lg mx-auto mb-4">
+                        <Star className="w-10 h-10 text-white" />
                     </div>
-                    <h1 className="text-4xl font-bold text-slate-800 mb-4">Shortlisted Candidates</h1>
-                    <p className="text-xl text-slate-600">Manage your shortlisted CVs across all applications</p>
+                    <h1 className="text-4xl font-bold text-base-900 mb-4">Shortlisted Candidates</h1>
+                    <p className="text-xl text-base-600">Manage your shortlisted CVs across all applications</p>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div className="bg-blue-50 rounded-xl p-4">
-                            <div className="text-3xl font-bold text-blue-600">{shortlistedApplications.length}</div>
-                            <div className="text-sm text-slate-600">Phases</div>
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-accent-600">{shortlistedApplications.length}</div>
+                            <div className="text-sm text-base-600">Phases</div>
                         </div>
-                        <div className="bg-green-50 rounded-xl p-4">
-                            <div className="text-3xl font-bold text-green-600">{totalShortlisted}</div>
-                            <div className="text-sm text-slate-600">Total Shortlisted CVs</div>
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-accent-600">{totalShortlisted}</div>
+                            <div className="text-sm text-base-600">Total Shortlisted CVs</div>
                         </div>
-                        <div className="bg-purple-50 rounded-xl p-4">
-                            <div className="text-3xl font-bold text-purple-600">
+                        <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-base-600">
                                 {shortlistedApplications.reduce((acc, phase) =>
                                     acc + phase.applications.filter(app => app.shortlistedCVs.length > 0).length, 0
                                 )}
                             </div>
-                            <div className="text-sm text-slate-600">Active Applications</div>
+                            <div className="text-sm text-base-600">Active Applications</div>
                         </div>
                     </div>
                 </div>
