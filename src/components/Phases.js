@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
 
 export default function Phases({ onNavigateToPhase }) {
@@ -26,26 +26,128 @@ export default function Phases({ onNavigateToPhase }) {
                     <p className="text-xl text-base-600">Manage your hiring process with AI-powered tools</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {menuItems.map((item) => (
-                        <button
+                        <PhaseCard
                             key={item.id}
-                            onClick={() => onNavigateToPhase(item.id)}
-                            className="group bg-white rounded-2xl shadow-soft hover:shadow-card-hover transition-all duration-300 p-8 text-left border border-base-200 hover:border-accent-300 transform hover:-translate-y-4"
-                        >
-                            <div className={`${item.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                                <item.icon className="w-8 h-8 text-white" />
-                            </div>
-                            <h3 className="text-xl font-bold text-base-900 mb-2">{item.label}</h3>
-                            <p className="text-sm text-base-600 mb-3">{item.description}</p>
-                            <div className="flex items-center text-accent-600 font-semibold">
-                                <span className="mr-2">Open</span>
-                                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                            </div>
-                        </button>
+                            item={item}
+                            onNavigateToPhase={onNavigateToPhase}
+                        />
                     ))}
                 </div>
             </div>
         </div>
+    );
+}
+
+function PhaseCard({ item, onNavigateToPhase }) {
+    const [ripples, setRipples] = useState([]);
+    const cardRef = useRef(null);
+
+    const handleMouseEnter = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // Calculate the maximum distance from click point to corners
+        const corners = [
+            {x: 0, y: 0},
+            {x: rect.width, y: 0},
+            {x: 0, y: rect.height},
+            {x: rect.width, y: rect.height}
+        ];
+        
+        const distances = corners.map(corner => 
+            Math.sqrt(Math.pow(corner.x - x, 2) + Math.pow(corner.y - y, 2))
+        );
+        
+        const maxDistance = Math.max(...distances);
+        
+        // Create multiple ripples with staggered timing
+        const newRipples = [];
+        for (let i = 0; i < 3; i++) {
+            newRipples.push({
+                x,
+                y,
+                id: Date.now() + i,
+                size: maxDistance * 2,
+                delay: i * 100 // Stagger each ripple
+            });
+        }
+        
+        setRipples(newRipples);
+    };
+
+    const handleMouseLeave = () => {
+        // Clear all ripples when mouse leaves
+        setRipples([]);
+    };
+
+    return (
+        <button
+            ref={cardRef}
+            onClick={() => onNavigateToPhase(item.id)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left border border-base-100 hover:border-accent-100 transform hover:-translate-y-1 overflow-hidden"
+        >
+            {/* Ripple container */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {ripples.map((ripple) => (
+                    <div
+                        key={ripple.id}
+                        className="absolute rounded-full bg-gradient-to-r from-blue-100/40 to-cyan-100/40"
+                        style={{
+                            left: ripple.x - ripple.size / 2,
+                            top: ripple.y - ripple.size / 2,
+                            width: ripple.size,
+                            height: ripple.size,
+                            opacity: 0,
+                            animation: `rippleExpand 700ms ease-out ${ripple.delay}ms forwards`,
+                            transformOrigin: 'center'
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Main content */}
+            <div className="relative z-10">
+                <div className={`${item.color} w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-md`}>
+                    <item.icon className="w-6 h-6 text-white transition-transform duration-500 group-hover:rotate-180" />
+                </div>
+
+                <h3 className="text-xl font-bold text-base-900 mb-2 group-hover:text-accent-600 transition-colors duration-300">
+                    {item.label}
+                </h3>
+
+                <p className="text-base-500 text-sm mb-4 min-h-[40px]">
+                    {item.description}
+                </p>
+
+                <div className="flex items-center text-accent-500 font-medium text-sm">
+                    <span className="mr-2 group-hover:mr-3 transition-all duration-300">Open Phase</span>
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+
+                {/* Animated progress bar */}
+                <div className="mt-4 h-1.5 w-full rounded-full bg-base-100 overflow-hidden">
+                    <div className="h-full w-0 group-hover:w-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-500 ease-out"></div>
+                </div>
+            </div>
+
+            {/* Add CSS animation */}
+            <style jsx>{`
+                @keyframes rippleExpand {
+                    0% {
+                        transform: scale(0);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: scale(1);
+                        opacity: 0;
+                    }
+                }
+            `}</style>
+        </button>
     );
 }

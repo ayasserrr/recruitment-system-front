@@ -418,5 +418,9 @@ a:hover {
     --color-neutral-200: #000000;
     --color-neutral-900: #000000;
     --color-white: #ffffff;
+    --color-base-100: #000000;
+    --color-base-700: #ffffff;
+    --color-accent-100: #000000;
+    --color-accent-700: #ffffff;
   }
 }
