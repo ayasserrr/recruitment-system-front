@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List } from 'lucide-react';
+import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
 import JobPost from './components/JobPost';
@@ -8,6 +8,7 @@ import TechnicalAssessment from './components/TechnicalAssessment';
 import TechnicalInterview from './components/TechnicalInterview';
 import HRInterview from './components/HRInterview';
 import FinalRanking from './components/FinalRanking';
+import Analytics from './components/Analytics';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -97,6 +98,7 @@ export default function RecruitmentSystem() {
         { id: 'hr-interview', icon: Users, label: 'HR Interview', color: 'bg-pink-500', description: 'Cultural fit assessment' },
         { id: 'final-ranking', icon: Award, label: 'Final Ranking', color: 'bg-yellow-500', description: 'Candidate ranking' },
         { id: 'applications', icon: List, label: 'Applications', color: 'bg-indigo-500', description: 'Application tracking' },
+        { id: 'analytics', icon: BarChart3, label: 'Analytics', color: 'bg-cyan-500', description: 'Performance insights' },
     ];
 
     const renderHome = () => (
@@ -221,6 +223,8 @@ export default function RecruitmentSystem() {
                 />
             ) : currentPage === 'applications' ? (
                 <Applications applications={applications} onBackToDashboard={() => setCurrentPage('home')} />
+            ) : currentPage === 'analytics' ? (
+                <Analytics onBack={() => setCurrentPage('home')} />
             ) : (
                 <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
                     <button
