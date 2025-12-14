@@ -1,11 +1,13 @@
 {
   "name": "recruitment-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.4.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

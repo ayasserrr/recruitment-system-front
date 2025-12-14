@@ -1,0 +1,469 @@
+import React from 'react';
+import { Briefcase, MapPin, Target, GraduationCap, DollarSign, Calendar, Mail } from 'lucide-react';
+
+export default function JobDetailsForm({ formData, updateFormData }) {
+    const seniorityLevels = [
+        'Intern',
+        'Entry Level',
+        'Junior',
+        'Mid Level',
+        'Senior',
+        'Lead',
+        'Manager',
+        'Director',
+        'VP',
+        'Executive'
+    ];
+
+    const employmentTypes = [
+        'Full-time',
+        'Part-time',
+        'Contract',
+        'Temporary',
+        'Internship',
+        'Volunteer'
+    ];
+
+    const educationLevels = [
+        'High School',
+        'Associate Degree',
+        "Bachelor's Degree",
+        "Master's Degree",
+        'PhD',
+        'No Formal Education Required'
+    ];
+
+    const currencies = ['USD ($)', 'EUR (€)', 'GBP (£)', 'CAD (C$)', 'AUD (A$)', 'EGP (E£)'];
+
+    const handleInputChange = (field, value) => {
+        updateFormData({ [field]: value });
+    };
+
+    const handleRemoteToggle = (checked) => {
+        updateFormData({
+            remoteAvailable: checked,
+            ...(checked ? { city: '', country: '' } : {}),
+        });
+    };
+
+    const handleArrayInput = (field, value) => {
+        const items = value
+            .split(',')
+            .map((item) => item.trim())
+            .filter((item) => item);
+        updateFormData({ [field]: items });
+    };
+
+    const handleResponsibilitiesChange = (value) => {
+        const responsibilities = value.split('\n').filter((line) => line.trim());
+        updateFormData({ responsibilities });
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Basic Information Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                        <Briefcase className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Basic Information</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Job Title *
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.jobTitle || ''}
+                            onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                            placeholder="e.g., Senior Frontend Developer"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Department
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.department || ''}
+                            onChange={(e) => handleInputChange('department', e.target.value)}
+                            placeholder="e.g., Engineering"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Seniority Level *
+                        </label>
+                        <select
+                            value={formData.seniorityLevel || ''}
+                            onChange={(e) => handleInputChange('seniorityLevel', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        >
+                            <option value="">Select Level</option>
+                            {seniorityLevels.map((level) => (
+                                <option key={level} value={level}>
+                                    {level}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Employment Type *
+                        </label>
+                        <select
+                            value={formData.employmentType || ''}
+                            onChange={(e) => handleInputChange('employmentType', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        >
+                            <option value="">Select Type</option>
+                            {employmentTypes.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* Location Section */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                    <div className="flex items-center mb-4">
+                        <MapPin className="w-5 h-5 text-gray-600 mr-2" />
+                        <h4 className="text-lg font-semibold text-gray-800">Location</h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                City {formData.remoteAvailable ? '' : '*'}
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.city || ''}
+                                onChange={(e) => handleInputChange('city', e.target.value)}
+                                placeholder="e.g., Cairo"
+                                disabled={!!formData.remoteAvailable}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                required={!formData.remoteAvailable}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Country {formData.remoteAvailable ? '' : '*'}
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.country || ''}
+                                onChange={(e) => handleInputChange('country', e.target.value)}
+                                placeholder="e.g., Egypt"
+                                disabled={!!formData.remoteAvailable}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                required={!formData.remoteAvailable}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center">
+                        <input
+                            type="checkbox"
+                            id="remotePosition"
+                            checked={formData.remoteAvailable || false}
+                            onChange={(e) => handleRemoteToggle(e.target.checked)}
+                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                        />
+                        <label htmlFor="remotePosition" className="ml-2 text-sm text-gray-700">
+                            Remote Position Available
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {/* Skills & Requirements Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                        <Target className="w-5 h-5 text-green-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Skills & Requirements</h3>
+                </div>
+
+                <div className="space-y-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Required Skills *
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.requiredSkills?.join(', ') || ''}
+                            onChange={(e) => handleArrayInput('requiredSkills', e.target.value)}
+                            placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma separated)"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        />
+                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Preferred Skills
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.preferredSkills?.join(', ') || ''}
+                            onChange={(e) => handleArrayInput('preferredSkills', e.target.value)}
+                            placeholder="e.g., GraphQL, Docker, AWS"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Experience & Education Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                        <GraduationCap className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Experience & Education</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Minimum Years of Experience *
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="50"
+                            value={formData.minExperience || 0}
+                            onChange={(e) =>
+                                handleInputChange('minExperience', parseInt(e.target.value))
+                            }
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Maximum Years of Experience *
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="50"
+                            value={formData.maxExperience || 5}
+                            onChange={(e) =>
+                                handleInputChange('maxExperience', parseInt(e.target.value))
+                            }
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Minimum Education Level *
+                        </label>
+                        <select
+                            value={formData.minEducation || ''}
+                            onChange={(e) => handleInputChange('minEducation', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        >
+                            <option value="">Select education level</option>
+                            {educationLevels.map((level) => (
+                                <option key={level} value={level}>
+                                    {level}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Field of Study (Preferred)
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.fieldOfStudy || ''}
+                            onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
+                            placeholder="e.g., Computer Science"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Job Description Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                        <Briefcase className="w-5 h-5 text-yellow-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Job Description</h3>
+                </div>
+
+                <div className="space-y-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Key Responsibilities *
+                        </label>
+                        <textarea
+                            value={formData.responsibilities?.join('\n') || ''}
+                            onChange={(e) => handleResponsibilitiesChange(e.target.value)}
+                            placeholder={`Enter key responsibilities (one per line)
+- Design and implement features
+- Collaborate with team members
+- Write clean, maintainable code`}
+                            rows="4"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-mono text-sm"
+                            required
+                        />
+                        <p className="mt-1 text-sm text-gray-500">Enter each responsibility on a new line</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Full Job Description *
+                        </label>
+                        <textarea
+                            value={formData.fullDescription || ''}
+                            onChange={(e) => handleInputChange('fullDescription', e.target.value)}
+                            placeholder="Detailed description of the role, team, company culture, etc."
+                            rows="6"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Compensation & Additional Info Section */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                        <DollarSign className="w-5 h-5 text-red-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Compensation & Additional Info</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Currency
+                        </label>
+                        <select
+                            value={formData.currency || 'USD ($)'}
+                            onChange={(e) => handleInputChange('currency', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        >
+                            {currencies.map((currency) => (
+                                <option key={currency} value={currency}>
+                                    {currency}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Minimum Salary (Monthly)
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            value={formData.minSalary || 0}
+                            onChange={(e) => handleInputChange('minSalary', parseInt(e.target.value))}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Maximum Salary (Monthly)
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            value={formData.maxSalary || 5000}
+                            onChange={(e) => handleInputChange('maxSalary', parseInt(e.target.value))}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Languages Required
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.languages?.join(', ') || ''}
+                            onChange={(e) => handleArrayInput('languages', e.target.value)}
+                            placeholder="e.g., English (Fluent), Arabic"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Application Deadline
+                        </label>
+                        <div className="flex items-center">
+                            <Calendar className="w-5 h-5 text-gray-400 mr-2" />
+                            <input
+                                type="date"
+                                value={formData.deadline || ''}
+                                onChange={(e) => handleInputChange('deadline', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Contact Email *
+                        </label>
+                        <div className="flex items-center">
+                            <Mail className="w-5 h-5 text-gray-400 mr-2" />
+                            <input
+                                type="email"
+                                value={formData.contactEmail || 'hr@company.com'}
+                                onChange={(e) => handleInputChange('contactEmail', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Additional Notes
+                        </label>
+                        <textarea
+                            value={formData.additionalNotes || ''}
+                            onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
+                            placeholder="Any additional information about the position"
+                            rows="3"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

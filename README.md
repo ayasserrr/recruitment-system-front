@@ -1,15 +1,26 @@
 # Recruitment Management System
 
-A modern React-based recruitment management system with AI-powered features.
+Recruitment management system with a multi-step job requisition flow.
 
-## Features
-- Job Description Creation
-- Job Posting to Multiple Platforms
-- Semantic Analysis of Candidates
-- Technical Assessment Management
-- Technical & HR Interview Scheduling
-- Final Candidate Ranking
-- Application Tracking Dashboard
+## New Features in v2.0
+- Multi-Step Job Requisition Form with 6 steps
+- AI-generated assessment and interview options (UI)
+- Custom question builders for technical and HR interviews
+- Platform selection for job posting
+- Timeline estimation and review/submit screen
+- Responsive UI with Tailwind CSS
+
+## Project Structure
+
+src/components/
+├── MultiStepForm.js
+├── StepProgress.js
+├── JobDetailsForm.js
+├── PlatformsForm.js
+├── TechnicalAssessmentForm.js
+├── TechnicalInterviewForm.js
+├── HRInterviewForm.js
+└── ReviewSubmitForm.js
 
 ## Setup
 
