@@ -10,11 +10,17 @@ import HRInterview from './components/HRInterview';
 import FinalRanking from './components/FinalRanking';
 import Analytics from './components/Analytics';
 import Shortlist from './components/Shortlist';
+import Home from './components/Home';
+import Login from './components/Login';
+import Phases from './components/Phases';
+import Navbar from './components/Navbar';
 import './App.css';
 
 export default function RecruitmentSystem() {
-    const [currentPage, setCurrentPage] = useState('home');
+    const [currentPage, setCurrentPage] = useState('landing');
     const [showJobRequisition, setShowJobRequisition] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const [applications, setApplications] = useState([
         {
             id: 1,
@@ -103,6 +109,42 @@ export default function RecruitmentSystem() {
         { id: 'analytics', icon: BarChart3, label: 'Analytics', color: 'bg-cyan-500', description: 'Performance insights' },
     ];
 
+    const handleLogin = (user) => {
+        setIsLoggedIn(true);
+        setCurrentUser(user);
+        setCurrentPage('phases');
+    };
+
+    const handleGetStarted = () => {
+        setCurrentPage('login');
+    };
+
+    const handleLearnMore = () => {
+        // Scroll to features section or show more info
+        const featuresSection = document.getElementById('features');
+        if (featuresSection) {
+            featuresSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        setCurrentPage('landing');
+    };
+
+    const handleNavigateToPhase = (phaseId) => {
+        if (phaseId === 'job-requisition') {
+            setShowJobRequisition(true);
+        } else {
+            setCurrentPage(phaseId);
+        }
+    };
+
+    const handleNavigateHome = () => {
+        setCurrentPage('phases');
+    };
+
     const renderHome = () => (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
@@ -173,6 +215,38 @@ export default function RecruitmentSystem() {
 
     return (
         <div>
+            {/* Landing Page */}
+            {currentPage === 'landing' && (
+                <Home
+                    onLoginClick={() => setCurrentPage('login')}
+                    onGetStartedClick={handleGetStarted}
+                    onLearnMoreClick={handleLearnMore}
+                />
+            )}
+
+            {/* Login Page */}
+            {currentPage === 'login' && (
+                <Login
+                    onLoginSuccess={handleLogin}
+                    onBackClick={() => setCurrentPage('landing')}
+                />
+            )}
+
+            {/* Authenticated Pages with Navbar */}
+            {isLoggedIn && currentPage !== 'landing' && currentPage !== 'login' && (
+                <Navbar
+                    currentUser={currentUser}
+                    onLogout={handleLogout}
+                    onNavigateHome={handleNavigateHome}
+                />
+            )}
+
+            {/* Phases Dashboard */}
+            {currentPage === 'phases' && (
+                <Phases onNavigateToPhase={handleNavigateToPhase} />
+            )}
+
+            {/* Job Requisition Modal */}
             {showJobRequisition ? (
                 <div>
                     <button
@@ -186,7 +260,7 @@ export default function RecruitmentSystem() {
                         onSubmitRequisition={handleRequisitionSubmitted}
                         onDone={() => {
                             setShowJobRequisition(false);
-                            setCurrentPage('home');
+                            setCurrentPage('phases');
                         }}
                     />
                 </div>
@@ -196,62 +270,44 @@ export default function RecruitmentSystem() {
                 <JobPost
                     applications={applications}
                     onUpdateApplication={handleUpdateApplication}
-                    onBackToDashboard={() => setCurrentPage('home')}
+                    onBackToDashboard={() => setCurrentPage('phases')}
                     onViewCVs={() => setCurrentPage('applications')}
                     onOpenSemanticAnalysis={() => setCurrentPage('semantic-analysis')}
                 />
             ) : currentPage === 'semantic-analysis' ? (
                 <SemanticAnalysis
                     applications={applications}
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'technical-assessment' ? (
                 <TechnicalAssessment
                     applications={applications}
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'technical-interview' ? (
                 <TechnicalInterview
                     applications={applications}
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'hr-interview' ? (
                 <HRInterview
                     applications={applications}
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'final-ranking' ? (
                 <FinalRanking
                     applications={applications}
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'shortlist' ? (
                 <Shortlist
-                    onBack={() => setCurrentPage('home')}
+                    onBack={() => setCurrentPage('phases')}
                 />
             ) : currentPage === 'applications' ? (
-                <Applications applications={applications} onBackToDashboard={() => setCurrentPage('home')} />
+                <Applications applications={applications} onBackToDashboard={() => setCurrentPage('phases')} />
             ) : currentPage === 'analytics' ? (
-                <Analytics onBack={() => setCurrentPage('home')} />
-            ) : (
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
-                    <button
-                        onClick={() => setCurrentPage('home')}
-                        className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
-                    >
-                        <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
-                        Back to Dashboard
-                    </button>
-                    <div className="bg-white rounded-2xl shadow-lg p-8">
-                        <h2 className="text-3xl font-bold text-slate-800 mb-4">
-                            {menuItems.find((item) => item.id === currentPage)?.label || 'Page'}
-                        </h2>
-                        <p className="text-slate-600">
-                            This feature is under development. The Job Requisition creation is now available as a multi-step form.
-                        </p>
-                    </div>
-                </div>
-            )}
+                <Analytics onBack={() => setCurrentPage('phases')} />
+            ) : null}
         </div>
     );
 }
