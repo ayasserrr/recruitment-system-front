@@ -1,12 +1,33 @@
 import React from 'react';
-import { Globe, Calendar, Check } from 'lucide-react';
+import { Globe, Calendar, Check, Briefcase, Search, Building } from 'lucide-react';
 
 export default function PlatformsForm({ formData, updateFormData }) {
     const platforms = [
-        { id: 'linkedin', name: 'LinkedIn', icon: '💼', description: 'Professional network' },
-        { id: 'indeed', name: 'Indeed', icon: '🔍', description: 'Job search engine' },
-        { id: 'glassdoor', name: 'Glassdoor', icon: '🏢', description: 'Company reviews' },
+        {
+            id: 'linkedin',
+            name: 'LinkedIn',
+            icon: 'briefcase',
+            description: 'Professional network'
+        },
+        {
+            id: 'indeed',
+            name: 'Indeed',
+            icon: 'search',
+            description: 'Job search engine'
+        },
+        {
+            id: 'glassdoor',
+            name: 'Glassdoor',
+            icon: 'building',
+            description: 'Company reviews'
+        },
     ];
+
+    const iconComponents = {
+        briefcase: Briefcase,
+        search: Search,
+        building: Building
+    };
 
     const handlePlatformToggle = (platformId) => {
         const currentPlatforms = formData.selectedPlatforms || [];
@@ -45,7 +66,17 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                     }`}
                             >
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-2xl">{platform.icon}</span>
+                                    <div className="text-2xl">
+                                        {React.createElement(iconComponents[platform.icon], {
+                                            className: 'w-6 h-6',
+                                            style: {
+                                                background: 'linear-gradient(90deg, #667585 0%, #92BBE8 100%)',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                display: 'inline-block'
+                                            }
+                                        })}
+                                    </div>
                                     {isSelected && <Check className="w-5 h-5 text-blue-600" />}
                                 </div>
                                 <h4 className="font-semibold text-gray-800">{platform.name}</h4>

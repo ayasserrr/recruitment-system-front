@@ -21,8 +21,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             id: 1,
             title: 'Job Details',
             icon: FileText,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-100',
+            color: 'text-base-900',
+            bgColor: 'bg-base-100',
             fields: [
                 { label: 'Job Title', value: formData.jobTitle },
                 { label: 'Department', value: formData.department },
@@ -42,8 +42,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             id: 2,
             title: 'Platforms & Interview',
             icon: Globe,
-            color: 'text-green-600',
-            bgColor: 'bg-green-100',
+            color: 'text-base-900',
+            bgColor: 'bg-base-100',
             fields: [
                 { label: 'Posting Platforms', value: `${formData.selectedPlatforms?.length || 0} platform(s)` },
                 { label: 'Posting Period', value: `${formatDate(formData.postingStartDate)} to ${formatDate(formData.postingEndDate)}` },
@@ -53,8 +53,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             id: 3,
             title: 'Technical Assessment',
             icon: ClipboardList,
-            color: 'text-orange-600',
-            bgColor: 'bg-orange-100',
+            color: 'text-base-900',
+            bgColor: 'bg-base-100',
             fields: [
                 {
                     label: 'Assessment Type',
@@ -81,8 +81,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             id: 4,
             title: 'Technical Interview',
             icon: Video,
-            color: 'text-red-600',
-            bgColor: 'bg-red-100',
+            color: 'text-base-900',
+            bgColor: 'bg-base-100',
             fields: [
                 {
                     label: 'Conducted By',
@@ -100,8 +100,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             id: 5,
             title: 'HR Interview',
             icon: Users,
-            color: 'text-pink-600',
-            bgColor: 'bg-pink-100',
+            color: 'text-base-900',
+            bgColor: 'bg-base-100',
             fields: [
                 {
                     label: 'Conducted By',
@@ -156,11 +156,11 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+            <div className="bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl p-8 text-white">
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-3xl font-bold mb-2">Review & Submit Job Requisition</h2>
-                        <p className="text-blue-100">Review all details before creating the job posting</p>
+                        <p className="text-base-100">Review all details before creating the job posting</p>
                     </div>
                     <CheckCircle className="w-12 h-12" />
                 </div>
@@ -170,8 +170,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                            <FileText className="w-6 h-6 text-blue-600" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
+                            <FileText className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <p className="text-sm text-gray-600">Job Title</p>
@@ -182,8 +182,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                            <Globe className="w-6 h-6 text-green-600" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
+                            <Globe className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <p className="text-sm text-gray-600">Platforms</p>
@@ -194,8 +194,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
-                            <ClipboardList className="w-6 h-6 text-orange-600" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
+                            <ClipboardList className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <p className="text-sm text-gray-600">Assessment</p>
@@ -212,8 +212,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                            <Video className="w-6 h-6 text-red-600" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
+                            <Video className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <p className="text-sm text-gray-600">Interview Type</p>
@@ -229,10 +229,10 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     <div key={section.id} className="bg-white rounded-xl shadow-sm p-6">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
-                                <div className={`${section.bgColor} w-10 h-10 rounded-lg flex items-center justify-center mr-4`}>
-                                    <section.icon className={`w-5 h-5 ${section.color}`} />
+                                <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                                    <section.icon className="w-5 h-5 text-white" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800">{section.title}</h3>
+                                <h3 className="text-xl font-bold text-base-900">{section.title}</h3>
                             </div>
                             <button
                                 type="button"

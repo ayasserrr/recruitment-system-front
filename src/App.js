@@ -285,7 +285,7 @@ function RecruitmentSystemContent() {
                 <div>
                     <button
                         onClick={() => setCurrentPage('phases')}
-                        className="m-6 text-accent-600 hover:text-accent-700 font-semibold flex items-center"
+                        className="m-6 text-white hover:text-white font-semibold flex items-center"
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
                         Back to Dashboard

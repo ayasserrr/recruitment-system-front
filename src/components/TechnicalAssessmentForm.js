@@ -1,7 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Brain, ClipboardList, Plus, Trash2, Settings2 } from 'lucide-react';
+import { Brain, ClipboardList, Plus, Trash2, Settings2, Bot, Pencil, ClipboardCheck } from 'lucide-react';
 
 export default function TechnicalAssessmentForm({ formData, updateFormData }) {
+    const iconComponents = {
+        'bot': Bot,
+        'pencil': Pencil,
+        'clipboard-check': ClipboardCheck
+    };
+
     const [customQuestions, setCustomQuestions] = useState([]);
     const [newQuestion, setNewQuestion] = useState({
         text: '',
@@ -15,21 +21,21 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             id: 'ai-generated',
             title: 'AI-Generated Assessment',
             description: 'Let AI create a complete technical assessment based on job description',
-            icon: '🤖',
+            icon: 'bot',
             features: ['Auto-generates questions', 'Matches skill levels', 'Includes coding challenges'],
         },
         {
             id: 'custom',
             title: 'Custom Assessment',
             description: 'Create your own technical assessment questions',
-            icon: '✏️',
+            icon: 'pencil',
             features: ['Full control over questions', 'Add your own coding tests', 'Custom scoring'],
         },
         {
             id: 'template',
             title: 'Use Template',
             description: 'Select from pre-built assessment templates',
-            icon: '📋',
+            icon: 'clipboard-check',
             features: ['Pre-defined question banks', 'Industry-specific templates', 'Quick setup'],
         },
     ];
@@ -189,12 +195,16 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                 key={option.id}
                                 onClick={() => handleAssessmentSelect(option.id)}
                                 className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected
-                                    ? 'border-orange-500 bg-orange-50'
+                                    ? 'border-blue-500 bg-blue-50'
                                     : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <span className="text-3xl mr-3">{option.icon}</span>
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mb-3 shadow-md mr-4">
+                                        {React.createElement(iconComponents[option.icon], {
+                                            className: 'w-6 h-6 text-white',
+                                        })}
+                                    </div>
                                     <div>
                                         <h4 className="font-bold text-gray-800">{option.title}</h4>
                                         <p className="text-sm text-gray-600 mt-1">{option.description}</p>
@@ -204,20 +214,20 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
                                         <li key={index} className="flex items-center text-sm text-gray-600">
-                                            <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></div>
+                                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
 
                                 {isSelected && (
-                                    <div className="mt-4 p-3 bg-orange-100 rounded-lg">
-                                        <p className="text-sm text-orange-800 font-medium">
+                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                                        <p className="text-sm text-blue-800 font-medium">
                                             {option.id === 'ai-generated'
-                                                ? '✅ AI will generate assessment based on job description'
+                                                ? 'AI will generate assessment based on job description'
                                                 : option.id === 'custom'
-                                                    ? '✅ You can add custom questions below'
-                                                    : '✅ Select from available templates'}
+                                                    ? 'You can add custom questions below'
+                                                    : 'Select from available templates'}
                                         </p>
                                     </div>
                                 )}

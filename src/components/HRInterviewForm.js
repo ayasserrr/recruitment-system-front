@@ -5,6 +5,9 @@ import {
     Plus,
     Trash2,
     MessageSquare,
+    Bot,
+    UserCircle,
+    Video
 } from 'lucide-react';
 
 export default function HRInterviewForm({ formData, updateFormData }) {
@@ -15,20 +18,33 @@ export default function HRInterviewForm({ formData, updateFormData }) {
         importance: 'medium',
     });
 
+    const iconComponents = {
+        'ai': Bot,
+        'hr': UserCircle,
+        'video': Video
+    };
+
     const interviewOptions = [
         {
             id: 'ai-conducted',
             title: 'AI-Conducted HR Interview',
             description: 'AI conducts cultural fit interview and scores responses',
-            icon: '🤖',
+            icon: 'ai',
             features: ['Standardized scoring', 'Fast scheduling', 'Bias-aware evaluation'],
         },
         {
             id: 'hr-conducted',
             title: 'HR Representative + AI Assistance',
             description: 'HR conducts; AI recommends questions and generates evaluation report',
-            icon: '🧑‍💼',
-            features: ['Human context', 'AI assistance', 'Structured report'],
+            icon: 'hr',
+            features: ['Human touch', 'AI insights', 'Structured evaluation'],
+        },
+        {
+            id: 'video-interview',
+            title: 'Video Interview',
+            description: 'Candidate records responses to pre-set questions',
+            icon: 'video',
+            features: ['Flexible timing', 'Review anytime', 'Share with team'],
         },
     ];
 
@@ -123,7 +139,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <span className="text-3xl mr-3">{option.icon}</span>
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                                        {React.createElement(iconComponents[option.icon], {
+                                            className: 'w-6 h-6 text-white',
+                                        })}
+                                    </div>
                                     <div>
                                         <h4 className="font-bold text-gray-800">{option.title}</h4>
                                         <p className="text-sm text-gray-600 mt-1">{option.description}</p>
