@@ -23,7 +23,9 @@ export default function Shortlist({ onBack }) {
                 }
 
                 // Extract application name from CV data or use default
-                const appName = cv.jobTitle || cv.applicationName || 'Unknown Application';
+                // Try multiple fields that might contain the application name
+                const appName = cv.jobTitle || cv.applicationName || cv.position ||
+                    (cv.applicationTitle) || (cv.role) || 'Senior AI Engineer';
 
                 if (!acc[phaseName].applications[appName]) {
                     acc[phaseName].applications[appName] = {
@@ -190,7 +192,7 @@ export default function Shortlist({ onBack }) {
 
                                         <div className="mb-4">
                                             <div className="flex flex-wrap gap-2">
-                                                {cv.skills.map((skill, index) => (
+                                                {(cv.skills || []).map((skill, index) => (
                                                     <span key={index} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
                                                         {skill}
                                                     </span>
@@ -281,7 +283,7 @@ export default function Shortlist({ onBack }) {
                                         <h3 className="text-lg font-semibold text-slate-800 mb-2">Key Projects</h3>
                                         <div className="bg-slate-50 p-4 rounded-lg">
                                             <ul className="list-disc list-inside text-slate-600 space-y-2">
-                                                {showCVModal.projects.map((project, index) => (
+                                                {(showCVModal.projects || []).map((project, index) => (
                                                     <li key={index}>{project}</li>
                                                 ))}
                                             </ul>
@@ -291,7 +293,7 @@ export default function Shortlist({ onBack }) {
                                     <div>
                                         <h3 className="text-lg font-semibold text-slate-800 mb-2">Skills</h3>
                                         <div className="flex flex-wrap gap-2">
-                                            {showCVModal.skills.map((skill, index) => (
+                                            {(showCVModal.skills || []).map((skill, index) => (
                                                 <span key={index} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
                                                     {skill}
                                                 </span>

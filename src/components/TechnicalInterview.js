@@ -696,6 +696,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                         onClick={() => {
                                             const shortlistData = {
                                                 ...mockCV,
+                                                jobTitle: selectedApp?.jobTitle || 'Unknown Application',
                                                 shortlistedFrom: 'Technical Interview',
                                                 shortlistedDate: new Date().toISOString().slice(0, 10)
                                             };

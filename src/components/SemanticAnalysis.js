@@ -354,6 +354,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                         // Add to shortlist functionality
                                                         const shortlistData = {
                                                             ...candidate,
+                                                            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
                                                             email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`,
                                                             phone: '+1 (555) 123-4567',
                                                             experience: '5+ years',

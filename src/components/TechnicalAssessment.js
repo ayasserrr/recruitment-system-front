@@ -638,6 +638,7 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                         onClick={() => {
                                             const shortlistData = {
                                                 ...showCVModal,
+                                                jobTitle: selectedApp?.jobTitle || 'Unknown Application',
                                                 email: `${showCVModal.name.toLowerCase().replace(' ', '.')}@email.com`,
                                                 phone: '+1 (555) 123-4567',
                                                 experience: '5+ years',

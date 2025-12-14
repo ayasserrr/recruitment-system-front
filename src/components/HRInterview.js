@@ -696,6 +696,7 @@ export default function HRInterview({ applications, onBack }) {
                                         onClick={() => {
                                             const shortlistData = {
                                                 ...mockCV,
+                                                jobTitle: selectedApp?.jobTitle || 'Unknown Application',
                                                 shortlistedFrom: 'HR Interview',
                                                 shortlistedDate: new Date().toISOString().slice(0, 10)
                                             };

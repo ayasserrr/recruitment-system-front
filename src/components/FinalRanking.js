@@ -818,6 +818,7 @@ export default function FinalRanking({ applications, onBack }) {
                                                     onClick={() => {
                                                         const shortlistData = {
                                                             ...candidate,
+                                                            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
                                                             shortlistedFrom: 'Final Ranking',
                                                             shortlistedDate: new Date().toISOString().slice(0, 10)
                                                         };
