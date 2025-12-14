@@ -119,7 +119,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-gray-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-accent-50' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
@@ -186,7 +186,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                                 : current.filter((id) => id !== criteria.id);
                                             updateFormData({ hrEvaluationCriteria: updated });
                                         }}
-                                        className="w-4 h-4 text-pink-600 rounded focus:ring-pink-500"
+                                        className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                     />
                                     <span className="ml-3 text-xl mr-3">{criteria.icon}</span>
                                     <span className="text-gray-700">{criteria.label}</span>
@@ -202,7 +202,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             onChange={(e) => updateFormData({ cultureValues: e.target.value })}
                             placeholder="Enter your company's core values (e.g., Innovation, Collaboration, Customer Focus)..."
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                         <p className="mt-1 text-sm text-gray-500">AI will evaluate candidates against these values</p>
                     </div>
@@ -223,7 +223,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             </div>
                         </div>
                         <div className="text-sm text-gray-600">
-                            Questions: <span className="font-bold text-pink-600">{customQuestions.length}</span>
+                            Questions: <span className="font-bold text-accent-600">{customQuestions.length}</span>
                         </div>
                     </div>
 
@@ -238,7 +238,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                     onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
                                     placeholder="Enter HR interview question..."
                                     rows="3"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 />
                             </div>
 
@@ -248,7 +248,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                     <select
                                         value={newQuestion.category}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                     >
                                         {questionCategories.map((cat) => (
                                             <option key={cat.id} value={cat.id}>
@@ -263,7 +263,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                     <select
                                         value={newQuestion.importance}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, importance: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                     >
                                         <option value="low">Low</option>
                                         <option value="medium">Medium</option>
@@ -300,7 +300,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                             <button
                                                 type="button"
                                                 onClick={() => addSample(question)}
-                                                className="text-sm text-pink-600 hover:text-pink-700 font-medium"
+                                                className="text-sm text-accent-600 hover:text-accent-700 font-medium"
                                             >
                                                 + Add to Interview
                                             </button>
@@ -350,7 +350,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <select
                                 value={formData.hrInterviewDuration || '45'}
                                 onChange={(e) => updateFormData({ hrInterviewDuration: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             >
                                 <option value="30">30 minutes</option>
                                 <option value="45">45 minutes</option>
@@ -363,7 +363,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <select
                                 value={formData.hrInterviewFormat || 'conversational'}
                                 onChange={(e) => updateFormData({ hrInterviewFormat: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             >
                                 <option value="conversational">Conversational</option>
                                 <option value="structured">Structured Q&A</option>
@@ -379,7 +379,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 min="1"
                                 value={formData.hrInterviewCandidatesToAdvance || 3}
                                 onChange={(e) => updateFormData({ hrInterviewCandidatesToAdvance: parseInt(e.target.value) })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             />
                         </div>
 
@@ -388,7 +388,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <select
                                 value={formData.hrDecisionTimeline || '48'}
                                 onChange={(e) => updateFormData({ hrDecisionTimeline: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             >
                                 <option value="24">24 hours</option>
                                 <option value="48">48 hours</option>
@@ -405,7 +405,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             onChange={(e) => updateFormData({ hrInterviewerNotes: e.target.value })}
                             placeholder="Specific instructions, red flags to watch for, culture points to emphasize..."
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
                 </div>

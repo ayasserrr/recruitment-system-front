@@ -23,15 +23,15 @@ export default function StepProgress({ currentStep, steps }) {
                                 className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-300 ${isCompleted
                                     ? 'bg-gradient-to-r from-base-500 to-accent-500 border-base-500'
                                     : isActive
-                                        ? 'bg-white border-accent-500'
-                                        : 'bg-white border-base-300'
+                                        ? 'bg-gradient-to-r from-base-500 to-accent-500 border-accent-500'
+                                        : 'bg-gradient-to-r from-base-500 to-accent-500 border-base-300'
                                     }`}
                             >
                                 {isCompleted ? (
                                     <CheckCircle className="w-6 h-6 text-white" />
                                 ) : (
                                     <span
-                                        className={`text-lg font-bold ${isActive ? 'text-accent-600' : 'text-base-400'
+                                        className={`text-lg font-bold ${isActive ? 'text-white' : 'text-white'
                                             }`}
                                     >
                                         {stepNumber}

@@ -190,7 +190,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                 onClick={() => handleAssessmentSelect(option.id)}
                                 className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected
                                     ? 'border-orange-500 bg-orange-50'
-                                    : 'border-gray-200 hover:border-gray-300'
+                                    : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
@@ -271,7 +271,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                     onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
                                     placeholder="Enter your question here..."
                                     rows="3"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 />
                             </div>
 
@@ -281,7 +281,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                     <select
                                         value={newQuestion.type}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, type: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                     >
                                         {questionTypes.map((type) => (
                                             <option key={type.id} value={type.id}>
@@ -302,12 +302,12 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                                         value={choice}
                                                         onChange={(e) => updateChoice(idx, e.target.value)}
                                                         placeholder={`Choice ${idx + 1}`}
-                                                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                                     />
                                                     <button
                                                         type="button"
                                                         onClick={() => removeChoiceField(idx)}
-                                                        className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                                                        className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-accent-50"
                                                     >
                                                         Remove
                                                     </button>
@@ -330,7 +330,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                     <select
                                         value={newQuestion.difficulty}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, difficulty: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                     >
                                         {difficultyLevels.map((level) => (
                                             <option key={level.id} value={level.id}>
@@ -420,7 +420,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                                             <button
                                                 type="button"
                                                 onClick={() => removeQuestion(question.id)}
-                                                className="ml-4 text-red-600 hover:text-red-700"
+                                                className="ml-4 text-accent-600 hover:text-accent-700"
                                             >
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
@@ -447,7 +447,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                         value={formData.templateTask || ''}
                         onChange={(e) => updateFormData({ templateTask: e.target.value })}
                         rows="6"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                     />
                 </div>
             )}
@@ -470,7 +470,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                             max="240"
                             value={formData.assessmentTimeLimit || 60}
                             onChange={(e) => updateFormData({ assessmentTimeLimit: parseInt(e.target.value) })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -481,7 +481,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                             min="1"
                             value={formData.assessmentCandidatesToAdvance || 10}
                             onChange={(e) => updateFormData({ assessmentCandidatesToAdvance: parseInt(e.target.value) })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -490,7 +490,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                         <select
                             value={formData.maxAttempts || '1'}
                             onChange={(e) => updateFormData({ maxAttempts: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="1">1 attempt</option>
                             <option value="2">2 attempts</option>
@@ -504,7 +504,7 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                         <select
                             value={formData.assessmentLanguage || 'English'}
                             onChange={(e) => updateFormData({ assessmentLanguage: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="English">English</option>
                         </select>

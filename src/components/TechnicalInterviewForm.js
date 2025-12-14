@@ -101,7 +101,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-accent-50' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
@@ -155,7 +155,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                     type="checkbox"
                                     checked={formData.aiEvaluationCriteria?.includes(criteria.id) || false}
                                     onChange={(e) => toggleCriteria(criteria.id, e.target.checked)}
-                                    className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
+                                    className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                 />
                                 <span className="ml-3 text-xl mr-3">{criteria.icon}</span>
                                 <span className="text-gray-700">{criteria.label}</span>
@@ -170,7 +170,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         <select
                             value={formData.technicalInterviewDuration || '45'}
                             onChange={(e) => updateFormData({ technicalInterviewDuration: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="30">30 minutes</option>
                             <option value="45">45 minutes</option>
@@ -185,7 +185,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         <select
                             value={formData.aiFeedbackLevel || 'detailed'}
                             onChange={(e) => updateFormData({ aiFeedbackLevel: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="summary">Summary</option>
                             <option value="detailed">Detailed</option>
@@ -198,7 +198,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         <select
                             value={formData.numberOfInterviewers || '1'}
                             onChange={(e) => updateFormData({ numberOfInterviewers: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -212,7 +212,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         <select
                             value={formData.scoringSystem || '1-5'}
                             onChange={(e) => updateFormData({ scoringSystem: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             <option value="1-5">1-5 Scale</option>
                             <option value="1-10">1-10 Scale</option>
@@ -227,7 +227,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             min="1"
                             value={formData.technicalInterviewCandidatesToAdvance || 5}
                             onChange={(e) => updateFormData({ technicalInterviewCandidatesToAdvance: parseInt(e.target.value) })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
                 </div>
@@ -239,7 +239,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         onChange={(e) => updateFormData({ interviewerNotes: e.target.value })}
                         placeholder="Specific instructions, focus areas, red flags..."
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                     />
                 </div>
             </div>
@@ -259,7 +259,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                         </div>
                     </div>
                     <div className="text-sm text-gray-600">
-                        Questions: <span className="font-bold text-red-600">{customQuestions.length}</span>
+                        Questions: <span className="font-bold text-accent-600">{customQuestions.length}</span>
                     </div>
                 </div>
 
@@ -275,7 +275,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                 onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
                                 placeholder="Enter technical interview question..."
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             />
                         </div>
 
@@ -285,7 +285,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                 <select
                                     value={newQuestion.category}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 >
                                     {questionCategories.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
@@ -300,7 +300,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                 <select
                                     value={newQuestion.difficulty}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, difficulty: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 >
                                     <option value="easy">Easy</option>
                                     <option value="medium">Medium</option>
@@ -339,7 +339,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                         <button
                                             type="button"
                                             onClick={() => removeQuestion(question.id)}
-                                            className="ml-4 text-red-600 hover:text-red-700"
+                                            className="ml-4 text-accent-600 hover:text-accent-700"
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>

@@ -80,7 +80,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.jobTitle || ''}
                             onChange={(e) => handleInputChange('jobTitle', e.target.value)}
                             placeholder="e.g., Senior Frontend Developer"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
                     </div>
@@ -94,7 +94,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.department || ''}
                             onChange={(e) => handleInputChange('department', e.target.value)}
                             placeholder="e.g., Engineering"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -105,7 +105,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <select
                             value={formData.seniorityLevel || ''}
                             onChange={(e) => handleInputChange('seniorityLevel', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         >
                             <option value="">Select Level</option>
@@ -124,7 +124,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <select
                             value={formData.employmentType || ''}
                             onChange={(e) => handleInputChange('employmentType', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         >
                             <option value="">Select Type</option>
@@ -157,7 +157,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 onChange={(e) => handleInputChange('city', e.target.value)}
                                 placeholder="e.g., Cairo"
                                 disabled={!!formData.remoteAvailable}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
                                 required={!formData.remoteAvailable}
                             />
                         </div>
@@ -172,7 +172,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 onChange={(e) => handleInputChange('country', e.target.value)}
                                 placeholder="e.g., Egypt"
                                 disabled={!!formData.remoteAvailable}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
                                 required={!formData.remoteAvailable}
                             />
                         </div>
@@ -184,7 +184,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             id="remotePosition"
                             checked={formData.remoteAvailable || false}
                             onChange={(e) => handleRemoteToggle(e.target.checked)}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                            className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                         />
                         <label htmlFor="remotePosition" className="ml-2 text-sm text-gray-700">
                             Remote Position Available
@@ -212,7 +212,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.requiredSkills?.join(', ') || ''}
                             onChange={(e) => handleArrayInput('requiredSkills', e.target.value)}
                             placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma separated)"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
                         <p className="mt-1 text-sm text-gray-500">Separate skills with commas</p>
@@ -227,7 +227,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.preferredSkills?.join(', ') || ''}
                             onChange={(e) => handleArrayInput('preferredSkills', e.target.value)}
                             placeholder="e.g., GraphQL, Docker, AWS"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
                 </div>
@@ -255,7 +255,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) =>
                                 handleInputChange('minExperience', parseInt(e.target.value))
                             }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
                     </div>
@@ -272,7 +272,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) =>
                                 handleInputChange('maxExperience', parseInt(e.target.value))
                             }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
                     </div>
@@ -284,7 +284,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <select
                             value={formData.minEducation || ''}
                             onChange={(e) => handleInputChange('minEducation', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         >
                             <option value="">Select education level</option>
@@ -305,7 +305,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.fieldOfStudy || ''}
                             onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
                             placeholder="e.g., Computer Science"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
                 </div>
@@ -333,7 +333,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
 - Collaborate with team members
 - Write clean, maintainable code`}
                             rows="4"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-mono text-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition font-mono text-sm"
                             required
                         />
                         <p className="mt-1 text-sm text-gray-500">Enter each responsibility on a new line</p>
@@ -348,7 +348,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleInputChange('fullDescription', e.target.value)}
                             placeholder="Detailed description of the role, team, company culture, etc."
                             rows="6"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             required
                         />
                     </div>
@@ -372,7 +372,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                         <select
                             value={formData.currency || 'USD ($)'}
                             onChange={(e) => handleInputChange('currency', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         >
                             {currencies.map((currency) => (
                                 <option key={currency} value={currency}>
@@ -391,7 +391,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             min="0"
                             value={formData.minSalary || 0}
                             onChange={(e) => handleInputChange('minSalary', parseInt(e.target.value))}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -404,7 +404,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             min="0"
                             value={formData.maxSalary || 5000}
                             onChange={(e) => handleInputChange('maxSalary', parseInt(e.target.value))}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -417,7 +417,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.languages?.join(', ') || ''}
                             onChange={(e) => handleArrayInput('languages', e.target.value)}
                             placeholder="e.g., English (Fluent), Arabic"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
 
@@ -433,7 +433,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.deadline || ''}
                                 onChange={(e) => handleInputChange('deadline', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                             />
                         </div>
                     </div>
@@ -450,7 +450,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 type="email"
                                 value={formData.contactEmail || 'hr@company.com'}
                                 onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 required
                             />
                         </div>
@@ -465,7 +465,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
                             placeholder="Any additional information about the position"
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                         />
                     </div>
                 </div>

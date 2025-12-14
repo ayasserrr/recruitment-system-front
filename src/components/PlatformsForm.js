@@ -41,7 +41,7 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 onClick={() => handlePlatformToggle(platform.id)}
                                 className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 ${isSelected
                                     ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200 hover:border-gray-300'
+                                    : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-center justify-between mb-2">
@@ -81,7 +81,7 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.postingStartDate || ''}
                                 onChange={(e) => updateFormData({ postingStartDate: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 required
                             />
                         </div>
@@ -99,7 +99,7 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.postingEndDate || ''}
                                 onChange={(e) => updateFormData({ postingEndDate: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
                                 required
                             />
                         </div>
