@@ -79,7 +79,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center px-6">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 flex items-center justify-center px-6">
             <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
                 {/* Message Display */}
                 {message && (
@@ -92,24 +92,24 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 )}
                 {/* Logo and Header */}
                 <div className="text-center mb-8">
-                    <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mx-auto mb-4">
-                        <Zap className="w-8 h-8 text-blue-600" />
+                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl mx-auto mb-4">
+                        <Zap className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-base-900">
                         {activeTab === 'signin' ? 'Welcome Back' : 'Welcome'}
                     </h2>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-base-600 mt-2">
                         {activeTab === 'signin' ? 'Sign in to your account' : 'Create your account'}
                     </p>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex mb-6 border-b border-gray-200">
+                <div className="flex mb-6 border-b border-base-200">
                     <button
                         onClick={() => setActiveTab('signin')}
                         className={`flex-1 pb-3 text-center font-medium transition-colors ${activeTab === 'signin'
-                            ? 'text-blue-600 border-b-2 border-blue-600'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'text-accent-600 border-b-2 border-accent-600'
+                            : 'text-base-500 hover:text-base-700'
                             }`}
                     >
                         Sign In
@@ -117,8 +117,8 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                     <button
                         onClick={() => setActiveTab('signup')}
                         className={`flex-1 pb-3 text-center font-medium transition-colors ${activeTab === 'signup'
-                            ? 'text-blue-600 border-b-2 border-blue-600'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'text-accent-600 border-b-2 border-accent-600'
+                            : 'text-base-500 hover:text-base-700'
                             }`}
                     >
                         Sign Up
@@ -129,7 +129,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 {activeTab === 'signin' && (
                     <form onSubmit={handleSignIn}>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -138,13 +138,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                 required
                             />
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Password
                             </label>
                             <div className="relative">
@@ -154,13 +154,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Enter your password"
-                                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                    className="w-full px-4 py-3 pr-12 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-500 hover:text-base-700"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -169,7 +169,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                            className="w-full bg-accent-600 text-white py-3 rounded-lg hover:bg-accent-700 transition-colors font-medium"
                         >
                             Sign In
                         </button>
@@ -180,7 +180,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 {activeTab === 'signup' && (
                     <form onSubmit={handleSignUp}>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Full Name
                             </label>
                             <input
@@ -189,13 +189,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="Enter your full name"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                 required
                             />
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -204,13 +204,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                 required
                             />
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Password
                             </label>
                             <div className="relative">
@@ -220,13 +220,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Create a password"
-                                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                    className="w-full px-4 py-3 pr-12 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowSignUpPassword(!showSignUpPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-500 hover:text-base-700"
                                 >
                                     {showSignUpPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -234,7 +234,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-base-700 mb-2">
                                 Confirm Password
                             </label>
                             <input
@@ -243,14 +243,14 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                                 placeholder="Confirm your password"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
                                 required
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                            className="w-full bg-accent-600 text-white py-3 rounded-lg hover:bg-accent-700 transition-colors font-medium"
                         >
                             Sign Up
                         </button>

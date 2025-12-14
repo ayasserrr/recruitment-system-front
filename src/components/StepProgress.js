@@ -6,9 +6,9 @@ export default function StepProgress({ currentStep, steps }) {
         <div className="w-full max-w-4xl mx-auto mb-8">
             <div className="flex items-center justify-between relative">
                 {/* Progress line */}
-                <div className="absolute top-6 left-6 right-6 h-1 bg-gray-200 -z-10"></div>
+                <div className="absolute top-6 left-6 right-6 h-1 bg-base-200 -z-10"></div>
                 <div
-                    className="absolute top-6 left-6 h-1 bg-blue-600 -z-10 transition-all duration-300"
+                    className="absolute top-6 left-6 h-1 bg-gradient-to-r from-base-500 to-accent-500 -z-10 transition-all duration-300"
                     style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
                 ></div>
 
@@ -21,17 +21,17 @@ export default function StepProgress({ currentStep, steps }) {
                         <div key={step.id} className="flex flex-col items-center relative">
                             <div
                                 className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-300 ${isCompleted
-                                    ? 'bg-blue-600 border-blue-600'
+                                    ? 'bg-gradient-to-r from-base-500 to-accent-500 border-base-500'
                                     : isActive
-                                        ? 'bg-white border-blue-600'
-                                        : 'bg-white border-gray-300'
+                                        ? 'bg-white border-accent-500'
+                                        : 'bg-white border-base-300'
                                     }`}
                             >
                                 {isCompleted ? (
                                     <CheckCircle className="w-6 h-6 text-white" />
                                 ) : (
                                     <span
-                                        className={`text-lg font-bold ${isActive ? 'text-blue-600' : 'text-gray-400'
+                                        className={`text-lg font-bold ${isActive ? 'text-accent-600' : 'text-base-400'
                                             }`}
                                     >
                                         {stepNumber}
@@ -40,12 +40,12 @@ export default function StepProgress({ currentStep, steps }) {
                             </div>
                             <div className="mt-3 text-center">
                                 <p
-                                    className={`text-sm font-medium ${isActive || isCompleted ? 'text-blue-600' : 'text-gray-500'
+                                    className={`text-sm font-medium ${isActive || isCompleted ? 'text-accent-600' : 'text-base-500'
                                         }`}
                                 >
                                     {step.title}
                                 </p>
-                                <p className="text-xs text-gray-400 mt-1">{step.subtitle}</p>
+                                <p className="text-xs text-base-400 mt-1">{step.subtitle}</p>
                             </div>
                         </div>
                     );

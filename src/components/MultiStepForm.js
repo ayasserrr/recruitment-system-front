@@ -258,12 +258,12 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">Create New Job Requisition</h1>
-                    <p className="text-slate-600">Follow the steps to capture the requisition requirements</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-base-800 mb-2">Create New Job Requisition</h1>
+                    <p className="text-base-600">Follow the steps to capture the requisition requirements</p>
                 </div>
 
                 {/* Step Progress */}
@@ -286,7 +286,7 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div>
                             {currentStep > 1 && (
-                                <button type="button" onClick={prevStep} className="flex items-center text-slate-600 hover:text-slate-800 font-medium">
+                                <button type="button" onClick={prevStep} className="flex items-center text-base-600 hover:text-base-800 font-medium">
                                     <ArrowLeft className="w-5 h-5 mr-2" />
                                     Back
                                 </button>
@@ -297,25 +297,17 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
                             <button
                                 type="button"
                                 onClick={handleSaveDraft}
-                                className="flex items-center text-slate-600 hover:text-slate-800 font-medium"
+                                className="flex items-center text-base-600 hover:text-base-800 font-medium"
                             >
                                 <Save className="w-5 h-5 mr-2" />
                                 Save Draft
                             </button>
-
                             <button
                                 type="button"
-                                onClick={() => {
-                                    if (!canContinue) {
-                                        setStepError(currentStepErrors[0]);
-                                        return;
-                                    }
-                                    nextStep();
-                                }}
-                                disabled={!canContinue}
-                                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={nextStep}
+                                className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-medium"
                             >
-                                {currentStep === steps.length - 1 ? 'Review & Submit' : 'Continue'}
+                                {currentStep === 5 ? 'Review' : 'Next'}
                                 <ArrowRight className="w-5 h-5 ml-2" />
                             </button>
                         </div>
@@ -324,12 +316,12 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
 
                 {/* Progress Indicator */}
                 <div className="text-center mt-8">
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-base-600">
                         Step {currentStep} of {steps.length} • {Math.round((currentStep / steps.length) * 100)}% Complete
                     </p>
-                    <div className="w-full bg-slate-200 rounded-full h-2 mt-2">
+                    <div className="w-full bg-base-200 rounded-full h-2 mt-2">
                         <div
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-gradient-to-r from-base-500 to-accent-500 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(currentStep / steps.length) * 100}%` }}
                         />
                     </div>
