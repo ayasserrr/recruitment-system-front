@@ -84,8 +84,8 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
             {/* Interview Type Selection */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                        <Video className="w-5 h-5 text-red-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Video className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-800">Technical Interview Setup</h3>
@@ -135,7 +135,9 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
             {/* Evaluation Criteria */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <Brain className="w-6 h-6 text-red-600 mr-3" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                        <Brain className="w-5 h-5 text-white" />
+                    </div>
                     <h3 className="text-lg font-bold text-gray-800">Evaluation Criteria</h3>
                 </div>
 
@@ -246,7 +248,9 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center">
-                        <MessageSquare className="w-6 h-6 text-red-600 mr-3" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                            <MessageSquare className="w-5 h-5 text-white" />
+                        </div>
                         <div>
                             <h3 className="text-lg font-bold text-gray-800">Technical Interview Questions</h3>
                             <p className="text-sm text-gray-600 mt-1">

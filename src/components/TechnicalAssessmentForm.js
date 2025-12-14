@@ -171,8 +171,8 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             {/* Assessment Type Selection */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
-                        <Brain className="w-5 h-5 text-orange-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Brain className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-800">Technical Assessment Type</h3>
@@ -230,7 +230,9 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             {formData.assessmentType === 'ai-generated' && (
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <ClipboardList className="w-6 h-6 text-orange-600 mr-3" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                            <ClipboardList className="w-5 h-5 text-white" />
+                        </div>
                         <h3 className="text-lg font-bold text-gray-800">Assessment Questions</h3>
                     </div>
                     <p className="text-sm text-gray-600">
@@ -244,7 +246,9 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center">
-                            <ClipboardList className="w-6 h-6 text-orange-600 mr-3" />
+                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                                <ClipboardList className="w-5 h-5 text-white" />
+                            </div>
                             <div>
                                 <h3 className="text-lg font-bold text-gray-800">Custom Assessment Builder</h3>
                                 <p className="text-sm text-gray-600 mt-1">Add your own technical questions</p>
@@ -433,7 +437,9 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             {formData.assessmentType === 'template' && (
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <ClipboardList className="w-6 h-6 text-orange-600 mr-3" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                            <ClipboardList className="w-5 h-5 text-white" />
+                        </div>
                         <h3 className="text-lg font-bold text-gray-800">Template Task</h3>
                     </div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Sample Task (Editable)</label>
@@ -449,7 +455,9 @@ export default function TechnicalAssessmentForm({ formData, updateFormData }) {
             {/* Assessment Settings */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <Settings2 className="w-6 h-6 text-gray-700 mr-3" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                        <Settings2 className="w-5 h-5 text-white" />
+                    </div>
                     <h3 className="text-lg font-bold text-gray-800">Assessment Settings</h3>
                 </div>
 

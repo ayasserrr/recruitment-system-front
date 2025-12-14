@@ -64,8 +64,8 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             {/* Basic Information Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                        <Briefcase className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Briefcase className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Basic Information</h3>
                 </div>
@@ -140,7 +140,9 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                 {/* Location Section */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="flex items-center mb-4">
-                        <MapPin className="w-5 h-5 text-gray-600 mr-2" />
+                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                            <MapPin className="w-5 h-5 text-white" />
+                        </div>
                         <h4 className="text-lg font-semibold text-gray-800">Location</h4>
                     </div>
 
@@ -194,8 +196,8 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             {/* Skills & Requirements Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                        <Target className="w-5 h-5 text-green-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Target className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Skills & Requirements</h3>
                 </div>
@@ -234,8 +236,8 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             {/* Experience & Education Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                        <GraduationCap className="w-5 h-5 text-purple-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <GraduationCap className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Experience & Education</h3>
                 </div>
@@ -312,8 +314,8 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             {/* Job Description Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
-                        <Briefcase className="w-5 h-5 text-yellow-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Briefcase className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Job Description</h3>
                 </div>
@@ -356,8 +358,8 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             {/* Compensation & Additional Info Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                        <DollarSign className="w-5 h-5 text-red-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <DollarSign className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Compensation & Additional Info</h3>
                 </div>
@@ -424,7 +426,9 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Application Deadline
                         </label>
                         <div className="flex items-center">
-                            <Calendar className="w-5 h-5 text-gray-400 mr-2" />
+                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                                <Calendar className="w-5 h-5 text-white" />
+                            </div>
                             <input
                                 type="date"
                                 value={formData.deadline || ''}
@@ -439,7 +443,9 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Contact Email *
                         </label>
                         <div className="flex items-center">
-                            <Mail className="w-5 h-5 text-gray-400 mr-2" />
+                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                                <Mail className="w-5 h-5 text-white" />
+                            </div>
                             <input
                                 type="email"
                                 value={formData.contactEmail || 'hr@company.com'}

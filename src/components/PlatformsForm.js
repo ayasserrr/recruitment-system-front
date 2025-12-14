@@ -22,8 +22,8 @@ export default function PlatformsForm({ formData, updateFormData }) {
             {/* Platforms Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                        <Globe className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Globe className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-800">Posting Platforms</h3>
@@ -59,8 +59,8 @@ export default function PlatformsForm({ formData, updateFormData }) {
             {/* Scheduling Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                        <Calendar className="w-5 h-5 text-green-600" />
+                    <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
+                        <Calendar className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-800">Scheduling</h3>
@@ -74,7 +74,9 @@ export default function PlatformsForm({ formData, updateFormData }) {
                             Posting Start Date *
                         </label>
                         <div className="flex items-center">
-                            <Calendar className="w-5 h-5 text-gray-400 mr-2" />
+                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                                <Calendar className="w-5 h-5 text-white" />
+                            </div>
                             <input
                                 type="date"
                                 value={formData.postingStartDate || ''}
@@ -90,7 +92,9 @@ export default function PlatformsForm({ formData, updateFormData }) {
                             CV Collection End Date *
                         </label>
                         <div className="flex items-center">
-                            <Calendar className="w-5 h-5 text-gray-400 mr-2" />
+                            <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
+                                <Calendar className="w-5 h-5 text-white" />
+                            </div>
                             <input
                                 type="date"
                                 value={formData.postingEndDate || ''}
