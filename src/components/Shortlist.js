@@ -11,29 +11,45 @@ export default function Shortlist({ onBack }) {
         const loadShortlistedCVs = () => {
             const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
 
-            // Group CVs by application/job title
-            const groupedCVs = shortlistData.reduce((acc, cv) => {
-                // Use the shortlistedFrom as application name or create a default one
-                const appName = cv.shortlistedFrom || 'General Application';
+            // Group CVs by phase first, then by application
+            const groupedByPhase = shortlistData.reduce((acc, cv) => {
+                const phaseName = cv.shortlistedFrom || 'General Application';
 
-                if (!acc[appName]) {
-                    acc[appName] = {
-                        id: appName, // Use app name as stable ID
+                if (!acc[phaseName]) {
+                    acc[phaseName] = {
+                        phaseName: phaseName,
+                        applications: {}
+                    };
+                }
+
+                // Extract application name from CV data or use default
+                const appName = cv.jobTitle || cv.applicationName || 'Unknown Application';
+
+                if (!acc[phaseName].applications[appName]) {
+                    acc[phaseName].applications[appName] = {
+                        id: appName,
                         jobTitle: appName,
                         posted: cv.shortlistedDate || new Date().toISOString().slice(0, 10),
                         shortlistedCVs: []
                     };
                 }
 
-                acc[appName].shortlistedCVs.push(cv);
+                acc[phaseName].applications[appName].shortlistedCVs.push(cv);
                 return acc;
             }, {});
 
-            const newApplications = Object.values(groupedCVs);
-            setShortlistedApplications(newApplications);
+            // Convert to array format
+            const phasesData = Object.values(groupedByPhase).map(phase => ({
+                ...phase,
+                applications: Object.values(phase.applications)
+            }));
+
+            setShortlistedApplications(phasesData);
 
             // Reset selected application if it no longer exists
-            if (selectedApplication && !newApplications.find(app => app.id === selectedApplication)) {
+            if (selectedApplication && !phasesData.find(phase =>
+                phase.applications.some(app => app.id === selectedApplication)
+            )) {
                 setSelectedApplication(null);
             }
         };
@@ -88,12 +104,25 @@ export default function Shortlist({ onBack }) {
         );
     };
 
-    const totalShortlisted = shortlistedApplications.reduce((acc, app) => acc + app.shortlistedCVs.length, 0);
+    const totalShortlisted = shortlistedApplications.reduce((acc, phase) =>
+        acc + phase.applications.reduce((phaseAcc, app) => phaseAcc + app.shortlistedCVs.length, 0), 0
+    );
 
     if (selectedApplication) {
-        const application = shortlistedApplications.find(app => app.id === selectedApplication);
+        // Find the application across all phases
+        let foundApplication = null;
+        let foundPhase = null;
 
-        if (!application) {
+        for (const phase of shortlistedApplications) {
+            const app = phase.applications.find(app => app.id === selectedApplication);
+            if (app) {
+                foundApplication = app;
+                foundPhase = phase;
+                break;
+            }
+        }
+
+        if (!foundApplication) {
             return (
                 <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
                     <div className="max-w-7xl mx-auto">
@@ -127,16 +156,16 @@ export default function Shortlist({ onBack }) {
                     <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
                         <div className="flex items-center justify-between mb-6">
                             <div>
-                                <h1 className="text-3xl font-bold text-slate-800 mb-2">{application.jobTitle}</h1>
-                                <p className="text-slate-600">Posted: {application.posted}</p>
+                                <h1 className="text-3xl font-bold text-slate-800 mb-2">{foundApplication.jobTitle}</h1>
+                                <p className="text-slate-600">Phase: {foundPhase.phaseName} • Posted: {foundApplication.posted}</p>
                             </div>
                             <div className="text-center">
-                                <div className="text-3xl font-bold text-blue-600">{application.shortlistedCVs.length}</div>
+                                <div className="text-3xl font-bold text-blue-600">{foundApplication.shortlistedCVs.length}</div>
                                 <div className="text-sm text-slate-600">Shortlisted CVs</div>
                             </div>
                         </div>
 
-                        {application.shortlistedCVs.length === 0 ? (
+                        {foundApplication.shortlistedCVs.length === 0 ? (
                             <div className="text-center py-12">
                                 <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                                 <h3 className="text-xl font-semibold text-slate-600 mb-2">No Shortlisted CVs</h3>
@@ -144,7 +173,7 @@ export default function Shortlist({ onBack }) {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {application.shortlistedCVs.map((cv) => (
+                                {foundApplication.shortlistedCVs.map((cv) => (
                                     <div key={cv.id} className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
@@ -201,7 +230,7 @@ export default function Shortlist({ onBack }) {
                                                 </button>
                                             </div>
                                             <button
-                                                onClick={() => removeFromShortlist(application.id, cv.id)}
+                                                onClick={() => removeFromShortlist(foundApplication.id, cv.id)}
                                                 className="text-red-600 hover:text-red-800 font-semibold flex items-center text-sm"
                                             >
                                                 <X className="w-4 h-4 mr-1" />
@@ -301,7 +330,7 @@ export default function Shortlist({ onBack }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                         <div className="bg-blue-50 rounded-xl p-4">
                             <div className="text-3xl font-bold text-blue-600">{shortlistedApplications.length}</div>
-                            <div className="text-sm text-slate-600">Applications</div>
+                            <div className="text-sm text-slate-600">Phases</div>
                         </div>
                         <div className="bg-green-50 rounded-xl p-4">
                             <div className="text-3xl font-bold text-green-600">{totalShortlisted}</div>
@@ -309,7 +338,9 @@ export default function Shortlist({ onBack }) {
                         </div>
                         <div className="bg-purple-50 rounded-xl p-4">
                             <div className="text-3xl font-bold text-purple-600">
-                                {shortlistedApplications.filter(app => app.shortlistedCVs.length > 0).length}
+                                {shortlistedApplications.reduce((acc, phase) =>
+                                    acc + phase.applications.filter(app => app.shortlistedCVs.length > 0).length, 0
+                                )}
                             </div>
                             <div className="text-sm text-slate-600">Active Applications</div>
                         </div>
@@ -317,40 +348,59 @@ export default function Shortlist({ onBack }) {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-xl p-8">
-                    <h2 className="text-2xl font-bold text-slate-800 mb-6">Applications with Shortlisted CVs</h2>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-6">Shortlisted CVs by Phase</h2>
 
                     {shortlistedApplications.length === 0 ? (
                         <div className="text-center py-12">
                             <Briefcase className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-slate-600 mb-2">No Applications</h3>
-                            <p className="text-slate-500">No applications found.</p>
+                            <h3 className="text-xl font-semibold text-slate-600 mb-2">No Shortlisted CVs</h3>
+                            <p className="text-slate-500">No CVs have been shortlisted yet.</p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
-                            {shortlistedApplications.map((application) => (
-                                <div
-                                    key={application.id}
-                                    className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-shadow cursor-pointer"
-                                    onClick={() => setSelectedApplication(application.id)}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="bg-blue-500 w-12 h-12 rounded-xl flex items-center justify-center">
-                                                <Briefcase className="w-6 h-6 text-white" />
+                        <div className="space-y-8">
+                            {shortlistedApplications.map((phase) => (
+                                <div key={phase.phaseName} className="border border-slate-200 rounded-xl p-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-xl font-bold text-slate-800">{phase.phaseName}</h3>
+                                        <div className="text-center">
+                                            <div className="text-2xl font-bold text-blue-600">
+                                                {phase.applications.reduce((acc, app) => acc + app.shortlistedCVs.length, 0)}
                                             </div>
-                                            <div>
-                                                <h3 className="text-lg font-bold text-slate-800">{application.jobTitle}</h3>
-                                                <p className="text-sm text-slate-600">Posted: {application.posted}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center space-x-6">
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-blue-600">{application.shortlistedCVs.length}</div>
-                                                <div className="text-xs text-slate-600">Shortlisted CVs</div>
-                                            </div>
-                                            <ChevronRight className="w-5 h-5 text-slate-400" />
+                                            <div className="text-sm text-slate-600">CVs</div>
                                         </div>
                                     </div>
+
+                                    {phase.applications.length === 0 ? (
+                                        <div className="text-center py-8">
+                                            <p className="text-slate-500">No applications in this phase yet.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-3">
+                                            {phase.applications.map((application) => (
+                                                <div
+                                                    key={application.id}
+                                                    onClick={() => setSelectedApplication(application.id)}
+                                                    className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg p-4 border border-slate-200 cursor-pointer hover:from-slate-100 hover:to-slate-200 transition-all"
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center space-x-3">
+                                                            <ChevronRight className="w-5 h-5 text-slate-400" />
+                                                            <div>
+                                                                <h4 className="font-semibold text-slate-800">{application.jobTitle}</h4>
+                                                                <p className="text-sm text-slate-600">Posted: {application.posted}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center space-x-4">
+                                                            <div className="text-right">
+                                                                <div className="text-lg font-bold text-blue-600">{application.shortlistedCVs.length}</div>
+                                                                <div className="text-xs text-slate-600">CVs</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
