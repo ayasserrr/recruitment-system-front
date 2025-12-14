@@ -4,6 +4,7 @@ import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
 import JobPost from './components/JobPost';
 import SemanticAnalysis from './components/SemanticAnalysis';
+import TechnicalAssessment from './components/TechnicalAssessment';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -192,6 +193,11 @@ export default function RecruitmentSystem() {
                 />
             ) : currentPage === 'semantic-analysis' ? (
                 <SemanticAnalysis
+                    applications={applications}
+                    onBack={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'technical-assessment' ? (
+                <TechnicalAssessment
                     applications={applications}
                     onBack={() => setCurrentPage('home')}
                 />
