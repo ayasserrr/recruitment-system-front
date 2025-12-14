@@ -7,7 +7,11 @@ import {
     MessageSquare,
     Bot,
     UserCircle,
-    Video
+    Video,
+    MessageCircle,
+    Building2,
+    Zap,
+    Heart,
 } from 'lucide-react';
 
 export default function HRInterviewForm({ formData, updateFormData }) {
@@ -48,11 +52,18 @@ export default function HRInterviewForm({ formData, updateFormData }) {
         },
     ];
 
+    const iconComponentsForCategories = {
+        'behavioral': MessageCircle,
+        'culture': Building2,
+        'leadership': Star,
+        'motivation': Zap,
+    };
+
     const questionCategories = [
-        { id: 'behavioral', name: 'Behavioral', icon: '💬' },
-        { id: 'culture', name: 'Culture', icon: '🏢' },
-        { id: 'leadership', name: 'Leadership', icon: '🎯' },
-        { id: 'motivation', name: 'Motivation', icon: '⚡' },
+        { id: 'behavioral', name: 'Behavioral', icon: 'behavioral' },
+        { id: 'culture', name: 'Culture', icon: 'culture' },
+        { id: 'leadership', name: 'Leadership', icon: 'leadership' },
+        { id: 'motivation', name: 'Motivation', icon: 'motivation' },
     ];
 
     const sampleQuestions = [
@@ -153,15 +164,15 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
                                         <li key={index} className="flex items-center text-sm text-gray-600">
-                                            <div className="w-1.5 h-1.5 bg-pink-500 rounded-full mr-2"></div>
+                                            <div className="w-1.5 h-1.5 bg-gradient-to-r from-base-500 to-accent-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
 
                                 {isSelected && (
-                                    <div className="mt-4 p-3 bg-pink-100 rounded-lg">
-                                        <p className="text-sm text-pink-800 font-medium">✅ Selected</p>
+                                    <div className="mt-4 p-3 bg-gradient-to-r from-base-100 to-accent-100 rounded-lg border border-accent-300">
+                                        <p className="text-sm font-medium bg-gradient-to-r from-base-700 to-accent-700 bg-clip-text text-transparent">✓ Selected</p>
                                     </div>
                                 )}
                             </div>
@@ -186,14 +197,14 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {[
-                                { id: 'communication', label: 'Communication Skills', icon: '💬' },
-                                { id: 'teamwork', label: 'Teamwork & Collaboration', icon: '👥' },
-                                { id: 'adaptability', label: 'Adaptability', icon: '🔄' },
-                                { id: 'problem-solving', label: 'Problem-Solving Approach', icon: '🧩' },
-                                { id: 'leadership', label: 'Leadership Potential', icon: '🎯' },
-                                { id: 'cultural-fit', label: 'Cultural Fit', icon: '🏢' },
-                                { id: 'motivation', label: 'Motivation & Drive', icon: '⚡' },
-                                { id: 'emotional-intelligence', label: 'Emotional Intelligence', icon: '❤️' },
+                                { id: 'communication', label: 'Communication Skills', icon: MessageCircle },
+                                { id: 'teamwork', label: 'Teamwork & Collaboration', icon: Users },
+                                { id: 'adaptability', label: 'Adaptability', icon: Zap },
+                                { id: 'problem-solving', label: 'Problem-Solving Approach', icon: Star },
+                                { id: 'leadership', label: 'Leadership Potential', icon: Star },
+                                { id: 'cultural-fit', label: 'Cultural Fit', icon: Building2 },
+                                { id: 'motivation', label: 'Motivation & Drive', icon: Zap },
+                                { id: 'emotional-intelligence', label: 'Emotional Intelligence', icon: Heart },
                             ].map((criteria) => (
                                 <label key={criteria.id} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                                     <input
@@ -208,7 +219,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                         }}
                                         className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                     />
-                                    <span className="ml-3 text-xl mr-3">{criteria.icon}</span>
+                                    <div className="ml-3 flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
+                                        {React.createElement(criteria.icon, {
+                                            className: 'w-4 h-4 text-white',
+                                        })}
+                                    </div>
                                     <span className="text-gray-700">{criteria.label}</span>
                                 </label>
                             ))}
@@ -272,7 +287,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                     >
                                         {questionCategories.map((cat) => (
                                             <option key={cat.id} value={cat.id}>
-                                                {cat.icon} {cat.name}
+                                                {cat.name}
                                             </option>
                                         ))}
                                     </select>
@@ -297,7 +312,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 type="button"
                                 onClick={addCustomQuestion}
                                 disabled={!newQuestion.text.trim()}
-                                className="flex items-center justify-center w-full bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center justify-center w-full bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Plus className="w-5 h-5 mr-2" />
                                 Add Question
@@ -312,7 +327,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 {sampleQuestions.map((question) => (
                                     <div key={question.id} className="border border-gray-200 rounded-lg p-4">
                                         <div className="flex items-start mb-3">
-                                            <span className="text-xl mr-3">{questionCategories.find((c) => c.id === question.category)?.icon}</span>
+                                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
+                                                {React.createElement(iconComponentsForCategories[question.category], {
+                                                    className: 'w-4 h-4 text-white',
+                                                })}
+                                            </div>
                                             <p className="text-gray-800">{question.text}</p>
                                         </div>
                                         <div className="flex justify-between items-center">
@@ -340,7 +359,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                         <div className="flex justify-between items-start">
                                             <div className="flex-1">
                                                 <div className="flex items-center mb-2">
-                                                    <span className="text-xl mr-3">{questionCategories.find((c) => c.id === question.category)?.icon}</span>
+                                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
+                                                        {React.createElement(iconComponentsForCategories[question.category], {
+                                                            className: 'w-4 h-4 text-white',
+                                                        })}
+                                                    </div>
                                                     <p className="text-gray-800">{question.text}</p>
                                                 </div>
                                                 <div className="flex items-center text-sm text-gray-600 ml-9">

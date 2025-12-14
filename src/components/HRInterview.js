@@ -242,7 +242,7 @@ export default function HRInterview({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-50 to-slate-100 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 to-slate-100 p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
@@ -252,7 +252,9 @@ export default function HRInterview({ applications, onBack }) {
                                     <ArrowLeft className="w-6 h-6 text-slate-600" />
                                 </button>
                             )}
-                            <Users className="w-12 h-12 text-pink-600 mr-4" />
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-base-500 to-accent-500 flex items-center justify-center mr-4">
+                                <Users className="w-6 h-6 text-white" />
+                            </div>
                             <div>
                                 <h1 className="text-4xl font-bold text-slate-800">HR Interviews</h1>
                                 <p className="text-slate-600">Assess cultural fit, communication skills, and team compatibility</p>
@@ -272,8 +274,8 @@ export default function HRInterview({ applications, onBack }) {
                                     key={app.id}
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                        ? 'border-pink-500 bg-pink-50'
-                                        : 'border-slate-200 hover:border-pink-300'
+                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : 'border-slate-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
@@ -297,10 +299,12 @@ export default function HRInterview({ applications, onBack }) {
                             <div className="bg-white rounded-xl shadow-lg p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-pink-600 mb-2">{interviewStats.totalScheduled}</div>
+                                        <div className="text-3xl font-bold bg-gradient-to-r from-base-600 to-accent-600 bg-clip-text text-transparent mb-2">{interviewStats.totalScheduled}</div>
                                         <div className="text-sm text-slate-600">Total Scheduled</div>
                                     </div>
-                                    <Calendar className="w-10 h-10 text-pink-400" />
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-base-400 to-accent-400 flex items-center justify-center">
+                                        <Calendar className="w-6 h-6 text-white" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -352,7 +356,7 @@ export default function HRInterview({ applications, onBack }) {
                                             <span>Passing: {selectedInterview.passingScore}/10</span>
                                         </div>
                                     </div>
-                                    <div className="px-4 py-2 bg-pink-100 text-pink-700 rounded-full font-semibold">
+                                    <div className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 rounded-full font-semibold bg-clip-text text-transparent">
                                         Avg Score: {selectedInterview.avgScore}/10
                                     </div>
                                 </div>
@@ -379,7 +383,7 @@ export default function HRInterview({ applications, onBack }) {
                                         </p>
                                         <div className="w-full bg-slate-200 rounded-full h-3">
                                             <div
-                                                className="bg-pink-600 h-3 rounded-full transition-all duration-500"
+                                                className="bg-gradient-to-r from-base-600 to-accent-600 h-3 rounded-full transition-all duration-500"
                                                 style={{ width: `${selectedInterview.scheduled > 0 ? (selectedInterview.completed / selectedInterview.scheduled) * 100 : 0}%` }}
                                             />
                                         </div>
@@ -388,12 +392,12 @@ export default function HRInterview({ applications, onBack }) {
                                     <div className="flex space-x-3">
                                         <button
                                             onClick={scheduleInterview}
-                                            className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
+                                            className="flex-1 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
                                         >
                                             <Users className="w-4 h-4 mr-2" />
                                             Schedule Interview
                                         </button>
-                                        <button className="flex-1 border border-pink-600 text-pink-600 hover:bg-pink-50 py-2 rounded-lg font-semibold transition-colors text-sm">
+                                        <button className="flex-1 border border-accent-600 text-accent-600 hover:bg-accent-50 py-2 rounded-lg font-semibold transition-colors text-sm">
                                             View Candidates
                                         </button>
                                     </div>
@@ -460,7 +464,7 @@ export default function HRInterview({ applications, onBack }) {
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => setShowFeedbackModal(candidate)}
-                                                                className="text-pink-600 hover:text-pink-800 font-semibold text-sm flex items-center"
+                                                                className="text-accent-600 hover:text-accent-800 font-semibold text-sm flex items-center"
                                                             >
                                                                 <MessageSquare className="w-4 h-4 mr-1" />
                                                                 Feedback
@@ -482,14 +486,14 @@ export default function HRInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={exportReport}
-                                        className="px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-lg font-semibold hover:bg-pink-50 transition-colors flex items-center"
+                                        className="px-6 py-3 border-2 border-accent-600 text-accent-600 rounded-lg font-semibold hover:bg-accent-50 transition-colors flex items-center"
                                     >
                                         <FileText className="w-5 h-5 mr-2" />
                                         Export Report
                                     </button>
                                     <button
                                         onClick={proceedToFinalRanking}
-                                        className="px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors"
+                                        className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 text-white rounded-lg font-semibold hover:from-base-700 hover:to-accent-700 transition-colors"
                                     >
                                         Proceed to Final Ranking
                                     </button>
@@ -562,7 +566,7 @@ export default function HRInterview({ applications, onBack }) {
                                     </div>
 
                                     {/* Feedback Summary */}
-                                    <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-6 border border-pink-200">
+                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-accent-200">
                                         <h4 className="font-bold text-slate-800 mb-3">Interview Summary</h4>
                                         <div className="space-y-2 text-slate-700">
                                             <p>• Interview conducted by {showFeedbackModal.interviewer} on {showFeedbackModal.date}</p>

@@ -5,6 +5,12 @@ import {
     Plus,
     Trash2,
     MessageSquare,
+    Code,
+    Building2,
+    MessageCircle,
+    Zap,
+    CheckSquare,
+    Cpu,
 } from 'lucide-react';
 
 export default function TechnicalInterviewForm({ formData, updateFormData }) {
@@ -15,36 +21,45 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
         difficulty: 'medium',
     });
 
+    const iconComponents = {
+        'coding': Code,
+        'systemDesign': Building2,
+        'debugging': Cpu,
+        'communication': MessageCircle,
+        'problemSolving': Brain,
+        'bestPractices': CheckSquare,
+    };
+
     const interviewOptions = [
         {
             id: 'ai-conducted',
             title: 'AI-Conducted Interview',
             description: 'AI runs the interview and scores answers automatically',
-            icon: '🤖',
+            icon: 'problemSolving',
             features: ['Consistent scoring', 'Automated feedback', 'Fast scheduling'],
         },
         {
             id: 'human-conducted',
             title: 'Human Interview + AI Notes',
             description: 'Interviewer conducts; AI provides structured feedback & scoring',
-            icon: '🧑‍💻',
+            icon: 'coding',
             features: ['Human context', 'AI-assisted scoring', 'Interview notes summary'],
         },
     ];
 
     const criteriaOptions = [
-        { id: 'coding', label: 'Coding', icon: '💻' },
-        { id: 'systemDesign', label: 'System Design', icon: '🏗️' },
-        { id: 'debugging', label: 'Debugging', icon: '🐞' },
-        { id: 'communication', label: 'Communication', icon: '💬' },
-        { id: 'problemSolving', label: 'Problem Solving', icon: '🧠' },
-        { id: 'bestPractices', label: 'Best Practices', icon: '✅' },
+        { id: 'coding', label: 'Coding', icon: 'coding' },
+        { id: 'systemDesign', label: 'System Design', icon: 'systemDesign' },
+        { id: 'debugging', label: 'Debugging', icon: 'debugging' },
+        { id: 'communication', label: 'Communication', icon: 'communication' },
+        { id: 'problemSolving', label: 'Problem Solving', icon: 'problemSolving' },
+        { id: 'bestPractices', label: 'Best Practices', icon: 'bestPractices' },
     ];
 
     const questionCategories = [
-        { id: 'technical', name: 'Technical', icon: '💻' },
-        { id: 'system-design', name: 'System Design', icon: '🏗️' },
-        { id: 'behavioral', name: 'Behavioral', icon: '💬' },
+        { id: 'technical', name: 'Technical', icon: 'coding' },
+        { id: 'system-design', name: 'System Design', icon: 'systemDesign' },
+        { id: 'behavioral', name: 'Behavioral', icon: 'communication' },
     ];
 
     const addCustomQuestion = () => {
@@ -101,11 +116,15 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-accent-50' : 'border-gray-200 hover:border-accent-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
-                                    <span className="text-3xl mr-3">{option.icon}</span>
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                                        {React.createElement(iconComponents[option.icon], {
+                                            className: 'w-6 h-6 text-white',
+                                        })}
+                                    </div>
                                     <div>
                                         <h4 className="font-bold text-gray-800">{option.title}</h4>
                                         <p className="text-sm text-gray-600 mt-1">{option.description}</p>
@@ -115,15 +134,15 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
                                         <li key={index} className="flex items-center text-sm text-gray-600">
-                                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></div>
+                                            <div className="w-1.5 h-1.5 bg-gradient-to-r from-base-500 to-accent-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
 
                                 {isSelected && (
-                                    <div className="mt-4 p-3 bg-red-100 rounded-lg">
-                                        <p className="text-sm text-red-800 font-medium">✅ Selected</p>
+                                    <div className="mt-4 p-3 bg-gradient-to-r from-base-100 to-accent-100 rounded-lg border border-accent-300">
+                                        <p className="text-sm font-medium bg-gradient-to-r from-base-700 to-accent-700 bg-clip-text text-transparent">✓ Selected</p>
                                     </div>
                                 )}
                             </div>
@@ -157,7 +176,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                     onChange={(e) => toggleCriteria(criteria.id, e.target.checked)}
                                     className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                 />
-                                <span className="ml-3 text-xl mr-3">{criteria.icon}</span>
+                                <div className="ml-3 flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
+                                    {React.createElement(iconComponents[criteria.icon], {
+                                        className: 'w-4 h-4 text-white',
+                                    })}
+                                </div>
                                 <span className="text-gray-700">{criteria.label}</span>
                             </label>
                         ))}
@@ -289,7 +312,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                 >
                                     {questionCategories.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
-                                            {cat.icon} {cat.name}
+                                            {cat.name}
                                         </option>
                                     ))}
                                 </select>
@@ -313,7 +336,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             type="button"
                             onClick={addCustomQuestion}
                             disabled={!newQuestion.text.trim()}
-                            className="flex items-center justify-center w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center w-full bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Plus className="w-5 h-5 mr-2" />
                             Add Question

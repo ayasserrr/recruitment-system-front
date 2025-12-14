@@ -272,8 +272,8 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     key={app.id}
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                        ? 'border-red-500 bg-red-50'
-                                        : 'border-slate-200 hover:border-red-300'
+                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : 'border-slate-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
@@ -297,10 +297,12 @@ export default function TechnicalInterview({ applications, onBack }) {
                             <div className="bg-white rounded-xl shadow-lg p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-red-600 mb-2">{interviewStats.totalScheduled}</div>
+                                        <div className="text-3xl font-bold bg-gradient-to-r from-base-600 to-accent-600 bg-clip-text text-transparent mb-2">{interviewStats.totalScheduled}</div>
                                         <div className="text-sm text-slate-600">Total Scheduled</div>
                                     </div>
-                                    <Calendar className="w-10 h-10 text-red-400" />
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-base-400 to-accent-400 flex items-center justify-center">
+                                        <Calendar className="w-6 h-6 text-white" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -352,7 +354,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                             <span>Passing: {selectedInterview.passingScore}/10</span>
                                         </div>
                                     </div>
-                                    <div className="px-4 py-2 bg-red-100 text-red-700 rounded-full font-semibold">
+                                    <div className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 rounded-full font-semibold bg-clip-text text-transparent">
                                         Avg Score: {selectedInterview.avgScore}/10
                                     </div>
                                 </div>
@@ -379,7 +381,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                         </p>
                                         <div className="w-full bg-slate-200 rounded-full h-3">
                                             <div
-                                                className="bg-red-600 h-3 rounded-full transition-all duration-500"
+                                                className="bg-gradient-to-r from-base-600 to-accent-600 h-3 rounded-full transition-all duration-500"
                                                 style={{ width: `${selectedInterview.scheduled > 0 ? (selectedInterview.completed / selectedInterview.scheduled) * 100 : 0}%` }}
                                             />
                                         </div>
@@ -388,12 +390,12 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     <div className="flex space-x-3">
                                         <button
                                             onClick={scheduleInterview}
-                                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
+                                            className="flex-1 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white py-2 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center"
                                         >
                                             <Video className="w-4 h-4 mr-2" />
                                             Schedule Interview
                                         </button>
-                                        <button className="flex-1 border border-red-600 text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors text-sm">
+                                        <button className="flex-1 border border-accent-600 text-accent-600 hover:bg-accent-50 py-2 rounded-lg font-semibold transition-colors text-sm">
                                             View Candidates
                                         </button>
                                     </div>
@@ -460,7 +462,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => setShowFeedbackModal(candidate)}
-                                                                className="text-red-600 hover:text-red-800 font-semibold text-sm flex items-center"
+                                                                className="text-accent-600 hover:text-accent-800 font-semibold text-sm flex items-center"
                                                             >
                                                                 <MessageSquare className="w-4 h-4 mr-1" />
                                                                 Feedback
@@ -482,14 +484,14 @@ export default function TechnicalInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={exportReport}
-                                        className="px-6 py-3 border-2 border-red-600 text-red-600 rounded-lg font-semibold hover:bg-red-50 transition-colors flex items-center"
+                                        className="px-6 py-3 border-2 border-accent-600 text-accent-600 rounded-lg font-semibold hover:bg-accent-50 transition-colors flex items-center"
                                     >
                                         <FileText className="w-5 h-5 mr-2" />
                                         Export Report
                                     </button>
                                     <button
                                         onClick={proceedToHRInterview}
-                                        className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                                        className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 text-white rounded-lg font-semibold hover:from-base-700 hover:to-accent-700 transition-colors"
                                     >
                                         Proceed to HR Interview
                                     </button>
@@ -562,7 +564,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     </div>
 
                                     {/* Feedback Summary */}
-                                    <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-6 border border-red-200">
+                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-accent-200">
                                         <h4 className="font-bold text-slate-800 mb-3">Interview Summary</h4>
                                         <div className="space-y-2 text-slate-700">
                                             <p>• Interview conducted by {showFeedbackModal.interviewer} on {showFeedbackModal.date}</p>
