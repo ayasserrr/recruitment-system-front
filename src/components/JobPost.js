@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, Upload, Send, Eye, Users, Briefcase, ChevronRight } from 'lucide-react';
 
-export default function JobPost({ applications, onUpdateApplication, onBackToDashboard }) {
+export default function JobPost({ applications, onUpdateApplication, onBackToDashboard, onViewCVs, onOpenSemanticAnalysis }) {
     const [selectedId, setSelectedId] = useState(null);
 
     const platformLabel = (id) => {
@@ -242,6 +242,8 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                                 getStatusIcon={getStatusIcon}
                                 statusPill={statusPill}
                                 safePercent={safePercent}
+                                onViewCVs={onViewCVs}
+                                onOpenSemanticAnalysis={onOpenSemanticAnalysis}
                             />
                         )}
                     </div>
@@ -251,7 +253,7 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
     );
 }
 
-function PostingProgress({ application, ensureProgress, onStepClick, getStatusIcon, statusPill, safePercent }) {
+function PostingProgress({ application, ensureProgress, onStepClick, getStatusIcon, statusPill, safePercent, onViewCVs, onOpenSemanticAnalysis }) {
     const progress = ensureProgress(application);
     const req = application.requisition || {};
 
@@ -359,7 +361,11 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                                 <span className="ml-3 px-2 py-1 bg-green-100 text-green-700 rounded text-xs">+{item.newToday} today</span>
                                             ) : null}
                                         </div>
-                                        <button type="button" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => onViewCVs?.(item)}
+                                            className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                                        >
                                             <Eye className="w-4 h-4 mr-1" />
                                             View
                                         </button>
@@ -434,7 +440,11 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                         <h5 className="font-bold text-slate-800">Next Step: {nextPhaseTitle}</h5>
                         <p className="text-sm text-slate-600">{semanticReady} candidates ready for semantic analysis & ranking</p>
                     </div>
-                    <button type="button" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center">
+                    <button
+                        type="button"
+                        onClick={() => onOpenSemanticAnalysis?.()}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
+                    >
                         <Eye className="w-4 h-4 mr-2" />
                         Open Semantic Analysis
                     </button>

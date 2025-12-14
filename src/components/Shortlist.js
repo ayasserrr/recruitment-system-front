@@ -90,6 +90,35 @@ export default function Shortlist({ onBack }) {
         }
     };
 
+    // Download CV functionality
+    const downloadCV = (cv) => {
+        const cvData = {
+            name: cv.name,
+            email: cv.email,
+            phone: cv.phone,
+            experience: cv.experience,
+            education: cv.education,
+            summary: cv.summary,
+            skills: cv.skills || [],
+            projects: cv.projects || [],
+            score: cv.score,
+            match: cv.match,
+            shortlistedFrom: cv.shortlistedFrom,
+            shortlistedDate: cv.shortlistedDate,
+            generatedDate: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(cvData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileDefaultName = `cv-${cv.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     const removeFromShortlist = (appId, cvId) => {
         // Remove from localStorage
         const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
@@ -226,7 +255,7 @@ export default function Shortlist({ onBack }) {
                                                     <Eye className="w-4 h-4 mr-1" />
                                                     View CV
                                                 </button>
-                                                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center text-sm">
+                                                <button onClick={() => downloadCV(cv)} className="text-green-600 hover:text-green-800 font-semibold flex items-center text-sm">
                                                     <Download className="w-4 h-4 mr-1" />
                                                     Download
                                                 </button>

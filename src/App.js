@@ -197,6 +197,8 @@ export default function RecruitmentSystem() {
                     applications={applications}
                     onUpdateApplication={handleUpdateApplication}
                     onBackToDashboard={() => setCurrentPage('home')}
+                    onViewCVs={() => setCurrentPage('applications')}
+                    onOpenSemanticAnalysis={() => setCurrentPage('semantic-analysis')}
                 />
             ) : currentPage === 'semantic-analysis' ? (
                 <SemanticAnalysis

@@ -421,27 +421,15 @@ export default function FinalRanking({ applications, onBack }) {
 
     // Extend offer functionality
     const extendOffer = (candidate) => {
-        const offerData = {
-            candidateName: candidate.name,
-            position: selectedApp?.jobTitle || 'Senior Software Engineer',
-            salary: '$120,000 - $150,000',
-            startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            offerType: 'Full-time',
-            benefits: ['Health Insurance', '401(k)', 'Remote Work Options', 'Professional Development'],
-            status: 'Offer Extended',
-            offerDate: new Date().toISOString(),
-            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-        };
+        alert(`Offer extended to ${candidate.name}! They will be contacted via email.`);
+    };
 
-        const dataStr = JSON.stringify(offerData, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
-        const exportFileDefaultName = `offer-letter-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
-
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
+    // Schedule follow-up functionality
+    const scheduleFollowUp = (candidate) => {
+        const date = prompt(`Schedule follow-up for ${candidate.name}. Enter date (YYYY-MM-DD):`, new Date().toISOString().split('T')[0]);
+        if (date) {
+            alert(`Follow-up scheduled for ${candidate.name} on ${date}`);
+        }
     };
 
     // Make final selection functionality
@@ -853,7 +841,10 @@ export default function FinalRanking({ applications, onBack }) {
                                             </div>
 
                                             <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                                                <button className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-colors">
+                                                <button
+                                                    onClick={() => scheduleFollowUp(candidate)}
+                                                    className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-colors"
+                                                >
                                                     Schedule Follow-up
                                                 </button>
                                                 <button
@@ -939,7 +930,10 @@ export default function FinalRanking({ applications, onBack }) {
 
                             {/* Final Actions */}
                             <div className="flex justify-end space-x-4">
-                                <button className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+                                <button
+                                    onClick={() => alert('Ranking saved for later!')}
+                                    className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors"
+                                >
                                     Save for Later
                                 </button>
                                 <button
