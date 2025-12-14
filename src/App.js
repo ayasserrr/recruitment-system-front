@@ -7,6 +7,7 @@ import SemanticAnalysis from './components/SemanticAnalysis';
 import TechnicalAssessment from './components/TechnicalAssessment';
 import TechnicalInterview from './components/TechnicalInterview';
 import HRInterview from './components/HRInterview';
+import FinalRanking from './components/FinalRanking';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -210,6 +211,11 @@ export default function RecruitmentSystem() {
                 />
             ) : currentPage === 'hr-interview' ? (
                 <HRInterview
+                    applications={applications}
+                    onBack={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'final-ranking' ? (
+                <FinalRanking
                     applications={applications}
                     onBack={() => setCurrentPage('home')}
                 />
