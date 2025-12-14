@@ -126,54 +126,54 @@ const Analytics = ({ onBack }) => {
 
     const renderOverviewCards = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-blue-200">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 border-2 border-accent-200">
                 <div className="flex items-center justify-between">
                     <div>
-                        <div className="text-3xl font-bold text-blue-600 mb-2">{formatNumber(analyticsData.overview.totalApplications)}</div>
-                        <div className="text-sm text-slate-600">Total Applications</div>
+                        <div className="text-3xl font-bold text-accent-600 mb-2">{formatNumber(analyticsData.overview.totalApplications)}</div>
+                        <div className="text-sm text-base-600">Total Applications</div>
                     </div>
-                    <FileText className="w-10 h-10 text-blue-400" />
+                    <FileText className="w-10 h-10 text-accent-400" />
                 </div>
-                <div className="mt-3 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-base-500">
                     <span className="text-green-600">+12.5%</span> from last period
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-green-200">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 border-2 border-accent-200">
                 <div className="flex items-center justify-between">
                     <div>
-                        <div className="text-3xl font-bold text-green-600 mb-2">{analyticsData.overview.totalHires}</div>
-                        <div className="text-sm text-slate-600">Total Hires</div>
+                        <div className="text-3xl font-bold text-accent-600 mb-2">{analyticsData.overview.totalHires}</div>
+                        <div className="text-sm text-base-600">Total Hires</div>
                     </div>
-                    <Users className="w-10 h-10 text-green-400" />
+                    <Users className="w-10 h-10 text-accent-400" />
                 </div>
-                <div className="mt-3 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-base-500">
                     <span className="text-green-600">+18.2%</span> from last period
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-purple-200">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 border-2 border-accent-200">
                 <div className="flex items-center justify-between">
                     <div>
-                        <div className="text-3xl font-bold text-purple-600 mb-2">{analyticsData.overview.averageTimeToHire}d</div>
-                        <div className="text-sm text-slate-600">Avg Time to Hire</div>
+                        <div className="text-3xl font-bold text-accent-600 mb-2">{analyticsData.overview.averageTimeToHire}d</div>
+                        <div className="text-sm text-base-600">Avg Time to Hire</div>
                     </div>
-                    <Clock className="w-10 h-10 text-purple-400" />
+                    <Clock className="w-10 h-10 text-accent-400" />
                 </div>
-                <div className="mt-3 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-base-500">
                     <span className="text-green-600">-15.3%</span> improvement
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-orange-200">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 border-2 border-accent-200">
                 <div className="flex items-center justify-between">
                     <div>
-                        <div className="text-3xl font-bold text-orange-600 mb-2">{analyticsData.overview.hrEfficiencyScore}%</div>
-                        <div className="text-sm text-slate-600">HR Efficiency</div>
+                        <div className="text-3xl font-bold text-accent-600 mb-2">{analyticsData.overview.hrEfficiencyScore}%</div>
+                        <div className="text-sm text-base-600">HR Efficiency</div>
                     </div>
-                    <Target className="w-10 h-10 text-orange-400" />
+                    <Target className="w-10 h-10 text-accent-400" />
                 </div>
-                <div className="mt-3 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-base-500">
                     <span className="text-green-600">+8.7%</span> improvement
                 </div>
             </div>
@@ -183,48 +183,48 @@ const Analytics = ({ onBack }) => {
     const renderApplicationsMetrics = () => {
         const data = analyticsData.applications;
         return (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                 <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                         <FileText className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800">Application Metrics</h2>
+                    <h2 className="text-2xl font-bold text-base-900">Application Metrics</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Total Submitted</div>
-                        <div className="text-2xl font-bold text-blue-600">{formatNumber(data.submitted)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Total Submitted</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.submitted)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Under Review</div>
-                        <div className="text-2xl font-bold text-orange-600">{formatNumber(data.underReview)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Under Review</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.underReview)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Shortlisted</div>
-                        <div className="text-2xl font-bold text-green-600">{formatNumber(data.shortlisted)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Shortlisted</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.shortlisted)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Rejected</div>
-                        <div className="text-2xl font-bold text-red-600">{formatNumber(data.rejected)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Rejected</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.rejected)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Conversion Rate</div>
-                        <div className="text-2xl font-bold text-purple-600">{data.conversionRate}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Conversion Rate</div>
+                        <div className="text-2xl font-bold text-base-600">{data.conversionRate}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Average Score</div>
-                        <div className="text-2xl font-bold text-indigo-600">{data.averageScore}</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Average Score</div>
+                        <div className="text-2xl font-bold text-base-600">{data.averageScore}</div>
                     </div>
                 </div>
 
-                <div className="mt-6 bg-slate-50 rounded-xl p-4">
-                    <h4 className="font-semibold text-slate-700 mb-3">Source Breakdown</h4>
+                <div className="mt-6 bg-base-50 rounded-xl p-4">
+                    <h4 className="font-semibold text-base-900 mb-3">Source Breakdown</h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {Object.entries(data.sourceBreakdown).map(([source, count]) => (
                             <div key={source} className="flex justify-between text-sm">
-                                <span className="text-slate-600 capitalize">{source}</span>
-                                <span className="font-semibold text-slate-800">{formatNumber(count)}</span>
+                                <span className="text-base-600 capitalize">{source}</span>
+                                <span className="font-semibold text-base-900">{formatNumber(count)}</span>
                             </div>
                         ))}
                     </div>
@@ -236,38 +236,38 @@ const Analytics = ({ onBack }) => {
     const renderAssessmentsMetrics = () => {
         const data = analyticsData.assessments;
         return (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                 <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                         <Brain className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800">Assessment Performance</h2>
+                    <h2 className="text-2xl font-bold text-base-900">Assessment Performance</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Sent</div>
-                        <div className="text-2xl font-bold text-purple-600">{formatNumber(data.sent)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Sent</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.sent)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Completed</div>
-                        <div className="text-2xl font-bold text-green-600">{formatNumber(data.completed)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Completed</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.completed)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Pending</div>
-                        <div className="text-2xl font-bold text-orange-600">{formatNumber(data.pending)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Pending</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.pending)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Average Score</div>
-                        <div className="text-2xl font-bold text-blue-600">{data.averageScore}</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Average Score</div>
+                        <div className="text-2xl font-bold text-base-600">{data.averageScore}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Pass Rate</div>
-                        <div className="text-2xl font-bold text-green-600">{data.passRate}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Pass Rate</div>
+                        <div className="text-2xl font-bold text-base-600">{data.passRate}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Avg Completion Time</div>
-                        <div className="text-2xl font-bold text-indigo-600">{data.averageCompletionTime}m</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Avg Completion Time</div>
+                        <div className="text-2xl font-bold text-base-600">{data.averageCompletionTime}m</div>
                     </div>
                 </div>
             </div>
@@ -277,38 +277,38 @@ const Analytics = ({ onBack }) => {
     const renderInterviewsMetrics = () => {
         const data = analyticsData.interviews;
         return (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                 <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                         <Users className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800">Interview Analytics</h2>
+                    <h2 className="text-2xl font-bold text-base-900">Interview Analytics</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Technical Interviews</div>
-                        <div className="text-2xl font-bold text-red-600">{formatNumber(data.technical)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Technical Interviews</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.technical)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">HR Interviews</div>
-                        <div className="text-2xl font-bold text-pink-600">{formatNumber(data.hr)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">HR Interviews</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.hr)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Completed</div>
-                        <div className="text-2xl font-bold text-green-600">{formatNumber(data.completed)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Completed</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.completed)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Average Score</div>
-                        <div className="text-2xl font-bold text-blue-600">{data.averageScore}/10</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Average Score</div>
+                        <div className="text-2xl font-bold text-base-600">{data.averageScore}/10</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Average Duration</div>
-                        <div className="text-2xl font-bold text-purple-600">{data.averageDuration}m</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Average Duration</div>
+                        <div className="text-2xl font-bold text-base-600">{data.averageDuration}m</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Satisfaction Score</div>
-                        <div className="text-2xl font-bold text-green-600">{data.satisfactionScore}/5</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Satisfaction Score</div>
+                        <div className="text-2xl font-bold text-base-600">{data.satisfactionScore}/5</div>
                     </div>
                 </div>
             </div>
@@ -318,48 +318,48 @@ const Analytics = ({ onBack }) => {
     const renderHiringMetrics = () => {
         const data = analyticsData.hiring;
         return (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                 <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                         <Award className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800">Hiring Insights</h2>
+                    <h2 className="text-2xl font-bold text-base-900">Hiring Insights</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Total Hires</div>
-                        <div className="text-2xl font-bold text-orange-600">{formatNumber(data.totalHires)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Total Hires</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.totalHires)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Time to Hire</div>
-                        <div className="text-2xl font-bold text-purple-600">{data.timeToHire}d</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Time to Hire</div>
+                        <div className="text-2xl font-bold text-accent-600">{data.timeToHire}d</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Offer Acceptance Rate</div>
-                        <div className="text-2xl font-bold text-green-600">{data.offerAcceptanceRate}%</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Offer Acceptance Rate</div>
+                        <div className="text-2xl font-bold text-accent-600">{data.offerAcceptanceRate}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Average Salary</div>
-                        <div className="text-2xl font-bold text-blue-600">{formatCurrency(data.averageSalary)}</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Average Salary</div>
+                        <div className="text-2xl font-bold text-base-600">{formatCurrency(data.averageSalary)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Retention Rate</div>
-                        <div className="text-2xl font-bold text-green-600">{data.retentionRate}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Retention Rate</div>
+                        <div className="text-2xl font-bold text-base-600">{data.retentionRate}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Quality of Hire</div>
-                        <div className="text-2xl font-bold text-purple-600">{data.qualityOfHire}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Quality of Hire</div>
+                        <div className="text-2xl font-bold text-base-600">{data.qualityOfHire}%</div>
                     </div>
                 </div>
 
-                <div className="mt-6 bg-slate-50 rounded-xl p-4">
-                    <h4 className="font-semibold text-slate-700 mb-3">Department Breakdown</h4>
+                <div className="mt-6 bg-base-50 rounded-xl p-4">
+                    <h4 className="font-semibold text-base-900 mb-3">Department Breakdown</h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {Object.entries(data.departmentBreakdown).map(([dept, count]) => (
                             <div key={dept} className="flex justify-between text-sm">
-                                <span className="text-slate-600 capitalize">{dept}</span>
-                                <span className="font-semibold text-slate-800">{formatNumber(count)}</span>
+                                <span className="text-base-600 capitalize">{dept}</span>
+                                <span className="font-semibold text-base-900">{formatNumber(count)}</span>
                             </div>
                         ))}
                     </div>
@@ -371,38 +371,38 @@ const Analytics = ({ onBack }) => {
     const renderEfficiencyMetrics = () => {
         const data = analyticsData.efficiency;
         return (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                 <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                         <TrendingUp className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800">HR Efficiency</h2>
+                    <h2 className="text-2xl font-bold text-base-900">HR Efficiency</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Time Saved Monthly</div>
-                        <div className="text-2xl font-bold text-pink-600">{data.timeSaved}h</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Time Saved Monthly</div>
+                        <div className="text-2xl font-bold text-accent-600">{data.timeSaved}h</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Automation Rate</div>
-                        <div className="text-2xl font-bold text-blue-600">{data.automationRate}%</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Automation Rate</div>
+                        <div className="text-2xl font-bold text-accent-600">{data.automationRate}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Manual Tasks Reduced</div>
-                        <div className="text-2xl font-bold text-green-600">{formatNumber(data.manualTasksReduced)}</div>
+                    <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Manual Tasks Reduced</div>
+                        <div className="text-2xl font-bold text-accent-600">{formatNumber(data.manualTasksReduced)}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Process Improvement</div>
-                        <div className="text-2xl font-bold text-purple-600">{data.processImprovement}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Process Improvement</div>
+                        <div className="text-2xl font-bold text-base-600">{data.processImprovement}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">HR Productivity</div>
-                        <div className="text-2xl font-bold text-orange-600">{data.hrProductivity}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">HR Productivity</div>
+                        <div className="text-2xl font-bold text-base-600">{data.hrProductivity}%</div>
                     </div>
-                    <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
-                        <div className="text-sm text-slate-600 mb-1">Compliance Score</div>
-                        <div className="text-2xl font-bold text-green-600">{data.complianceScore}%</div>
+                    <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl p-6">
+                        <div className="text-sm text-base-600 mb-1">Compliance Score</div>
+                        <div className="text-2xl font-bold text-base-600">{data.complianceScore}%</div>
                     </div>
                 </div>
             </div>
@@ -410,15 +410,15 @@ const Analytics = ({ onBack }) => {
     };
 
     const renderTrendsChart = () => (
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center">
-                    <BarChart3 className="w-6 h-6 mr-3 text-indigo-600" />
+                <h2 className="text-2xl font-bold text-base-900 flex items-center">
+                    <BarChart3 className="w-6 h-6 mr-3 text-accent-600" />
                     Performance Trends
                 </h2>
                 <div className="flex items-center space-x-2">
-                    <Calendar className="w-5 h-5 text-slate-600" />
-                    <span className="text-sm text-slate-600">Last 12 Months</span>
+                    <Calendar className="w-5 h-5 text-base-600" />
+                    <span className="text-sm text-base-600">Last 12 Months</span>
                 </div>
             </div>
 
@@ -499,7 +499,7 @@ const Analytics = ({ onBack }) => {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-slate-100 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -507,27 +507,24 @@ const Analytics = ({ onBack }) => {
                         <div className="flex items-center">
                             {onBack && (
                                 <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-slate-600" />
+                                    <ArrowLeft className="w-6 h-6 text-base-600" />
                                 </button>
                             )}
-                            <div className="relative">
-                                <BarChart3 className="w-16 h-16 text-indigo-600" />
-                                <div className="absolute -top-2 -right-2 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
-                                    <TrendingUp className="w-4 h-4 text-white" />
-                                </div>
+                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-16 h-16 rounded-lg">
+                                <BarChart3 className="w-8 h-8 text-white" />
                             </div>
                             <div className="ml-6">
-                                <h1 className="text-4xl font-bold text-slate-800">Analytics Dashboard</h1>
-                                <p className="text-slate-600">Performance insights and recruitment metrics</p>
+                                <h1 className="text-4xl font-bold text-base-900">Analytics Dashboard</h1>
+                                <p className="text-base-600">Performance insights and recruitment metrics</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="flex items-center space-x-2">
-                                <Calendar className="w-5 h-5 text-slate-600" />
+                                <Calendar className="w-5 h-5 text-base-600" />
                                 <select
                                     value={selectedPeriod}
                                     onChange={(e) => setSelectedPeriod(e.target.value)}
-                                    className="border border-slate-300 rounded-lg px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
                                 >
                                     <option value="7days">Last 7 Days</option>
                                     <option value="30days">Last 30 Days</option>
@@ -535,30 +532,44 @@ const Analytics = ({ onBack }) => {
                                     <option value="1year">Last Year</option>
                                 </select>
                             </div>
+
+                            <div className="flex items-center space-x-2">
+                                <Filter className="w-5 h-5 text-base-600" />
+                                <select
+                                    value={selectedMetric}
+                                    onChange={(e) => setSelectedMetric(e.target.value)}
+                                    className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                                >
+                                    <option value="overview">Overview</option>
+                                    <option value="applications">Applications</option>
+                                    <option value="assessments">Assessments</option>
+                                    <option value="interviews">Interviews</option>
+                                    <option value="hiring">Hiring</option>
+                                    <option value="efficiency">Efficiency</option>
+                                </select>
+                            </div>
+
                             <button
                                 onClick={exportAnalytics}
-                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors flex items-center"
+                                className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-6 py-2 rounded-lg font-semibold flex items-center"
                             >
                                 <Download className="w-5 h-5 mr-2" />
-                                Export Report
+                                Export
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Overview Cards */}
-                {renderOverviewCards()}
-
                 {/* Navigation Tabs */}
-                <div className="bg-white rounded-2xl shadow-xl p-2 mb-8">
+                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-2 mb-8">
                     <div className="flex space-x-2">
                         {['overview', 'applications', 'assessments', 'interviews', 'hiring', 'efficiency', 'trends'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setSelectedMetric(tab)}
                                 className={`px-6 py-3 rounded-xl font-semibold transition-all ${selectedMetric === tab
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-slate-600 hover:bg-slate-100'
+                                    ? 'bg-gradient-to-r from-base-600 to-accent-600 text-white'
+                                    : 'text-base-600 hover:bg-base-100'
                                     }`}
                             >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -588,33 +599,33 @@ const Analytics = ({ onBack }) => {
                 {selectedMetric === 'trends' && renderTrendsChart()}
 
                 {/* HR Impact Summary */}
-                <div className="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-200">
-                    <h2 className="text-2xl font-bold text-slate-800 mb-6">HR Impact Summary</h2>
+                <div className="mt-8 bg-gradient-to-r from-base-50 to-accent-50 rounded-2xl p-8 border border-base-200">
+                    <h2 className="text-2xl font-bold text-base-900 mb-6">HR Impact Summary</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-indigo-600 mb-2">
+                            <div className="text-3xl font-bold text-accent-600 mb-2">
                                 {analyticsData.efficiency.timeSaved}h
                             </div>
-                            <div className="text-sm text-slate-600">Time Saved Monthly</div>
-                            <div className="text-xs text-slate-500 mt-1">
+                            <div className="text-sm text-base-600">Time Saved Monthly</div>
+                            <div className="text-xs text-base-500 mt-1">
                                 Through automation and streamlined processes
                             </div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-green-600 mb-2">
+                            <div className="text-3xl font-bold text-accent-600 mb-2">
                                 ${formatNumber(analyticsData.efficiency.manualTasksReduced * 50)}
                             </div>
-                            <div className="text-sm text-slate-600">Cost Savings</div>
-                            <div className="text-xs text-slate-500 mt-1">
+                            <div className="text-sm text-base-600">Cost Savings</div>
+                            <div className="text-xs text-base-500 mt-1">
                                 Reduced manual work and improved efficiency
                             </div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-purple-600 mb-2">
+                            <div className="text-3xl font-bold text-accent-600 mb-2">
                                 {analyticsData.efficiency.hrProductivity}%
                             </div>
-                            <div className="text-sm text-slate-600">HR Productivity Score</div>
-                            <div className="text-xs text-slate-500 mt-1">
+                            <div className="text-sm text-base-600">HR Productivity Score</div>
+                            <div className="text-xs text-base-500 mt-1">
                                 Measured against industry benchmarks
                             </div>
                         </div>

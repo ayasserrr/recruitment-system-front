@@ -55,25 +55,27 @@ export default function Applications({ applications, onBackToDashboard }) {
         ];
 
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-slate-100 p-6 md:p-8">
+            <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
                 <div className="max-w-7xl mx-auto">
                     <button
                         type="button"
                         onClick={() => setSelectedId(null)}
-                        className="mb-6 text-indigo-700 hover:text-indigo-900 font-semibold flex items-center"
+                        className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
                     >
                         <ArrowLeft className="w-5 h-5 mr-2" />
                         Back to Applications
                     </button>
 
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                             <div>
                                 <div className="flex items-center gap-3">
-                                    <Briefcase className="w-7 h-7 text-indigo-600" />
-                                    <h1 className="text-3xl font-bold text-slate-800">{selectedApplication.jobTitle}</h1>
+                                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg">
+                                        <Briefcase className="w-6 h-6 text-white" />
+                                    </div>
+                                    <h1 className="text-3xl font-bold text-base-900">{selectedApplication.jobTitle}</h1>
                                 </div>
-                                <div className="mt-2 flex items-center text-slate-600">
+                                <div className="mt-2 flex items-center text-base-600">
                                     <Calendar className="w-4 h-4 mr-2" />
                                     <span>Posted on {selectedApplication.posted}</span>
                                 </div>
@@ -86,37 +88,37 @@ export default function Applications({ applications, onBackToDashboard }) {
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
                             {stages.map((s) => (
-                                <div key={s.label} className={`${s.color} p-4 rounded-lg`}>
-                                    <div className="text-sm text-slate-600 mb-1">{s.label}</div>
-                                    <div className={`text-2xl font-bold ${s.textColor}`}>{s.value}</div>
+                                <div key={s.label} className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                    <div className="text-sm text-base-600 mb-1">{s.label}</div>
+                                    <div className="text-2xl font-bold text-accent-600">{s.value}</div>
                                 </div>
                             ))}
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div className="lg:col-span-2">
-                                <h2 className="text-xl font-bold text-slate-800 mb-4">Process</h2>
+                                <h2 className="text-xl font-bold text-base-900 mb-4">Process</h2>
 
                                 <div className="space-y-4">
                                     {process.map((p, idx) => (
-                                        <div key={idx} className="border border-slate-200 rounded-xl p-5">
+                                        <div key={idx} className="border border-base-200 rounded-xl p-5 hover:shadow-lg hover:shadow-base-200 transition-all">
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
                                                     <div className="flex items-center gap-2">
-                                                        <CheckCircle className="w-5 h-5 text-indigo-600" />
-                                                        <h3 className="text-lg font-semibold text-slate-800">{p.title}</h3>
+                                                        <CheckCircle className="w-5 h-5 text-accent-600" />
+                                                        <h3 className="text-lg font-semibold text-base-900">{p.title}</h3>
                                                     </div>
-                                                    <p className="text-sm text-slate-600 mt-1">{p.description}</p>
+                                                    <p className="text-sm text-base-600 mt-1">{p.description}</p>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="text-sm text-slate-600">Count</div>
-                                                    <div className="text-2xl font-bold text-slate-800">{p.value}</div>
+                                                    <div className="text-sm text-base-600">Count</div>
+                                                    <div className="text-2xl font-bold text-base-900">{p.value}</div>
                                                 </div>
                                             </div>
 
                                             {typeof p.threshold === 'number' && (
-                                                <div className="mt-3 text-sm text-slate-600">
-                                                    Candidates to advance after this phase: <span className="font-semibold text-slate-800">{p.threshold}</span>
+                                                <div className="mt-3 text-sm text-base-600">
+                                                    Candidates to advance after this phase: <span className="font-semibold text-base-900">{p.threshold}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -125,44 +127,44 @@ export default function Applications({ applications, onBackToDashboard }) {
                             </div>
 
                             <div>
-                                <h2 className="text-xl font-bold text-slate-800 mb-4">Requisition Details</h2>
-                                <div className="border border-slate-200 rounded-xl p-5 space-y-4">
+                                <h2 className="text-xl font-bold text-base-900 mb-4">Requisition Details</h2>
+                                <div className="border border-base-200 rounded-xl p-5 space-y-4">
                                     <div>
-                                        <div className="text-sm text-slate-600">Platforms</div>
-                                        <div className="font-semibold text-slate-800">
+                                        <div className="text-sm text-base-600">Platforms</div>
+                                        <div className="font-semibold text-base-900">
                                             {(req.selectedPlatforms || []).length ? (req.selectedPlatforms || []).join(', ') : 'Not set'}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-slate-600">CV Collection Window</div>
-                                        <div className="font-semibold text-slate-800">
+                                        <div className="text-sm text-base-600">CV Collection Window</div>
+                                        <div className="font-semibold text-base-900">
                                             {(req.postingStartDate || '—') + ' to ' + (req.postingEndDate || '—')}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-slate-600">Assessment Type</div>
-                                        <div className="font-semibold text-slate-800">{req.assessmentType || 'Not set'}</div>
+                                        <div className="text-sm text-base-600">Assessment Type</div>
+                                        <div className="font-semibold text-base-900">{req.assessmentType || 'Not set'}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-slate-600">Technical Interview Duration</div>
-                                        <div className="font-semibold text-slate-800">{(req.technicalInterviewDuration || '45') + ' minutes'}</div>
+                                        <div className="text-sm text-base-600">Technical Interview Duration</div>
+                                        <div className="font-semibold text-base-900">{(req.technicalInterviewDuration || '45') + ' minutes'}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-slate-600">HR Interview Duration</div>
-                                        <div className="font-semibold text-slate-800">{(req.hrInterviewDuration || '45') + ' minutes'}</div>
+                                        <div className="text-sm text-base-600">HR Interview Duration</div>
+                                        <div className="font-semibold text-base-900">{(req.hrInterviewDuration || '45') + ' minutes'}</div>
                                     </div>
                                 </div>
 
-                                <div className="mt-6 border border-slate-200 rounded-xl p-5">
+                                <div className="mt-6 border border-base-200 rounded-xl p-5">
                                     <div className="flex items-center justify-between mb-3">
-                                        <span className="text-sm font-semibold text-slate-600">Overall Progress</span>
-                                        <span className="text-sm font-semibold text-slate-600">
+                                        <span className="text-sm font-semibold text-base-600">Overall Progress</span>
+                                        <span className="text-sm font-semibold text-base-600">
                                             {safePercent(selectedApplication.finalCandidates || 0, selectedApplication.cvs || 0)}%
                                         </span>
                                     </div>
-                                    <div className="w-full bg-slate-200 rounded-full h-3">
+                                    <div className="w-full bg-base-200 rounded-full h-3">
                                         <div
-                                            className="bg-indigo-600 h-3 rounded-full transition-all"
+                                            className="bg-gradient-to-r from-base-500 to-accent-500 h-3 rounded-full transition-all"
                                             style={{ width: `${safePercent(selectedApplication.finalCandidates || 0, selectedApplication.cvs || 0)}%` }}
                                         />
                                     </div>
@@ -176,104 +178,106 @@ export default function Applications({ applications, onBackToDashboard }) {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-slate-100 p-6 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between gap-4 mb-8">
                     <div>
-                        <h1 className="text-4xl font-bold text-slate-800 mb-2">Application Management</h1>
-                        <p className="text-slate-600">Track and manage all job applications in one place</p>
+                        <h1 className="text-4xl font-bold text-base-900 mb-2">Application Management</h1>
+                        <p className="text-base-600">Track and manage all job applications in one place</p>
                     </div>
                     <button
                         type="button"
                         onClick={onBackToDashboard}
-                        className="text-indigo-700 hover:text-indigo-900 font-semibold flex items-center"
+                        className="text-base-600 hover:text-base-800 font-semibold flex items-center"
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
                         Back to Dashboard
                     </button>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
                     <div className="flex items-center mb-6">
-                        <List className="w-10 h-10 text-indigo-600 mr-4" />
-                        <h2 className="text-3xl font-bold text-slate-800">Applications Overview</h2>
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                            <List className="w-6 h-6 text-white" />
+                        </div>
+                        <h2 className="text-3xl font-bold text-base-900">Applications Overview</h2>
                     </div>
 
                     <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="bg-indigo-50 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-indigo-600 mb-2">{totals.cvs}</div>
-                            <div className="text-sm font-semibold text-slate-700">Total CVs Received</div>
-                            <div className="text-sm text-slate-500">Across all positions</div>
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
+                            <div className="text-4xl font-bold text-accent-600 mb-2">{totals.cvs}</div>
+                            <div className="text-sm font-semibold text-base-700">Total CVs Received</div>
+                            <div className="text-sm text-base-500">Across all positions</div>
                         </div>
 
-                        <div className="bg-green-50 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-green-600 mb-2">{totals.finalCandidates}</div>
-                            <div className="text-sm font-semibold text-slate-700">Final Candidates</div>
-                            <div className="text-sm text-slate-500">Ready for hiring decision</div>
+                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
+                            <div className="text-4xl font-bold text-accent-600 mb-2">{totals.finalCandidates}</div>
+                            <div className="text-sm font-semibold text-base-700">Final Candidates</div>
+                            <div className="text-sm text-base-500">Ready for hiring decision</div>
                         </div>
 
-                        <div className="bg-blue-50 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-blue-600 mb-2">{totals.positions}</div>
-                            <div className="text-sm font-semibold text-slate-700">Active Positions</div>
-                            <div className="text-sm text-slate-500">Currently recruiting</div>
+                        <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl">
+                            <div className="text-4xl font-bold text-base-600 mb-2">{totals.positions}</div>
+                            <div className="text-sm font-semibold text-base-700">Active Positions</div>
+                            <div className="text-sm text-base-500">Currently recruiting</div>
                         </div>
                     </div>
 
                     {applications.length === 0 ? (
-                        <div className="border-2 border-dashed border-slate-200 rounded-xl p-10 text-center">
-                            <p className="text-slate-700 font-semibold">No applications yet</p>
-                            <p className="text-slate-500 mt-1">Submit a Job Requisition to create your first application record.</p>
+                        <div className="border-2 border-dashed border-base-200 rounded-xl p-10 text-center">
+                            <p className="text-base-700 font-semibold">No applications yet</p>
+                            <p className="text-base-500 mt-1">Submit a Job Requisition to create your first application record.</p>
                         </div>
                     ) : (
                         <div className="space-y-6">
                             {applications.map((app) => (
                                 <div
                                     key={app.id}
-                                    className="border-2 border-slate-200 rounded-xl p-6 hover:border-indigo-500 transition-colors hover:shadow-lg"
+                                    className="border-2 border-base-200 rounded-xl p-6 hover:border-accent-500 transition-colors hover:shadow-lg hover:shadow-base-200"
                                 >
                                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                                         <div className="mb-4 md:mb-0">
-                                            <h3 className="text-2xl font-bold text-slate-800">{app.jobTitle}</h3>
-                                            <p className="text-slate-600">Posted on {app.posted}</p>
+                                            <h3 className="text-2xl font-bold text-base-900">{app.jobTitle}</h3>
+                                            <p className="text-base-600">Posted on {app.posted}</p>
                                         </div>
                                         <div className={`px-4 py-2 rounded-full font-semibold ${statusStyles(app.status)}`}>{app.status}</div>
                                     </div>
 
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-                                        <div className="bg-slate-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">CVs</div>
-                                            <div className="text-2xl font-bold text-slate-800">{app.cvs}</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">CVs</div>
+                                            <div className="text-2xl font-bold text-accent-600">{app.cvs}</div>
                                         </div>
-                                        <div className="bg-purple-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">Semantic</div>
-                                            <div className="text-2xl font-bold text-purple-600">{app.semantic}</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">Semantic</div>
+                                            <div className="text-2xl font-bold text-accent-600">{app.semantic}</div>
                                         </div>
-                                        <div className="bg-orange-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">Assessment</div>
-                                            <div className="text-2xl font-bold text-orange-600">{app.assessment}</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">Assessment</div>
+                                            <div className="text-2xl font-bold text-accent-600">{app.assessment}</div>
                                         </div>
-                                        <div className="bg-red-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">Tech Interview</div>
-                                            <div className="text-2xl font-bold text-red-600">{app.techInterview}</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">Tech Interview</div>
+                                            <div className="text-2xl font-bold text-accent-600">{app.techInterview}</div>
                                         </div>
-                                        <div className="bg-pink-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">HR Interview</div>
-                                            <div className="text-2xl font-bold text-pink-600">{app.hrInterview}</div>
+                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">HR Interview</div>
+                                            <div className="text-2xl font-bold text-accent-600">{app.hrInterview}</div>
                                         </div>
-                                        <div className="bg-yellow-50 p-4 rounded-lg">
-                                            <div className="text-sm text-slate-600 mb-1">Final</div>
-                                            <div className="text-2xl font-bold text-yellow-600">{app.finalCandidates}</div>
+                                        <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-lg">
+                                            <div className="text-sm text-base-600 mb-1">Final</div>
+                                            <div className="text-2xl font-bold text-base-600">{app.finalCandidates}</div>
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-semibold text-slate-600">Overall Progress</span>
-                                            <span className="text-sm font-semibold text-slate-600">{safePercent(app.finalCandidates, app.cvs)}%</span>
+                                            <span className="text-sm font-semibold text-base-600">Overall Progress</span>
+                                            <span className="text-sm font-semibold text-base-600">{safePercent(app.finalCandidates, app.cvs)}%</span>
                                         </div>
-                                        <div className="w-full bg-slate-200 rounded-full h-3">
+                                        <div className="w-full bg-base-200 rounded-full h-3">
                                             <div
-                                                className="bg-indigo-600 h-3 rounded-full transition-all"
+                                                className="bg-gradient-to-r from-base-500 to-accent-500 h-3 rounded-full transition-all"
                                                 style={{ width: `${safePercent(app.finalCandidates, app.cvs)}%` }}
                                             />
                                         </div>
@@ -283,7 +287,7 @@ export default function Applications({ applications, onBackToDashboard }) {
                                         <button
                                             type="button"
                                             onClick={() => setSelectedId(app.id)}
-                                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                                            className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                                         >
                                             View Details
                                         </button>
