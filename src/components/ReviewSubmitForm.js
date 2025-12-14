@@ -170,36 +170,36 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
-                            <FileText className="w-6 h-6 text-white" />
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
+                            <FileText className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">Job Title</p>
-                            <p className="font-bold text-gray-800">{formData.jobTitle || 'Not set'}</p>
+                            <p className="text-sm text-base-600">Job Title</p>
+                            <p className="font-bold text-base-900">{formData.jobTitle || 'Not set'}</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
-                            <Globe className="w-6 h-6 text-white" />
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
+                            <Globe className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">Platforms</p>
-                            <p className="font-bold text-gray-800">{formData.selectedPlatforms?.length || 0} platforms</p>
+                            <p className="text-sm text-base-600">Platforms</p>
+                            <p className="font-bold text-base-900">{formData.selectedPlatforms?.length || 0} platforms</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
-                            <ClipboardList className="w-6 h-6 text-white" />
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
+                            <ClipboardList className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">Assessment</p>
-                            <p className="font-bold text-gray-800">
+                            <p className="text-sm text-base-600">Assessment</p>
+                            <p className="font-bold text-base-900">
                                 {formData.assessmentType === 'ai-generated'
                                     ? 'AI-Generated'
                                     : formData.assessmentType === 'custom'
@@ -212,12 +212,12 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center mb-4">
-                        <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg justify-center mr-4">
-                            <Video className="w-6 h-6 text-white" />
+                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
+                            <Video className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-600">Interview Type</p>
-                            <p className="font-bold text-gray-800">{formData.technicalInterviewType === 'ai-conducted' ? 'AI' : 'Human'}</p>
+                            <p className="text-sm text-base-600">Interview Type</p>
+                            <p className="font-bold text-base-900">{formData.technicalInterviewType === 'ai-conducted' ? 'AI' : 'Human'}</p>
                         </div>
                     </div>
                 </div>
@@ -229,15 +229,15 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     <div key={section.id} className="bg-white rounded-xl shadow-sm p-6">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
-                                <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
-                                    <section.icon className="w-5 h-5 text-white" />
+                                <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-4 flex-shrink-0">
+                                    <section.icon className="w-4 h-4 text-white" />
                                 </div>
                                 <h3 className="text-xl font-bold text-base-900">{section.title}</h3>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => onEditStep(section.id)}
-                                className="flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                                className="flex items-center text-base-600 hover:text-base-700 font-medium"
                             >
                                 <Edit className="w-4 h-4 mr-2" />
                                 Edit

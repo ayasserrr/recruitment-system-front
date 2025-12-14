@@ -20,27 +20,22 @@ export default function StepProgress({ currentStep, steps }) {
                     return (
                         <div key={step.id} className="flex flex-col items-center relative">
                             <div
-                                className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-300 ${isCompleted
-                                    ? 'bg-gradient-to-r from-base-500 to-accent-500 border-base-500'
-                                    : isActive
-                                        ? 'bg-gradient-to-r from-base-500 to-accent-500 border-accent-500'
-                                        : 'bg-gradient-to-r from-base-500 to-accent-500 border-base-300'
+                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted || isActive
+                                    ? 'bg-gradient-to-r from-base-500 to-accent-500'
+                                    : 'bg-gradient-to-r from-base-300 to-accent-300'
                                     }`}
                             >
                                 {isCompleted ? (
                                     <CheckCircle className="w-6 h-6 text-white" />
                                 ) : (
-                                    <span
-                                        className={`text-lg font-bold ${isActive ? 'text-white' : 'text-white'
-                                            }`}
-                                    >
+                                    <span className="text-lg font-bold text-white">
                                         {stepNumber}
                                     </span>
                                 )}
                             </div>
                             <div className="mt-3 text-center">
                                 <p
-                                    className={`text-sm font-medium ${isActive || isCompleted ? 'text-accent-600' : 'text-base-500'
+                                    className={`text-sm font-medium ${isActive || isCompleted ? 'text-base-700' : 'text-base-500'
                                         }`}
                                 >
                                     {step.title}
