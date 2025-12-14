@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ClipboardCheck, ChevronRight, Clock, CheckCircle, Send, Eye, TrendingUp, Users, Target, Award, FileText, Download, ArrowLeft } from 'lucide-react';
+import { ClipboardCheck, ChevronRight, Clock, CheckCircle, Send, Eye, TrendingUp, Users, Target, Award, FileText, Download, ArrowLeft, Star } from 'lucide-react';
 
 export default function TechnicalAssessment({ applications, onBack }) {
     const [selectedAppId, setSelectedAppId] = useState(null);
@@ -633,6 +633,37 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                         className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
                                     >
                                         Close
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const shortlistData = {
+                                                ...showCVModal,
+                                                email: `${showCVModal.name.toLowerCase().replace(' ', '.')}@email.com`,
+                                                phone: '+1 (555) 123-4567',
+                                                experience: '5+ years',
+                                                education: "Bachelor's in Computer Science",
+                                                summary: 'Experienced software engineer with strong technical skills and a proven track record of delivering high-quality solutions.',
+                                                projects: [
+                                                    'Led development of microservices architecture serving 1M+ users',
+                                                    'Implemented machine learning pipeline reducing processing time by 40%',
+                                                    'Built real-time analytics dashboard with React and Node.js'
+                                                ],
+                                                shortlistedFrom: 'Technical Assessment',
+                                                shortlistedDate: new Date().toISOString().slice(0, 10)
+                                            };
+                                            const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                            const existingCV = existingShortlist.find(cv => cv.name === showCVModal.name && cv.email === shortlistData.email);
+                                            if (!existingCV) {
+                                                localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                alert(`${showCVModal.name} has been added to your shortlist!`);
+                                            } else {
+                                                alert(`${showCVModal.name} is already in your shortlist.`);
+                                            }
+                                        }}
+                                        className="px-6 py-3 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-colors"
+                                    >
+                                        <Star className="w-5 h-5 mr-2" />
+                                        Add to Shortlist
                                     </button>
                                     <button
                                         onClick={() => downloadCV(showCVModal)}

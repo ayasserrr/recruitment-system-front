@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Brain, ChevronRight, CheckCircle, Eye, Users, Clock, FileText, Download, ArrowLeft } from 'lucide-react';
+import { Brain, ChevronRight, CheckCircle, Eye, Users, Clock, FileText, Download, ArrowLeft, Star } from 'lucide-react';
 
 export default function SemanticAnalysis({ applications, onBack }) {
     const [selectedAppId, setSelectedAppId] = useState(null);
@@ -348,6 +348,39 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                 >
                                                     <Eye className="w-5 h-5 mr-2" />
                                                     View Full Report
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        // Add to shortlist functionality
+                                                        const shortlistData = {
+                                                            ...candidate,
+                                                            email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`,
+                                                            phone: '+1 (555) 123-4567',
+                                                            experience: '5+ years',
+                                                            education: "Bachelor's in Computer Science",
+                                                            summary: 'Experienced software engineer with strong technical skills and a proven track record of delivering high-quality solutions.',
+                                                            projects: [
+                                                                'Led development of microservices architecture serving 1M+ users',
+                                                                'Implemented machine learning pipeline reducing processing time by 40%',
+                                                                'Built real-time analytics dashboard with React and Node.js'
+                                                            ],
+                                                            shortlistedFrom: 'Semantic Analysis',
+                                                            shortlistedDate: new Date().toISOString().slice(0, 10)
+                                                        };
+                                                        // Store in localStorage for persistence across pages
+                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                                        const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === shortlistData.email);
+                                                        if (!existingCV) {
+                                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                            alert(`${candidate.name} has been added to your shortlist!`);
+                                                        } else {
+                                                            alert(`${candidate.name} is already in your shortlist.`);
+                                                        }
+                                                    }}
+                                                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-3 rounded-lg font-semibold flex items-center transition-colors"
+                                                >
+                                                    <Star className="w-5 h-5 mr-2" />
+                                                    Add to Shortlist
                                                 </button>
                                             </div>
                                         </div>

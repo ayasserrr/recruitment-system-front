@@ -814,9 +814,26 @@ export default function FinalRanking({ applications, onBack }) {
                                         {/* Actions */}
                                         <div className="flex flex-wrap justify-between items-center pt-6 border-t border-slate-200">
                                             <div className="flex items-center space-x-4">
-                                                <button className="text-yellow-600 hover:text-yellow-800 font-semibold flex items-center">
+                                                <button
+                                                    onClick={() => {
+                                                        const shortlistData = {
+                                                            ...candidate,
+                                                            shortlistedFrom: 'Final Ranking',
+                                                            shortlistedDate: new Date().toISOString().slice(0, 10)
+                                                        };
+                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                                        const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === candidate.email);
+                                                        if (!existingCV) {
+                                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                            alert(`${candidate.name} has been added to your shortlist!`);
+                                                        } else {
+                                                            alert(`${candidate.name} is already in your shortlist.`);
+                                                        }
+                                                    }}
+                                                    className="text-yellow-600 hover:text-yellow-800 font-semibold flex items-center"
+                                                >
                                                     <Star className="w-5 h-5 mr-2" />
-                                                    Add to Favorites
+                                                    Add to Shortlist
                                                 </button>
                                                 <button
                                                     onClick={() => setShowCVModal(candidate)}
@@ -850,88 +867,88 @@ export default function FinalRanking({ applications, onBack }) {
                                     </div>
                                 ))}
                             </div>
-                        </div>
 
-                        {/* Comparative Analysis */}
-                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                            <h2 className="text-2xl font-bold text-slate-800 mb-6">Comparative Analysis</h2>
+                            {/* Comparative Analysis */}
+                            <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                                <h2 className="text-2xl font-bold text-slate-800 mb-6">Comparative Analysis</h2>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                {/* Score Distribution */}
-                                <div>
-                                    <h3 className="text-lg font-semibold text-slate-700 mb-4">Score Distribution</h3>
-                                    <div className="space-y-4">
-                                        {filteredCandidates.map((candidate) => (
-                                            <div key={candidate.id} className="flex items-center">
-                                                <div className="w-32 text-sm font-medium text-slate-700">{candidate.name}</div>
-                                                <div className="flex-1 ml-4">
-                                                    <div className="relative h-8 rounded-lg overflow-hidden">
-                                                        <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-200"></div>
-                                                        <div
-                                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-amber-600 transition-all duration-1000"
-                                                            style={{ width: `${candidate.overallScore}%` }}
-                                                        />
-                                                        <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-800">
-                                                            {candidate.overallScore}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Score Distribution */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-700 mb-4">Score Distribution</h3>
+                                        <div className="space-y-4">
+                                            {filteredCandidates.map((candidate) => (
+                                                <div key={candidate.id} className="flex items-center">
+                                                    <div className="w-32 text-sm font-medium text-slate-700">{candidate.name}</div>
+                                                    <div className="flex-1 ml-4">
+                                                        <div className="relative h-8 rounded-lg overflow-hidden">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-200"></div>
+                                                            <div
+                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-amber-600 transition-all duration-1000"
+                                                                style={{ width: `${candidate.overallScore}%` }}
+                                                            />
+                                                            <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-800">
+                                                                {candidate.overallScore}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Recommendations Summary */}
-                                <div>
-                                    <h3 className="text-lg font-semibold text-slate-700 mb-4">Recommendation Summary</h3>
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl text-center">
-                                            <div className="text-3xl font-bold text-green-600 mb-2">
-                                                {filteredCandidates.filter(c => c.recommendation === 'Strongly Recommend').length}
-                                            </div>
-                                            <div className="text-sm text-slate-600">Strongly Recommend</div>
-                                        </div>
-                                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
-                                            <div className="text-3xl font-bold text-blue-600 mb-2">
-                                                {filteredCandidates.filter(c => c.recommendation === 'Recommend').length}
-                                            </div>
-                                            <div className="text-sm text-slate-600">Recommend</div>
-                                        </div>
-                                        <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center">
-                                            <div className="text-3xl font-bold text-orange-600 mb-2">
-                                                {filteredCandidates.filter(c => c.recommendation === 'Consider').length}
-                                            </div>
-                                            <div className="text-sm text-slate-600">Consider</div>
+                                            ))}
                                         </div>
                                     </div>
 
-                                    <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200">
-                                        <div className="flex items-center">
-                                            <CheckCircle className="w-6 h-6 text-yellow-600 mr-3" />
-                                            <div>
-                                                <h4 className="font-bold text-slate-800">Ready for Hiring Decision</h4>
-                                                <p className="text-sm text-slate-600">
-                                                    All {filteredCandidates.length} candidates have completed all evaluation stages and are ready for final hiring decisions.
-                                                </p>
+                                    {/* Recommendations Summary */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-700 mb-4">Recommendation Summary</h3>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-green-600 mb-2">
+                                                    {filteredCandidates.filter(c => c.recommendation === 'Strongly Recommend').length}
+                                                </div>
+                                                <div className="text-sm text-slate-600">Strongly Recommend</div>
+                                            </div>
+                                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-blue-600 mb-2">
+                                                    {filteredCandidates.filter(c => c.recommendation === 'Recommend').length}
+                                                </div>
+                                                <div className="text-sm text-slate-600">Recommend</div>
+                                            </div>
+                                            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center">
+                                                <div className="text-3xl font-bold text-orange-600 mb-2">
+                                                    {filteredCandidates.filter(c => c.recommendation === 'Consider').length}
+                                                </div>
+                                                <div className="text-sm text-slate-600">Consider</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-yellow-200">
+                                            <div className="flex items-center">
+                                                <CheckCircle className="w-6 h-6 text-yellow-600 mr-3" />
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800">Ready for Hiring Decision</h4>
+                                                    <p className="text-sm text-slate-600">
+                                                        All {filteredCandidates.length} candidates have completed all evaluation stages and are ready for final hiring decisions.
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Final Actions */}
-                        <div className="flex justify-end space-x-4">
-                            <button className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
-                                Save for Later
-                            </button>
-                            <button
-                                onClick={makeFinalSelection}
-                                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all flex items-center"
-                            >
-                                <CheckCircle className="w-6 h-6 mr-3" />
-                                Make Final Selection
-                            </button>
+                            {/* Final Actions */}
+                            <div className="flex justify-end space-x-4">
+                                <button className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+                                    Save for Later
+                                </button>
+                                <button
+                                    onClick={makeFinalSelection}
+                                    className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all flex items-center"
+                                >
+                                    <CheckCircle className="w-6 h-6 mr-3" />
+                                    Make Final Selection
+                                </button>
+                            </div>
                         </div>
                     </>
                 ) : (
@@ -941,232 +958,7 @@ export default function FinalRanking({ applications, onBack }) {
                         <p className="text-slate-500">Choose an application from the list above to view final candidate rankings</p>
                     </div>
                 )}
-
-                {/* CV Modal */}
-                {showCVModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-8 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="p-8">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-slate-800">Candidate CV</h2>
-                                    <button
-                                        onClick={() => setShowCVModal(null)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                                    >
-                                        <ChevronRight className="w-5 h-5 text-slate-600 rotate-180" />
-                                    </button>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <div className="text-center pb-6 border-b border-slate-200">
-                                        <h3 className="text-xl font-bold text-slate-800">{mockCV.name}</h3>
-                                        <div className="text-slate-600 mt-2">
-                                            <div>{mockCV.email}</div>
-                                            <div>{mockCV.phone}</div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h4 className="font-semibold text-slate-700 mb-2">Professional Summary</h4>
-                                        <p className="text-slate-600">{mockCV.summary}</p>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <h4 className="font-semibold text-slate-700 mb-2">Experience</h4>
-                                            <p className="text-slate-600">{mockCV.experience}</p>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-slate-700 mb-2">Education</h4>
-                                            <p className="text-slate-600">{mockCV.education}</p>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h4 className="font-semibold text-slate-700 mb-2">Key Projects</h4>
-                                        <ul className="space-y-2">
-                                            {mockCV.projects.map((project, index) => (
-                                                <li key={index} className="flex items-start">
-                                                    <ChevronRight className="w-4 h-4 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-slate-600">{project}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div className="mt-8 flex justify-end space-x-4">
-                                    <button
-                                        onClick={() => setShowCVModal(null)}
-                                        className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        onClick={() => downloadCV(showCVModal)}
-                                        className="px-6 py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
-                                    >
-                                        Download CV
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Full Report Modal */}
-                {showFullReportModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="p-8">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-3xl font-bold text-slate-800">Candidate Full Report</h2>
-                                    <button
-                                        onClick={() => setShowFullReportModal(null)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                                    >
-                                        <ChevronRight className="w-6 h-6 text-slate-600 rotate-180" />
-                                    </button>
-                                </div>
-
-                                {(() => {
-                                    const report = generateFullReport(showFullReportModal);
-                                    return (
-                                        <div className="space-y-8">
-                                            {/* Personal Information Header */}
-                                            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
-                                                <div className="flex items-start justify-between">
-                                                    <div className="flex items-center">
-                                                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
-                                                            {report.personalInfo.name.split(' ').map(n => n[0]).join('')}
-                                                        </div>
-                                                        <div>
-                                                            <h3 className="text-2xl font-bold text-slate-800">{report.personalInfo.name}</h3>
-                                                            <div className="text-slate-600 mt-1">
-                                                                <div className="flex items-center mb-1">
-                                                                    <Mail className="w-4 h-4 mr-2" />
-                                                                    {report.personalInfo.email}
-                                                                </div>
-                                                                <div className="flex items-center mb-1">
-                                                                    <Phone className="w-4 h-4 mr-2" />
-                                                                    {report.personalInfo.phone}
-                                                                </div>
-                                                                <div className="flex items-center">
-                                                                    <MapPin className="w-4 h-4 mr-2" />
-                                                                    {report.personalInfo.location}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-4xl font-bold text-blue-600 mb-2">{report.overallPerformance.overallScore}</div>
-                                                        <div className="text-sm text-slate-600">Overall Score</div>
-                                                        <div className="text-lg font-semibold mt-2">Rank #{report.overallPerformance.rank}/{report.overallPerformance.totalCandidates}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Overall Performance Summary */}
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                <div className="bg-green-50 p-6 rounded-xl border border-green-200">
-                                                    <div className="flex items-center mb-4">
-                                                        <Trophy className="w-8 h-8 text-green-600 mr-3" />
-                                                        <h4 className="font-bold text-slate-800">Performance Status</h4>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <div className="flex justify-between">
-                                                            <span className="text-slate-600">Status:</span>
-                                                            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(report.overallPerformance.status)}`}>
-                                                                {report.overallPerformance.status}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <span className="text-slate-600">Recommendation:</span>
-                                                            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getRecommendationColor(report.overallPerformance.recommendation)}`}>
-                                                                {report.overallPerformance.recommendation}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <span className="text-slate-600">Percentile:</span>
-                                                            <span className="font-bold text-green-600">Top {report.overallPerformance.percentile}%</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                                                    <div className="flex items-center mb-4">
-                                                        <Briefcase className="w-8 h-8 text-blue-600 mr-3" />
-                                                        <h4 className="font-bold text-slate-800">Experience</h4>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <div className="flex justify-between">
-                                                            <span className="text-slate-600">Experience:</span>
-                                                            <span className="font-bold">{report.personalInfo.experience}</span>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <span className="text-slate-600">Education:</span>
-                                                            <span className="font-bold">{report.personalInfo.education}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="bg-purple-50 p-6 rounded-xl border border-purple-200">
-                                                    <div className="flex items-center mb-4">
-                                                        <Brain className="w-8 h-8 text-purple-600 mr-3" />
-                                                        <h4 className="font-bold text-slate-800">Skills Summary</h4>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <div>
-                                                            <span className="text-slate-600 text-sm">Technical:</span>
-                                                            <div className="flex flex-wrap gap-1 mt-1">
-                                                                {report.skillsAssessment.technical.slice(0, 3).map((skill, i) => (
-                                                                    <span key={i} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">{skill}</span>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <span className="text-slate-600 text-sm">Soft Skills:</span>
-                                                            <div className="flex flex-wrap gap-1 mt-1">
-                                                                {report.skillsAssessment.soft.slice(0, 3).map((skill, i) => (
-                                                                    <span key={i} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">{skill}</span>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Action Buttons */}
-                                            <div className="flex justify-end space-x-4 pt-6 border-t border-slate-200">
-                                                <button
-                                                    onClick={() => setShowFullReportModal(null)}
-                                                    className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 transition-colors"
-                                                >
-                                                    Close Report
-                                                </button>
-                                                <button
-                                                    onClick={() => downloadPDF(showFullReportModal)}
-                                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center"
-                                                >
-                                                    <Download className="w-5 h-5 mr-2" />
-                                                    Download PDF
-                                                </button>
-                                                <button
-                                                    onClick={() => extendOffer(showFullReportModal)}
-                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center"
-                                                >
-                                                    <CheckCircle className="w-5 h-5 mr-2" />
-                                                    Extend Offer
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
-        </div >
+        </div>
     );
 }

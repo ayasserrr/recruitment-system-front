@@ -693,6 +693,27 @@ export default function HRInterview({ applications, onBack }) {
                                         Close
                                     </button>
                                     <button
+                                        onClick={() => {
+                                            const shortlistData = {
+                                                ...mockCV,
+                                                shortlistedFrom: 'HR Interview',
+                                                shortlistedDate: new Date().toISOString().slice(0, 10)
+                                            };
+                                            const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                            const existingCV = existingShortlist.find(cv => cv.name === mockCV.name && cv.email === shortlistData.email);
+                                            if (!existingCV) {
+                                                localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                alert(`${mockCV.name} has been added to your shortlist!`);
+                                            } else {
+                                                alert(`${mockCV.name} is already in your shortlist.`);
+                                            }
+                                        }}
+                                        className="px-6 py-3 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-colors"
+                                    >
+                                        <Star className="w-5 h-5 mr-2" />
+                                        Add to Shortlist
+                                    </button>
+                                    <button
                                         onClick={downloadCV}
                                         className="px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors"
                                     >

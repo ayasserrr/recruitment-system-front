@@ -1,0 +1,362 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { ChevronRight, Briefcase, Users, FileText, Star, ArrowLeft, CheckCircle, X, Eye, Download } from 'lucide-react';
+
+export default function Shortlist({ onBack }) {
+    const [selectedApplication, setSelectedApplication] = useState(null);
+    const [showCVModal, setShowCVModal] = useState(null);
+    const [shortlistedApplications, setShortlistedApplications] = useState([]);
+
+    // Load shortlisted CVs from localStorage
+    useEffect(() => {
+        const loadShortlistedCVs = () => {
+            const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
+
+            // Group CVs by application/job title
+            const groupedCVs = shortlistData.reduce((acc, cv) => {
+                // Use the shortlistedFrom as application name or create a default one
+                const appName = cv.shortlistedFrom || 'General Application';
+
+                if (!acc[appName]) {
+                    acc[appName] = {
+                        id: appName, // Use app name as stable ID
+                        jobTitle: appName,
+                        posted: cv.shortlistedDate || new Date().toISOString().slice(0, 10),
+                        shortlistedCVs: []
+                    };
+                }
+
+                acc[appName].shortlistedCVs.push(cv);
+                return acc;
+            }, {});
+
+            const newApplications = Object.values(groupedCVs);
+            setShortlistedApplications(newApplications);
+
+            // Reset selected application if it no longer exists
+            if (selectedApplication && !newApplications.find(app => app.id === selectedApplication)) {
+                setSelectedApplication(null);
+            }
+        };
+
+        loadShortlistedCVs();
+
+        // Listen for storage changes to update in real-time
+        const handleStorageChange = () => {
+            loadShortlistedCVs();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        // Also check for changes every 2 seconds as a fallback
+        const interval = setInterval(handleStorageChange, 2000);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(interval);
+        };
+    }, [selectedApplication]);
+
+    const getScoreColor = (score) => {
+        if (score >= 90) return 'text-green-600';
+        if (score >= 80) return 'text-blue-600';
+        if (score >= 70) return 'text-orange-600';
+        return 'text-red-600';
+    };
+
+    const getMatchColor = (match) => {
+        switch (match) {
+            case 'Excellent': return 'bg-green-100 text-green-700';
+            case 'Very Good': return 'bg-blue-100 text-blue-700';
+            case 'Good': return 'bg-orange-100 text-orange-700';
+            default: return 'bg-slate-100 text-slate-700';
+        }
+    };
+
+    const removeFromShortlist = (appId, cvId) => {
+        // Remove from localStorage
+        const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
+        const updatedShortlist = shortlistData.filter(cv => cv.id !== cvId);
+        localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
+
+        // Update state
+        setShortlistedApplications(prev =>
+            prev.map(app =>
+                app.id === appId
+                    ? { ...app, shortlistedCVs: app.shortlistedCVs.filter(cv => cv.id !== cvId) }
+                    : app
+            )
+        );
+    };
+
+    const totalShortlisted = shortlistedApplications.reduce((acc, app) => acc + app.shortlistedCVs.length, 0);
+
+    if (selectedApplication) {
+        const application = shortlistedApplications.find(app => app.id === selectedApplication);
+
+        if (!application) {
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+                    <div className="max-w-7xl mx-auto">
+                        <button
+                            onClick={() => setSelectedApplication(null)}
+                            className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                        >
+                            <ArrowLeft className="w-5 h-5 mr-2" />
+                            Back to Applications
+                        </button>
+                        <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+                            <h3 className="text-xl font-semibold text-slate-700 mb-2">Application Not Found</h3>
+                            <p className="text-slate-500">The selected application could not be found.</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+                <div className="max-w-7xl mx-auto">
+                    <button
+                        onClick={() => setSelectedApplication(null)}
+                        className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                    >
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                        Back to Applications
+                    </button>
+
+                    <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 className="text-3xl font-bold text-slate-800 mb-2">{application.jobTitle}</h1>
+                                <p className="text-slate-600">Posted: {application.posted}</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-3xl font-bold text-blue-600">{application.shortlistedCVs.length}</div>
+                                <div className="text-sm text-slate-600">Shortlisted CVs</div>
+                            </div>
+                        </div>
+
+                        {application.shortlistedCVs.length === 0 ? (
+                            <div className="text-center py-12">
+                                <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                                <h3 className="text-xl font-semibold text-slate-600 mb-2">No Shortlisted CVs</h3>
+                                <p className="text-slate-500">No CVs have been shortlisted for this application yet.</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {application.shortlistedCVs.map((cv) => (
+                                    <div key={cv.id} className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-slate-800 mb-1">{cv.name}</h3>
+                                                <p className="text-sm text-slate-600">{cv.email} • {cv.phone}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className={`text-2xl font-bold ${getScoreColor(cv.score)}`}>{cv.score}%</div>
+                                                <div className={`text-xs px-2 py-1 rounded-full ${getMatchColor(cv.match)}`}>
+                                                    {cv.match}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <div className="flex flex-wrap gap-2">
+                                                {cv.skills.map((skill, index) => (
+                                                    <span key={index} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <p className="text-sm text-slate-600 mb-2">
+                                                <span className="font-semibold">Experience:</span> {cv.experience} •
+                                                <span className="font-semibold"> Education:</span> {cv.education}
+                                            </p>
+                                            <p className="text-sm text-slate-600 line-clamp-2">{cv.summary}</p>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <p className="text-xs text-slate-500 mb-1">
+                                                Shortlisted from: <span className="font-semibold">{cv.shortlistedFrom}</span>
+                                            </p>
+                                            <p className="text-xs text-slate-500">
+                                                Shortlisted on: {cv.shortlistedDate}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex justify-between items-center pt-4 border-t border-slate-200">
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    onClick={() => setShowCVModal(cv)}
+                                                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center text-sm"
+                                                >
+                                                    <Eye className="w-4 h-4 mr-1" />
+                                                    View CV
+                                                </button>
+                                                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center text-sm">
+                                                    <Download className="w-4 h-4 mr-1" />
+                                                    Download
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={() => removeFromShortlist(application.id, cv.id)}
+                                                className="text-red-600 hover:text-red-800 font-semibold flex items-center text-sm"
+                                            >
+                                                <X className="w-4 h-4 mr-1" />
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* CV Modal */}
+                {showCVModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                            <div className="p-8">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold text-slate-800">{showCVModal.name}'s CV</h2>
+                                    <button
+                                        onClick={() => setShowCVModal(null)}
+                                        className="text-slate-500 hover:text-slate-700"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Contact Information</h3>
+                                        <div className="bg-slate-50 p-4 rounded-lg">
+                                            <p className="text-slate-600"><strong>Email:</strong> {showCVModal.email}</p>
+                                            <p className="text-slate-600"><strong>Phone:</strong> {showCVModal.phone}</p>
+                                            <p className="text-slate-600"><strong>Experience:</strong> {showCVModal.experience}</p>
+                                            <p className="text-slate-600"><strong>Education:</strong> {showCVModal.education}</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Professional Summary</h3>
+                                        <div className="bg-slate-50 p-4 rounded-lg">
+                                            <p className="text-slate-600">{showCVModal.summary}</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Key Projects</h3>
+                                        <div className="bg-slate-50 p-4 rounded-lg">
+                                            <ul className="list-disc list-inside text-slate-600 space-y-2">
+                                                {showCVModal.projects.map((project, index) => (
+                                                    <li key={index}>{project}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Skills</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {showCVModal.skills.map((skill, index) => (
+                                                <span key={index} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+            <div className="max-w-7xl mx-auto">
+                <button
+                    onClick={onBack}
+                    className="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                >
+                    <ArrowLeft className="w-5 h-5 mr-2" />
+                    Back to Dashboard
+                </button>
+
+                <div className="text-center mb-8">
+                    <div className="flex items-center justify-center mb-4">
+                        <Star className="w-16 h-16 text-yellow-500" />
+                    </div>
+                    <h1 className="text-4xl font-bold text-slate-800 mb-4">Shortlisted Candidates</h1>
+                    <p className="text-xl text-slate-600">Manage your shortlisted CVs across all applications</p>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div className="bg-blue-50 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-blue-600">{shortlistedApplications.length}</div>
+                            <div className="text-sm text-slate-600">Applications</div>
+                        </div>
+                        <div className="bg-green-50 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-green-600">{totalShortlisted}</div>
+                            <div className="text-sm text-slate-600">Total Shortlisted CVs</div>
+                        </div>
+                        <div className="bg-purple-50 rounded-xl p-4">
+                            <div className="text-3xl font-bold text-purple-600">
+                                {shortlistedApplications.filter(app => app.shortlistedCVs.length > 0).length}
+                            </div>
+                            <div className="text-sm text-slate-600">Active Applications</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-8">
+                    <h2 className="text-2xl font-bold text-slate-800 mb-6">Applications with Shortlisted CVs</h2>
+
+                    {shortlistedApplications.length === 0 ? (
+                        <div className="text-center py-12">
+                            <Briefcase className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                            <h3 className="text-xl font-semibold text-slate-600 mb-2">No Applications</h3>
+                            <p className="text-slate-500">No applications found.</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {shortlistedApplications.map((application) => (
+                                <div
+                                    key={application.id}
+                                    className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-shadow cursor-pointer"
+                                    onClick={() => setSelectedApplication(application.id)}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="bg-blue-500 w-12 h-12 rounded-xl flex items-center justify-center">
+                                                <Briefcase className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-lg font-bold text-slate-800">{application.jobTitle}</h3>
+                                                <p className="text-sm text-slate-600">Posted: {application.posted}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-6">
+                                            <div className="text-center">
+                                                <div className="text-2xl font-bold text-blue-600">{application.shortlistedCVs.length}</div>
+                                                <div className="text-xs text-slate-600">Shortlisted CVs</div>
+                                            </div>
+                                            <ChevronRight className="w-5 h-5 text-slate-400" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -9,6 +9,7 @@ import TechnicalInterview from './components/TechnicalInterview';
 import HRInterview from './components/HRInterview';
 import FinalRanking from './components/FinalRanking';
 import Analytics from './components/Analytics';
+import Shortlist from './components/Shortlist';
 import './App.css';
 
 export default function RecruitmentSystem() {
@@ -97,6 +98,7 @@ export default function RecruitmentSystem() {
         { id: 'technical-interview', icon: Video, label: 'Technical Interview', color: 'bg-red-500', description: 'Interview scheduling' },
         { id: 'hr-interview', icon: Users, label: 'HR Interview', color: 'bg-pink-500', description: 'Cultural fit assessment' },
         { id: 'final-ranking', icon: Award, label: 'Final Ranking', color: 'bg-yellow-500', description: 'Candidate ranking' },
+        { id: 'shortlist', icon: Star, label: 'Shortlist', color: 'bg-yellow-500', description: 'Manage shortlisted CVs' },
         { id: 'applications', icon: List, label: 'Applications', color: 'bg-indigo-500', description: 'Application tracking' },
         { id: 'analytics', icon: BarChart3, label: 'Analytics', color: 'bg-cyan-500', description: 'Performance insights' },
     ];
@@ -219,6 +221,10 @@ export default function RecruitmentSystem() {
             ) : currentPage === 'final-ranking' ? (
                 <FinalRanking
                     applications={applications}
+                    onBack={() => setCurrentPage('home')}
+                />
+            ) : currentPage === 'shortlist' ? (
+                <Shortlist
                     onBack={() => setCurrentPage('home')}
                 />
             ) : currentPage === 'applications' ? (
