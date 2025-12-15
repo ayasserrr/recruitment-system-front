@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import PhaseExplanationModal from './PhaseExplanationModal';
 
 export default function Phases({ onNavigateToPhase }) {
     const { isDarkMode } = useDarkMode();
+    const [selectedPhase, setSelectedPhase] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const menuItems = [
         { id: 'job-requisition', icon: Plus, label: 'Create Job Requisition', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Capture requisition requirements' },
         { id: 'job-post', icon: Share2, label: 'Job Post', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Manage postings' },
@@ -16,6 +20,16 @@ export default function Phases({ onNavigateToPhase }) {
         { id: 'applications', icon: List, label: 'Applications', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Application tracking' },
         { id: 'analytics', icon: BarChart3, label: 'Analytics', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Performance insights' },
     ];
+
+    const handleShowPhaseExplanation = (phaseId) => {
+        setSelectedPhase(phaseId);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedPhase(null);
+    };
 
     return (
         <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
@@ -34,17 +48,26 @@ export default function Phases({ onNavigateToPhase }) {
                             key={item.id}
                             item={item}
                             onNavigateToPhase={onNavigateToPhase}
+                            onShowPhaseExplanation={handleShowPhaseExplanation}
                             isDarkMode={isDarkMode}
                         />
                     ))}
                 </div>
+
+                {/* Phase Explanation Modal */}
+                <PhaseExplanationModal
+                    phase={selectedPhase}
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                />
             </div>
         </div>
     );
 }
 
-function PhaseCard({ item, onNavigateToPhase, isDarkMode }) {
+function PhaseCard({ item, onNavigateToPhase, onShowPhaseExplanation, isDarkMode }) {
     const [ripples, setRipples] = useState([]);
+    const [hoverTimer, setHoverTimer] = useState(null);
     const cardRef = useRef(null);
 
     const handleMouseEnter = (e) => {
@@ -79,11 +102,24 @@ function PhaseCard({ item, onNavigateToPhase, isDarkMode }) {
         }
 
         setRipples(newRipples);
+
+        // Set 3-second timer to show phase explanation
+        const timer = setTimeout(() => {
+            onShowPhaseExplanation(item.id);
+        }, 3000); // 3 seconds
+
+        setHoverTimer(timer);
     };
 
     const handleMouseLeave = () => {
         // Clear all ripples when mouse leaves
         setRipples([]);
+
+        // Clear the hover timer
+        if (hoverTimer) {
+            clearTimeout(hoverTimer);
+            setHoverTimer(null);
+        }
     };
 
     return (
