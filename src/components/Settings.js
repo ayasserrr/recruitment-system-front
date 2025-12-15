@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronRight, User, Mail, Building, Phone, Moon, Sun, Lock, Eye, EyeOff } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useTour } from '../contexts/TourContext';
 
 export default function Settings({ currentUser, onBack, onDarkModeToggle, isDarkMode }) {
     const { isDarkMode: contextDarkMode, toggleDarkMode } = useDarkMode();
+    const { showTourOnLogin: tourPreference, toggleTourPreference } = useTour();
     const [showPassword, setShowPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [showTourOnLogin, setShowTourOnLogin] = useState(true);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [passwordData, setPasswordData] = useState({
@@ -285,12 +286,12 @@ export default function Settings({ currentUser, onBack, onDarkModeToggle, isDark
                                 <div className={`flex items-center justify-between p-3 border rounded-lg transition-colors duration-300 ${contextDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
                                     <span className={`font-medium transition-colors duration-300 ${contextDarkMode ? 'text-white' : 'text-gray-900'}`}>Show Tour on Login</span>
                                     <button
-                                        onClick={() => setShowTourOnLogin(!showTourOnLogin)}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${showTourOnLogin ? 'bg-blue-600' : 'bg-gray-200'
+                                        onClick={toggleTourPreference}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${tourPreference ? 'bg-blue-600' : 'bg-gray-200'
                                             }`}
                                     >
                                         <span
-                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${showTourOnLogin ? 'translate-x-6' : 'translate-x-1'
+                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${tourPreference ? 'translate-x-6' : 'translate-x-1'
                                                 }`}
                                         />
                                     </button>

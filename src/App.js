@@ -25,10 +25,13 @@ import FinalCandidateReportsDetail from './components/features/FinalCandidateRep
 import PipelineAnalyticsDetail from './components/features/PipelineAnalyticsDetail';
 import SmartJobPostingDetail from './components/features/SmartJobPostingDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
+import { TourProvider, useTour } from './contexts/TourContext';
+import TourModal from './components/TourModal';
 import './App.css';
 
 function RecruitmentSystemContent() {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
+    const { showTour, startTour, endTour, shouldShowTourOnLogin } = useTour();
     const [currentPage, setCurrentPage] = useState('landing');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
@@ -146,6 +149,11 @@ function RecruitmentSystemContent() {
         localStorage.setItem('currentUser', JSON.stringify(user));
         console.log('Login: Saved to localStorage:', { user, isLoggedIn: 'true' });
         setCurrentPage('phases');
+
+        // Show tour after successful login if enabled
+        if (shouldShowTourOnLogin()) {
+            setTimeout(() => startTour(), 500);
+        }
     };
 
     const handleGetStarted = () => {
@@ -246,6 +254,13 @@ function RecruitmentSystemContent() {
 
     return (
         <div>
+            {/* Tour Modal */}
+            <TourModal
+                isOpen={showTour}
+                onClose={endTour}
+                onComplete={endTour}
+            />
+
             {/* Landing Page */}
             {currentPage === 'landing' && (
                 <Home
@@ -424,7 +439,9 @@ function RecruitmentSystemContent() {
 export default function RecruitmentSystem() {
     return (
         <DarkModeProvider>
-            <RecruitmentSystemContent />
+            <TourProvider>
+                <RecruitmentSystemContent />
+            </TourProvider>
         </DarkModeProvider>
     );
 }
