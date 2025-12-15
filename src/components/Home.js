@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Zap, Brain, Target, BarChart3, Video, FileText, ChevronRight, ClipboardCheck, Share2, Star, Award } from 'lucide-react';
+import { Zap, Brain, Target, BarChart3, Video, FileText, ChevronRight, ClipboardCheck, Share2, Star, Award, Moon, Sun } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick }) {
-    const { isDarkMode } = useDarkMode();
+    const { isDarkMode, toggleDarkMode } = useDarkMode();
 
     const handleFeatureCardClick = (featureType) => {
         onLearnMoreClick(featureType);
@@ -19,12 +19,21 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                     </div>
                     <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
                 </div>
-                <button
-                    onClick={onLoginClick}
-                    className={`px-6 py-2 border rounded-lg transition-colors font-medium ${isDarkMode ? 'text-accent-400 border-accent-400 hover:bg-accent-400/10' : 'text-accent-600 border-accent-600 hover:bg-accent-50'}`}
-                >
-                    Login
-                </button>
+                <div className="flex items-center space-x-4">
+                    <button
+                        onClick={toggleDarkMode}
+                        className={`p-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-base-900 hover:bg-base-100'}`}
+                        aria-label="Toggle dark mode"
+                    >
+                        {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                    </button>
+                    <button
+                        onClick={onLoginClick}
+                        className={`px-6 py-2 border rounded-lg transition-colors font-medium ${isDarkMode ? 'text-accent-400 border-accent-400 hover:bg-accent-400/10' : 'text-accent-600 border-accent-600 hover:bg-accent-50'}`}
+                    >
+                        Login
+                    </button>
+                </div>
             </nav>
 
             {/* Hero Section */}
@@ -70,6 +79,14 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <FeatureCard
+                            icon={Share2}
+                            title="Smart Job Posting"
+                            description="AI-powered job post creation based on job descriptions, with bias detection and scheduled posting across multiple platforms"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('job-posting')}
+                        />
+
                         <FeatureCard
                             icon={Brain}
                             title="Deep Semantic Analysis"

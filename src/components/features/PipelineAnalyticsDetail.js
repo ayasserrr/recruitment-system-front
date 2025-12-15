@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, BarChart3, TrendingUp, Users, Clock, Target, DollarSign, Filter, CheckCircle, AlertCircle, Calendar, Download, Eye, Zap } from 'lucide-react';
+import { ArrowLeft, BarChart3, TrendingUp, Users, Clock, Target, DollarSign, Filter, CheckCircle, AlertCircle, Calendar, Download, Eye, Zap, Play, Shield, Sparkles, ArrowRight } from 'lucide-react';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 
 export default function PipelineAnalyticsDetail({ onBack }) {
@@ -211,6 +211,139 @@ export default function PipelineAnalyticsDetail({ onBack }) {
                     </div>
                 </div>
 
+                {/* How We Do This Section */}
+                <div className={`mb-12 border rounded-2xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-white/50 border-base-200'}`}>
+                    <div className="flex items-center mb-6">
+                        <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                            <Play className="w-6 h-6 text-white" />
+                        </div>
+                        <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                            How We Do This
+                        </h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/50' : 'bg-base-50/50'}`}>
+                            <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg flex items-center justify-center mb-4`}>
+                                <Eye className="w-5 h-5 text-white" />
+                            </div>
+                            <h3 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                Real-time Data Aggregation
+                            </h3>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                We continuously collect and process recruitment data from all touchpoints, providing up-to-the-minute insights into your pipeline performance and conversion metrics.
+                            </p>
+                        </div>
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/50' : 'bg-base-50/50'}`}>
+                            <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg flex items-center justify-center mb-4`}>
+                                <TrendingUp className="w-5 h-5 text-white" />
+                            </div>
+                            <h3 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                Advanced Analytics Engine
+                            </h3>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                Our sophisticated algorithms analyze historical patterns and current trends to identify bottlenecks, predict outcomes, and recommend optimization strategies.
+                            </p>
+                        </div>
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/50' : 'bg-base-50/50'}`}>
+                            <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg flex items-center justify-center mb-4`}>
+                                <Target className="w-5 h-5 text-white" />
+                            </div>
+                            <h3 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                Predictive Modeling
+                            </h3>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                Machine learning models forecast hiring needs, identify potential issues before they impact your pipeline, and suggest data-driven improvements.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* How We're Different Section */}
+                <div className={`mb-12 border rounded-2xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-white/50 border-base-200'}`}>
+                    <div className="flex items-center mb-6">
+                        <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-xl flex items-center justify-center mr-4`}>
+                            <Sparkles className="w-6 h-6 text-white" />
+                        </div>
+                        <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                            How We're Different From Others
+                        </h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
+                            <div className="flex items-start space-x-4">
+                                <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
+                                    <Shield className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        End-to-End Visibility
+                                    </h3>
+                                    <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Unlike fragmented analytics tools that only show partial data, we provide complete visibility from application to hire, ensuring no insights are lost in system silos.
+                                    </p>
+                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700'}`}>
+                                        360° Pipeline View
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
+                            <div className="flex items-start space-x-4">
+                                <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
+                                    <Zap className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        Actionable Intelligence
+                                    </h3>
+                                    <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Other systems provide raw data and complex dashboards. We deliver actionable insights with specific recommendations, confidence scores, and predicted impact.
+                                    </p>
+                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>
+                                        AI-Powered Recommendations
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
+                            <div className="flex items-start space-x-4">
+                                <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
+                                    <Clock className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        Real-time Optimization
+                                    </h3>
+                                    <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Traditional analytics offer historical reports. Our system continuously monitors performance and alerts you to issues and opportunities as they happen, enabling immediate action.
+                                    </p>
+                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
+                                        Live Performance Monitoring
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
+                            <div className="flex items-start space-x-4">
+                                <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
+                                    <DollarSign className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        Cost-to-Value Analytics
+                                    </h3>
+                                    <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Most tools track metrics in isolation. We connect recruitment costs directly to hiring outcomes, showing true ROI and helping optimize budget allocation for maximum impact.
+                                    </p>
+                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-700'}`}>
+                                        ROI-Focused Insights
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Navigation Tabs */}
                 <div className="flex space-x-1 mb-8 border-b">
                     {analyticsTabs.map((tab) => {
@@ -397,17 +530,6 @@ export default function PipelineAnalyticsDetail({ onBack }) {
                     </div>
                 )}
 
-                {/* Analytics Actions Sidebar */}
-                <div className="fixed bottom-8 right-8 space-y-3">
-                    <button className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg ${isDarkMode ? 'bg-accent-500 text-white hover:bg-accent-600' : 'bg-accent-600 text-white hover:bg-accent-700'}`}>
-                        <Download className="w-4 h-4 inline mr-2" />
-                        Export Report
-                    </button>
-                    <button className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg border ${isDarkMode ? 'border-slate-600 text-gray-300 bg-slate-800 hover:bg-slate-700' : 'border-base-300 text-base-700 bg-white hover:bg-base-100'}`}>
-                        <Calendar className="w-4 h-4 inline mr-2" />
-                        Schedule Report
-                    </button>
-                </div>
             </div>
         </div>
     );

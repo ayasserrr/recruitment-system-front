@@ -12,17 +12,17 @@ export default function PhaseReportingDetail({ onBack }) {
             title: 'Semantic Analysis Reports',
             icon: Target,
             description: 'Deep AI analysis insights and candidate matching metrics',
-            metrics: [
-                { label: 'Candidates Processed', value: '1,247', trend: '+23%' },
-                { label: 'Match Accuracy', value: '94%', trend: '+8%' },
-                { label: 'Processing Time', value: '2.3s', trend: '-15%' },
-                { label: 'Skill Coverage', value: '87%', trend: '+12%' }
+            features: [
+                { title: 'Intelligent Resume Processing', description: 'Advanced AI algorithms analyze candidate resumes beyond simple keyword matching' },
+                { title: 'Contextual Skill Assessment', description: 'Evaluates skills in the context of actual project experience and career progression' },
+                { title: 'Career Trajectory Analysis', description: 'Tracks candidate career patterns to predict future performance and growth potential' },
+                { title: 'Cultural Fit Indicators', description: 'Identifies alignment with company values and team dynamics through semantic patterns' }
             ],
-            insights: [
-                'Top performing candidates show 3x higher skill relevance',
-                'Machine learning models improve accuracy by 15% weekly',
-                'Industry-specific terminology recognition increased by 45%',
-                'Candidate experience patterns predict success with 78% accuracy'
+            benefits: [
+                'Identify top-performing candidates through advanced pattern recognition',
+                'Reduce screening time while maintaining high-quality candidate evaluation',
+                'Discover hidden talent that traditional screening methods might miss',
+                'Make data-driven decisions with comprehensive candidate insights'
             ]
         },
         {
@@ -30,17 +30,17 @@ export default function PhaseReportingDetail({ onBack }) {
             title: 'Technical Assessment Reports',
             icon: BarChart3,
             description: 'Comprehensive skill evaluation and performance analytics',
-            metrics: [
-                { label: 'Assessments Completed', value: '892', trend: '+31%' },
-                { label: 'Average Score', value: '76%', trend: '+5%' },
-                { label: 'Completion Rate', value: '87%', trend: '+9%' },
-                { label: 'Skill Gap ID', value: '94%', trend: '+18%' }
+            features: [
+                { title: 'Customizable Test Creation', description: 'Design tailored assessments that match your specific technical requirements' },
+                { title: 'Automated Performance Analysis', description: 'Instant evaluation of technical skills with detailed scoring and feedback' },
+                { title: 'Skill Gap Identification', description: 'Pinpoint specific areas where candidates need development or improvement' },
+                { title: 'Real-time Performance Tracking', description: 'Monitor candidate progress during assessments with live analytics' }
             ],
-            insights: [
-                'Python developers show highest problem-solving scores',
-                'System design assessments predict senior-level performance',
-                'Time-based tests correlate better with real-world performance',
-                'Multi-language candidates demonstrate 25% better adaptability'
+            benefits: [
+                'Evaluate technical capabilities with practical, job-relevant challenges',
+                'Standardize assessment processes for fair and consistent evaluation',
+                'Reduce interviewer bias through objective technical measurement',
+                'Identify candidates with the right skills for your specific technical environment'
             ]
         },
         {
@@ -48,17 +48,17 @@ export default function PhaseReportingDetail({ onBack }) {
             title: 'Interview Evaluation Reports',
             icon: Users,
             description: 'Interview performance and evaluator consistency analytics',
-            metrics: [
-                { label: 'Interviews Conducted', value: '456', trend: '+18%' },
-                { label: 'Evaluator Consistency', value: '89%', trend: '+6%' },
-                { label: 'Candidate Satisfaction', value: '4.7/5', trend: '+0.2' },
-                { label: 'Decision Time', value: '1.8 days', trend: '-32%' }
+            features: [
+                { title: 'Structured Interview Frameworks', description: 'Standardized question sets and evaluation criteria for consistent interviews' },
+                { title: 'Multi-format Interview Support', description: 'Accommodates technical, behavioral, and panel interview formats' },
+                { title: 'Evaluator Calibration Tools', description: 'Ensure consistency across different interviewers and evaluation styles' },
+                { title: 'Candidate Experience Tracking', description: 'Monitor and improve the interview experience for all candidates' }
             ],
-            insights: [
-                'Technical interviews predict on-job performance with 82% accuracy',
-                'Behavioral assessments improve cultural fit matching by 34%',
-                'Panel interviews reduce individual bias by 67%',
-                'Structured questions increase evaluation reliability by 45%'
+            benefits: [
+                'Improve hiring decisions through structured, consistent interview processes',
+                'Reduce unconscious bias with standardized evaluation frameworks',
+                'Enhance candidate experience through professional and fair interviews',
+                'Speed up decision-making with clear evaluation criteria and scoring'
             ]
         },
         {
@@ -66,17 +66,17 @@ export default function PhaseReportingDetail({ onBack }) {
             title: 'Final Ranking Reports',
             icon: Award,
             description: 'Comprehensive candidate evaluation and recommendation analytics',
-            metrics: [
-                { label: 'Candidates Ranked', value: '234', trend: '+12%' },
-                { label: 'Hiring Accuracy', value: '91%', trend: '+11%' },
-                { label: 'Time-to-Rank', value: '0.8 days', trend: '-28%' },
-                { label: 'Satisfaction Score', value: '4.8/5', trend: '+0.3' }
+            features: [
+                { title: 'Multi-factor Ranking Algorithm', description: 'Combines all evaluation data into comprehensive candidate scoring' },
+                { title: 'Comparative Analysis Tools', description: 'Side-by-side candidate comparisons across all evaluation dimensions' },
+                { title: 'Risk Assessment Dashboard', description: 'Identify potential hiring risks and mitigation strategies for each candidate' },
+                { title: 'AI-Powered Recommendations', description: 'Intelligent suggestions based on historical hiring success patterns' }
             ],
-            insights: [
-                'Multi-factor ranking improves hiring quality by 41%',
-                'AI recommendations match human decisions 89% of the time',
-                'Diverse candidates show 23% higher retention rates',
-                'Comprehensive evaluations reduce turnover by 34%'
+            benefits: [
+                'Make confident hiring decisions with comprehensive candidate evaluation',
+                'Reduce hiring mistakes through data-driven risk assessment',
+                'Improve team performance by selecting candidates with proven success indicators',
+                'Streamline final decision process with clear ranking and recommendation systems'
             ]
         }
     ];
@@ -86,27 +86,27 @@ export default function PhaseReportingDetail({ onBack }) {
     const reportTypes = [
         {
             name: 'Executive Summary',
-            description: 'High-level overview for leadership',
+            description: 'Strategic overview for leadership decision-making',
             icon: BarChart3,
-            features: ['KPI dashboards', 'Trend analysis', 'ROI metrics', 'Strategic insights']
+            benefits: ['Make informed hiring decisions with high-level insights', 'Track recruitment ROI and budget effectiveness', 'Identify strategic opportunities for process improvement', 'Align recruitment goals with business objectives']
         },
         {
             name: 'Detailed Analytics',
-            description: 'Comprehensive data analysis',
+            description: 'In-depth analysis for recruitment optimization',
             icon: TrendingUp,
-            features: ['Statistical breakdowns', 'Comparative analysis', 'Performance trends', 'Predictive models']
+            benefits: ['Deep dive into recruitment process performance', 'Identify bottlenecks and optimization opportunities', 'Compare effectiveness across different channels', 'Forecast future hiring needs and trends']
         },
         {
             name: 'Candidate Insights',
-            description: 'Individual candidate reports',
+            description: 'Individual candidate evaluation reports',
             icon: Users,
-            features: ['Skill assessments', 'Performance history', 'Potential analysis', 'Fit scoring']
+            benefits: ['Personalized candidate assessment profiles', 'Track individual candidate progression', 'Identify high-potential talent early', 'Make fair and consistent evaluation decisions']
         },
         {
             name: 'Process Efficiency',
-            description: 'Workflow optimization reports',
+            description: 'Workflow optimization and performance reports',
             icon: Clock,
-            features: ['Bottleneck identification', 'Time analysis', 'Resource utilization', 'Process recommendations']
+            benefits: ['Streamline recruitment processes for faster hiring', 'Reduce administrative overhead and manual work', 'Improve interviewer productivity and coordination', 'Enhance overall candidate experience']
         }
     ];
 
@@ -171,39 +171,31 @@ export default function PhaseReportingDetail({ onBack }) {
                                 {currentPhase.description}
                             </p>
 
-                            {/* Metrics Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                                {currentPhase.metrics.map((metric, index) => (
+                            {/* Features Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                {currentPhase.features.map((feature, index) => (
                                     <div key={index} className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
-                                        <div className="flex justify-between items-start mb-2">
-                                            <span className={`text-xs font-medium uppercase tracking-wide transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                                {metric.label}
-                                            </span>
-                                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${metric.trend.startsWith('+')
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-blue-100 text-blue-700'
-                                                }`}>
-                                                {metric.trend}
-                                            </span>
-                                        </div>
-                                        <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-teal-400' : 'text-teal-600'}`}>
-                                            {metric.value}
-                                        </div>
+                                        <h4 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-teal-400' : 'text-teal-600'}`}>
+                                            {feature.title}
+                                        </h4>
+                                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            {feature.description}
+                                        </p>
                                     </div>
                                 ))}
                             </div>
 
-                            {/* Key Insights */}
+                            {/* Key Benefits */}
                             <div>
                                 <h3 className={`text-lg font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                    Key Insights
+                                    Key Benefits
                                 </h3>
                                 <ul className="space-y-3">
-                                    {currentPhase.insights.map((insight, index) => (
+                                    {currentPhase.benefits.map((benefit, index) => (
                                         <li key={index} className="flex items-start space-x-3">
                                             <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-teal-400' : 'text-teal-600'}`} />
                                             <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                                {insight}
+                                                {benefit}
                                             </span>
                                         </li>
                                     ))}
@@ -233,11 +225,11 @@ export default function PhaseReportingDetail({ onBack }) {
                                                 {type.description}
                                             </p>
                                             <ul className="space-y-1">
-                                                {type.features.map((feature, featureIndex) => (
-                                                    <li key={featureIndex} className="flex items-center space-x-2">
+                                                {type.benefits.map((benefit, benefitIndex) => (
+                                                    <li key={benefitIndex} className="flex items-center space-x-2">
                                                         <div className={`w-1.5 h-1.5 rounded-full ${isDarkMode ? 'bg-teal-400' : 'bg-teal-600'}`}></div>
                                                         <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                                            {feature}
+                                                            {benefit}
                                                         </span>
                                                     </li>
                                                 ))}

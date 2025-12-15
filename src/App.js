@@ -23,6 +23,7 @@ import InterviewManagementDetail from './components/features/InterviewManagement
 import PhaseReportingDetail from './components/features/PhaseReportingDetail';
 import FinalCandidateReportsDetail from './components/features/FinalCandidateReportsDetail';
 import PipelineAnalyticsDetail from './components/features/PipelineAnalyticsDetail';
+import SmartJobPostingDetail from './components/features/SmartJobPostingDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import './App.css';
 
@@ -282,6 +283,10 @@ function RecruitmentSystemContent() {
 
             {currentPage === 'feature-analytics' && (
                 <PipelineAnalyticsDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-job-posting' && (
+                <SmartJobPostingDetail onBack={() => setCurrentPage('landing')} />
             )}
 
             {/* Login Page */}
