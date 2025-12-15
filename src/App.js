@@ -15,6 +15,13 @@ import Login from './components/Login';
 import Phases from './components/Phases';
 import Navbar from './components/Navbar';
 import Settings from './components/Settings';
+import LearnMore from './components/LearnMore';
+import SemanticAnalysisDetail from './components/features/SemanticAnalysisDetail';
+import TechnicalAssessmentDetail from './components/features/TechnicalAssessmentDetail';
+import InterviewManagementDetail from './components/features/InterviewManagementDetail';
+import PhaseReportingDetail from './components/features/PhaseReportingDetail';
+import FinalCandidateReportsDetail from './components/features/FinalCandidateReportsDetail';
+import PipelineAnalyticsDetail from './components/features/PipelineAnalyticsDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import './App.css';
 
@@ -144,11 +151,11 @@ function RecruitmentSystemContent() {
         setCurrentPage('login');
     };
 
-    const handleLearnMore = () => {
-        // Scroll to features section or show more info
-        const featuresSection = document.getElementById('features');
-        if (featuresSection) {
-            featuresSection.scrollIntoView({ behavior: 'smooth' });
+    const handleLearnMore = (featureType) => {
+        if (featureType) {
+            setCurrentPage(`feature-${featureType}`);
+        } else {
+            setCurrentPage('learn-more');
         }
     };
 
@@ -245,6 +252,36 @@ function RecruitmentSystemContent() {
                     onGetStartedClick={handleGetStarted}
                     onLearnMoreClick={handleLearnMore}
                 />
+            )}
+
+            {/* Learn More Page */}
+            {currentPage === 'learn-more' && (
+                <LearnMore onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {/* Feature Detail Pages */}
+            {currentPage === 'feature-semantic-analysis' && (
+                <SemanticAnalysisDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-technical-assessment' && (
+                <TechnicalAssessmentDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-interviews' && (
+                <InterviewManagementDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-reporting' && (
+                <PhaseReportingDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-final-reports' && (
+                <FinalCandidateReportsDetail onBack={() => setCurrentPage('landing')} />
+            )}
+
+            {currentPage === 'feature-analytics' && (
+                <PipelineAnalyticsDetail onBack={() => setCurrentPage('landing')} />
             )}
 
             {/* Login Page */}

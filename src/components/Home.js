@@ -1,9 +1,14 @@
-import React from 'react';
-import { Zap, Brain, Target, BarChart3, Video, FileText } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Zap, Brain, Target, BarChart3, Video, FileText, ChevronRight, ClipboardCheck, Share2, Star, Award } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick }) {
     const { isDarkMode } = useDarkMode();
+
+    const handleFeatureCardClick = (featureType) => {
+        onLearnMoreClick(featureType);
+    };
+
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             {/* Navigation */}
@@ -57,57 +62,182 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                     <h2 className={`text-3xl font-bold text-center mb-12 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                         Why Choose HireFlow AI?
                     </h2>
+                    <div className={`text-center max-w-4xl mx-auto mb-16 ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>
+                        <p className="text-lg leading-relaxed">
+                            HireFlow AI revolutionizes recruitment with <span className="font-semibold text-accent-600">deep semantic analysis</span> that goes beyond simple keyword matching.
+                            Our platform generates <span className="font-semibold text-accent-600">comprehensive reports for every phase</span> and produces <span className="font-semibold text-accent-600">detailed final candidate evaluations</span>,
+                            ensuring you make data-driven hiring decisions across the complete recruitment lifecycle.
+                        </p>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <Brain className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>AI-Powered Screening</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Advanced algorithms analyze resumes and match candidates to job requirements automatically</p>
-                        </div>
+                        <FeatureCard
+                            icon={Brain}
+                            title="Deep Semantic Analysis"
+                            description="Advanced AI performs contextual understanding of resumes, analyzing skills, experience, and potential beyond surface-level matching"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('semantic-analysis')}
+                        />
 
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <Zap className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Lightning Fast</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Process hundreds of applications in minutes instead of days with our optimized workflow</p>
-                        </div>
+                        <FeatureCard
+                            icon={ClipboardCheck}
+                            title="Technical Assessment Platform"
+                            description="Comprehensive skill evaluation with automated scoring, detailed performance reports, and candidate capability analysis"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('technical-assessment')}
+                        />
 
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <Target className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Bias-Free Hiring</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Eliminate unconscious bias with standardized evaluation criteria and AI assistance</p>
-                        </div>
+                        <FeatureCard
+                            icon={Video}
+                            title="Technical & HR Interviews"
+                            description="Structured interview management with evaluation frameworks, scoring systems, and detailed interviewer feedback collection"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('interviews')}
+                        />
 
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <BarChart3 className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Smart Analytics</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Get detailed insights into your recruitment process with comprehensive analytics dashboards</p>
-                        </div>
+                        <FeatureCard
+                            icon={FileText}
+                            title="Phase-by-Phase Reporting"
+                            description="Detailed analytics and insights for each recruitment phase, tracking candidate progression and pipeline efficiency"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('reporting')}
+                        />
 
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <Video className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Integrated Interviews</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Schedule and conduct video interviews seamlessly within the platform</p>
-                        </div>
+                        <FeatureCard
+                            icon={Award}
+                            title="Final Candidate Reports"
+                            description="Comprehensive evaluation summaries combining all phase data, assessments, and interviews into unified candidate profiles"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('final-reports')}
+                        />
 
-                        <div className={`p-6 border rounded-xl hover:shadow-lg transition-shadow ${isDarkMode ? 'border-slate-700 bg-slate-700 hover:shadow-slate-900' : 'border-base-200 hover:shadow-base-200'}`}>
-                            <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mb-4">
-                                <FileText className="w-6 h-6 text-white" />
-                            </div>
-                            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Comprehensive Reports</h3>
-                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Generate detailed reports on candidate performance and recruitment metrics</p>
-                        </div>
+                        <FeatureCard
+                            icon={BarChart3}
+                            title="End-to-End Pipeline Analytics"
+                            description="Complete recruitment funnel visibility with conversion metrics, time-to-hire analysis, and ROI tracking"
+                            isDarkMode={isDarkMode}
+                            onClick={() => handleFeatureCardClick('analytics')}
+                        />
                     </div>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function FeatureCard({ icon, title, description, isDarkMode, onClick }) {
+    const [ripples, setRipples] = useState([]);
+    const cardRef = useRef(null);
+
+    const handleMouseEnter = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Calculate the maximum distance from click point to corners
+        const corners = [
+            { x: 0, y: 0 },
+            { x: rect.width, y: 0 },
+            { x: 0, y: rect.height },
+            { x: rect.width, y: rect.height }
+        ];
+
+        const distances = corners.map(corner =>
+            Math.sqrt(Math.pow(corner.x - x, 2) + Math.pow(corner.y - y, 2))
+        );
+
+        const maxDistance = Math.max(...distances);
+
+        // Create multiple ripples with staggered timing
+        const newRipples = [];
+        for (let i = 0; i < 3; i++) {
+            newRipples.push({
+                x,
+                y,
+                id: Date.now() + i,
+                size: maxDistance * 2,
+                delay: i * 100 // Stagger each ripple
+            });
+        }
+
+        setRipples(newRipples);
+    };
+
+    const handleMouseLeave = () => {
+        // Clear all ripples when mouse leaves
+        setRipples([]);
+    };
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+        }
+    };
+
+    return (
+        <div
+            ref={cardRef}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
+            className={`group relative rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 transform hover:-translate-y-1 overflow-hidden border cursor-pointer ${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-accent-400' : 'bg-white border-base-100 hover:border-accent-100'}`}
+        >
+            {/* Ripple container */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {ripples.map((ripple) => (
+                    <div
+                        key={ripple.id}
+                        className={`absolute rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20' : 'bg-gradient-to-r from-blue-100/40 to-cyan-100/40'}`}
+                        style={{
+                            left: ripple.x - ripple.size / 2,
+                            top: ripple.y - ripple.size / 2,
+                            width: ripple.size,
+                            height: ripple.size,
+                            opacity: 0,
+                            animation: `rippleExpand 700ms ease-out ${ripple.delay}ms forwards`,
+                            transformOrigin: 'center'
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Main content */}
+            <div className="relative z-10">
+                <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-14 h-14 rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-md`}>
+                    {React.createElement(icon, { className: "w-6 h-6 text-white transition-transform duration-500 group-hover:rotate-180" })}
+                </div>
+
+                <h3 className={`text-xl font-bold mb-2 group-hover:text-accent-600 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                    {title}
+                </h3>
+
+                <p className={`text-sm mb-4 min-h-[40px] transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>
+                    {description}
+                </p>
+
+                <div className="flex items-center text-accent-500 font-medium text-sm">
+                    <span className="mr-2 group-hover:mr-3 transition-all duration-300">Learn More</span>
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+
+                {/* Animated progress bar */}
+                <div className={`mt-4 h-1.5 w-full rounded-full overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-100'}`}>
+                    <div className="h-full w-0 group-hover:w-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-500 ease-out"></div>
+                </div>
+            </div>
+
+            {/* Add CSS animation */}
+            <style jsx>{`
+                @keyframes rippleExpand {
+                    0% {
+                        transform: scale(0);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: scale(1);
+                        opacity: 0;
+                    }
+                }
+            `}</style>
         </div>
     );
 }

@@ -30,6 +30,13 @@ export default function Applications({ applications, onBackToDashboard }) {
         return 'bg-slate-100 text-slate-700';
     };
 
+    const getDarkModeStatusStyles = (status) => {
+        if (status === 'Final Stage') return 'bg-green-900 text-green-300';
+        if (status === 'CV Collection') return 'bg-indigo-900 text-indigo-300';
+        if (status === 'Submitted') return 'bg-blue-900 text-blue-300';
+        return 'bg-slate-700 text-slate-300';
+    };
+
     const safePercent = (numerator, denominator) => {
         const d = denominator > 0 ? denominator : 1;
         return Math.round((numerator / d) * 100);
@@ -180,104 +187,104 @@ export default function Applications({ applications, onBackToDashboard }) {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-6 md:p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between gap-4 mb-8">
                     <div>
-                        <h1 className="text-4xl font-bold text-base-900 mb-2">Application Management</h1>
-                        <p className="text-base-600">Track and manage all job applications in one place</p>
+                        <h1 className={`text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Application Management</h1>
+                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Track and manage all job applications in one place</p>
                     </div>
                     <button
                         type="button"
                         onClick={onBackToDashboard}
-                        className="text-base-600 hover:text-base-800 font-semibold flex items-center"
+                        className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
                         Back to Dashboard
                     </button>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
+                <div className={`rounded-2xl shadow-lg p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                     <div className="flex items-center mb-6">
-                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4">
+                        <div className={`flex items-center justify-center w-12 h-12 rounded-lg mr-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-r from-base-500 to-accent-500'}`}>
                             <List className="w-6 h-6 text-white" />
                         </div>
-                        <h2 className="text-3xl font-bold text-base-900">Applications Overview</h2>
+                        <h2 className={`text-3xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Applications Overview</h2>
                     </div>
 
                     <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-accent-600 mb-2">{totals.cvs}</div>
-                            <div className="text-sm font-semibold text-base-700">Total CVs Received</div>
-                            <div className="text-sm text-base-500">Across all positions</div>
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                            <div className={`text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{totals.cvs}</div>
+                            <div className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Total CVs Received</div>
+                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Across all positions</div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-accent-600 mb-2">{totals.finalCandidates}</div>
-                            <div className="text-sm font-semibold text-base-700">Final Candidates</div>
-                            <div className="text-sm text-base-500">Ready for hiring decision</div>
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                            <div className={`text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{totals.finalCandidates}</div>
+                            <div className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Final Candidates</div>
+                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Ready for hiring decision</div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl">
-                            <div className="text-4xl font-bold text-base-600 mb-2">{totals.positions}</div>
-                            <div className="text-sm font-semibold text-base-700">Active Positions</div>
-                            <div className="text-sm text-base-500">Currently recruiting</div>
+                        <div className={`p-6 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-gradient-to-br from-base-100 to-accent-100'}`}>
+                            <div className={`text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>{totals.positions}</div>
+                            <div className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Active Positions</div>
+                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Currently recruiting</div>
                         </div>
                     </div>
 
                     {applications.length === 0 ? (
-                        <div className="border-2 border-dashed border-base-200 rounded-xl p-10 text-center">
-                            <p className="text-base-700 font-semibold">No applications yet</p>
-                            <p className="text-base-500 mt-1">Submit a Job Requisition to create your first application record.</p>
+                        <div className={`border-2 border-dashed rounded-xl p-10 text-center transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                            <p className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>No applications yet</p>
+                            <p className={`mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Submit a Job Requisition to create your first application record.</p>
                         </div>
                     ) : (
                         <div className="space-y-6">
                             {applications.map((app) => (
                                 <div
                                     key={app.id}
-                                    className="border-2 border-base-200 rounded-xl p-6 hover:border-accent-500 transition-colors hover:shadow-lg hover:shadow-base-200"
+                                    className={`border-2 rounded-xl p-6 transition-colors hover:shadow-lg ${isDarkMode ? 'border-slate-600 hover:border-accent-400 hover:shadow-slate-900' : 'border-base-200 hover:border-accent-500 hover:shadow-base-200'}`}
                                 >
                                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                                         <div className="mb-4 md:mb-0">
-                                            <h3 className="text-2xl font-bold text-base-900">{app.jobTitle}</h3>
-                                            <p className="text-base-600">Posted on {app.posted}</p>
+                                            <h3 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</h3>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posted on {app.posted}</p>
                                         </div>
-                                        <div className={`px-4 py-2 rounded-full font-semibold ${statusStyles(app.status)}`}>{app.status}</div>
+                                        <div className={`px-4 py-2 rounded-full font-semibold transition-colors duration-300 ${isDarkMode ? getDarkModeStatusStyles(app.status) : statusStyles(app.status)}`}>{app.status}</div>
                                     </div>
 
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">CVs</div>
-                                            <div className="text-2xl font-bold text-accent-600">{app.cvs}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>CVs</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{app.cvs}</div>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">Semantic</div>
-                                            <div className="text-2xl font-bold text-accent-600">{app.semantic}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Semantic</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{app.semantic}</div>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">Assessment</div>
-                                            <div className="text-2xl font-bold text-accent-600">{app.assessment}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Assessment</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{app.assessment}</div>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">Tech Interview</div>
-                                            <div className="text-2xl font-bold text-accent-600">{app.techInterview}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Tech Interview</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{app.techInterview}</div>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">HR Interview</div>
-                                            <div className="text-2xl font-bold text-accent-600">{app.hrInterview}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>HR Interview</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{app.hrInterview}</div>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-lg">
-                                            <div className="text-sm text-base-600 mb-1">Final</div>
-                                            <div className="text-2xl font-bold text-base-600">{app.finalCandidates}</div>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-gradient-to-br from-base-100 to-accent-100'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Final</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>{app.finalCandidates}</div>
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-semibold text-base-600">Overall Progress</span>
-                                            <span className="text-sm font-semibold text-base-600">{safePercent(app.finalCandidates, app.cvs)}%</span>
+                                            <span className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall Progress</span>
+                                            <span className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{safePercent(app.finalCandidates, app.cvs)}%</span>
                                         </div>
-                                        <div className="w-full bg-base-200 rounded-full h-3">
+                                        <div className={`w-full rounded-full h-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-200'}`}>
                                             <div
                                                 className="bg-gradient-to-r from-base-500 to-accent-500 h-3 rounded-full transition-all"
                                                 style={{ width: `${safePercent(app.finalCandidates, app.cvs)}%` }}

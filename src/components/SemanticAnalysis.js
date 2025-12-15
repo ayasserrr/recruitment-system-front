@@ -68,6 +68,15 @@ export default function SemanticAnalysis({ applications, onBack }) {
         }
     };
 
+    const getDarkModeMatchColor = (match) => {
+        switch (match) {
+            case 'Excellent': return 'bg-green-900 text-green-300';
+            case 'Very Good': return 'bg-blue-900 text-blue-300';
+            case 'Good': return 'bg-orange-900 text-orange-300';
+            default: return 'bg-slate-700 text-slate-300';
+        }
+    };
+
     const getScoreBarColor = (score) => {
         if (score >= 90) return '#10b981';
         if (score >= 80) return '#3b82f6';
@@ -309,27 +318,27 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                 {candidates.map((candidate, index) => (
                                     <div
                                         key={index}
-                                        className="border-2 border-base-200 rounded-xl p-6 hover:border-accent-500 transition-all duration-300 hover:shadow-lg hover:shadow-base-200"
+                                        className={`border-2 rounded-xl p-6 transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'border-slate-600 hover:border-accent-400 hover:shadow-slate-900' : 'border-base-200 hover:border-accent-500 hover:shadow-base-200'}`}
                                     >
                                         <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
                                             <div className="mb-4 md:mb-0">
                                                 <div className="flex items-center mb-3">
-                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mr-4 ${index === 0 ? 'bg-gradient-to-r from-base-200 to-accent-200 text-accent-600' :
+                                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mr-4 transition-colors duration-300 ${index === 0 ? 'bg-gradient-to-r from-base-200 to-accent-200 text-accent-600' :
                                                         index === 1 ? 'bg-gradient-to-r from-base-100 to-accent-100 text-base-600' :
                                                             index === 2 ? 'bg-gradient-to-r from-base-200 to-accent-200 text-base-600' :
-                                                                'bg-base-50 text-base-500'
+                                                                isDarkMode ? 'bg-slate-600 text-gray-400' : 'bg-base-50 text-base-500'
                                                         }`}>
                                                         #{index + 1}
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-xl font-bold text-base-900">{candidate.name}</h3>
+                                                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{candidate.name}</h3>
                                                         <div className="flex items-center mt-2">
                                                             <span className={`text-4xl font-bold ${getScoreColor(candidate.score)} mr-3`}>
                                                                 {candidate.score}
                                                             </span>
                                                             <div>
-                                                                <div className="text-sm text-base-600">Semantic Match Score</div>
-                                                                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getMatchColor(candidate.match)}`}>
+                                                                <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Semantic Match Score</div>
+                                                                <span className={`px-3 py-1 rounded-full text-sm font-semibold transition-colors duration-300 ${isDarkMode ? getDarkModeMatchColor(candidate.match) : getMatchColor(candidate.match)}`}>
                                                                     {candidate.match} Match
                                                                 </span>
                                                             </div>
@@ -392,12 +401,12 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
                                         <div className="space-y-4">
                                             <div>
-                                                <h4 className="text-sm font-semibold text-base-700 mb-3">Matched Skills:</h4>
+                                                <h4 className={`text-sm font-semibold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Matched Skills:</h4>
                                                 <div className="flex flex-wrap gap-2">
                                                     {candidate.skills.map((skill, i) => (
                                                         <span
                                                             key={i}
-                                                            className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 text-base-700 rounded-lg text-sm font-medium hover:from-base-200 hover:to-accent-200 transition-colors"
+                                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-gray-300 hover:bg-slate-500' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700 hover:from-base-200 hover:to-accent-200'}`}
                                                         >
                                                             {skill}
                                                         </span>
@@ -405,26 +414,26 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-base-200">
+                                            <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
                                                 <div className="text-center">
-                                                    <div className="text-sm text-base-600">Skills Match</div>
-                                                    <div className="text-lg font-bold text-accent-600">{candidate.score - 10}%</div>
+                                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Skills Match</div>
+                                                    <div className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>{candidate.score - 10}%</div>
                                                 </div>
                                                 <div className="text-center">
-                                                    <div className="text-sm text-base-600">Experience Level</div>
-                                                    <div className="text-lg font-bold text-base-700">
+                                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Experience Level</div>
+                                                    <div className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                                         {candidate.score >= 90 ? 'Senior' : candidate.score >= 80 ? 'Mid-Senior' : 'Mid-Level'}
                                                     </div>
                                                 </div>
                                                 <div className="text-center">
-                                                    <div className="text-sm text-base-600">Education Match</div>
-                                                    <div className="text-lg font-bold text-accent-600">
+                                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Education Match</div>
+                                                    <div className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>
                                                         {candidate.score >= 85 ? 'High' : 'Medium'}
                                                     </div>
                                                 </div>
                                                 <div className="text-center">
-                                                    <div className="text-sm text-base-600">Recommendation</div>
-                                                    <div className="text-lg font-bold text-accent-600">
+                                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Recommendation</div>
+                                                    <div className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>
                                                         {candidate.score >= 85 ? 'Strong' : candidate.score >= 75 ? 'Moderate' : 'Review'}
                                                     </div>
                                                 </div>
@@ -435,12 +444,12 @@ export default function SemanticAnalysis({ applications, onBack }) {
                             </div>
 
                             {/* Distribution Chart */}
-                            <div className="mt-8 pt-8 border-t border-base-200">
-                                <h3 className="text-xl font-bold text-base-900 mb-6">Score Distribution</h3>
+                            <div className={`mt-8 pt-8 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                <h3 className={`text-xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Score Distribution</h3>
                                 <div className="space-y-4">
                                     {scoreDistribution.map((item, index) => (
                                         <div key={index} className="flex items-center">
-                                            <div className="w-20 text-sm font-medium text-base-700">{item.range}</div>
+                                            <div className={`w-20 text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>{item.range}</div>
                                             <div className="flex-1 ml-4">
                                                 <div
                                                     className="h-8 rounded-lg transition-all duration-500"
@@ -450,7 +459,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                     }}
                                                 />
                                             </div>
-                                            <div className="w-16 text-right text-sm font-semibold text-base-700">{item.count}</div>
+                                            <div className={`w-16 text-right text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>{item.count}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -460,7 +469,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                             <div className="mt-8 flex justify-end space-x-4">
                                 <button
                                     onClick={downloadReport}
-                                    className="px-6 py-3 border-2 border-base-600 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors flex items-center"
+                                    className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors flex items-center ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-600 text-base-600 hover:bg-base-50'}`}
                                 >
                                     <Download className="w-5 h-5 mr-2" />
                                     Export Report
@@ -576,10 +585,10 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     <div className={`text-center pb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
                                         <h3 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{showReportModal.name}</h3>
                                         <div className="flex items-center justify-center mt-3">
-                                            <span className={`text-3xl font-bold ${getScoreColor(showReportModal.score)} mr-4`}>
+                                            <span className={`text-3xl font-bold mr-4 ${getScoreColor(showReportModal.score)}`}>
                                                 {showReportModal.score}
                                             </span>
-                                            <span className={`px-4 py-2 rounded-full text-lg font-semibold ${getMatchColor(showReportModal.match)}`}>
+                                            <span className={`px-4 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${isDarkMode ? getDarkModeMatchColor(showReportModal.match) : getMatchColor(showReportModal.match)}`}>
                                                 {showReportModal.match} Match
                                             </span>
                                         </div>
