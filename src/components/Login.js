@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, Eye, EyeOff } from 'lucide-react';
+import { Zap, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import userDatabase from '../utils/userDatabase';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -82,7 +82,14 @@ export default function Login({ onLoginSuccess, onBackClick }) {
 
     return (
         <div className={`min-h-screen flex items-center justify-center px-6 transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
-            <div className={`rounded-2xl shadow-xl p-8 w-full max-w-md transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+            <div className={`rounded-2xl shadow-xl p-8 w-full max-w-md transition-colors duration-300 relative ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+                {/* Back Arrow Button */}
+                <button
+                    onClick={onBackClick}
+                    className={`absolute top-4 left-4 p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700 text-gray-400 hover:text-gray-300' : 'hover:bg-gray-100 text-gray-600 hover:text-gray-800'}`}
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </button>
                 {/* Message Display */}
                 {message && (
                     <div className={`mb-4 p-3 rounded-lg text-sm transition-colors duration-300 ${messageType === 'success'
