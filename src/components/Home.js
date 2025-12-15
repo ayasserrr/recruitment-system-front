@@ -47,7 +47,7 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                             Get Started
                         </button>
                         <button
-                            onClick={onLearnMoreClick}
+                            onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                             className={`px-8 py-3 border rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 border-slate-600 hover:bg-slate-600' : 'bg-white text-base-700 border-base-300 hover:bg-base-50'}`}
                         >
                             Learn More
@@ -80,16 +80,16 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
 
                         <FeatureCard
                             icon={ClipboardCheck}
-                            title="Technical Assessment Platform"
-                            description="Comprehensive skill evaluation with automated scoring, detailed performance reports, and candidate capability analysis"
+                            title="Customizable Assessment Creation"
+                            description="Choose from ready-to-use assessments, customizable templates, or build fully custom evaluations from scratch"
                             isDarkMode={isDarkMode}
                             onClick={() => handleFeatureCardClick('technical-assessment')}
                         />
 
                         <FeatureCard
                             icon={Video}
-                            title="Technical & HR Interviews"
-                            description="Structured interview management with evaluation frameworks, scoring systems, and detailed interviewer feedback collection"
+                            title="Flexible Interview Options"
+                            description="Choose between AI-conducted, HR-led, or technical interviews with AI feedback for comprehensive candidate evaluation"
                             isDarkMode={isDarkMode}
                             onClick={() => handleFeatureCardClick('interviews')}
                         />

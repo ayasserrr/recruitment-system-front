@@ -107,19 +107,19 @@ export default function TechnicalInterview({ applications, onBack }) {
     }, [interviewData]);
 
     const getScoreColor = (score) => {
-        if (score >= 9) return 'text-green-600';
-        if (score >= 8) return 'text-blue-600';
-        if (score >= 7) return 'text-orange-600';
-        return 'text-red-600';
+        if (score >= 9) return isDarkMode ? 'text-green-400' : 'text-green-600';
+        if (score >= 8) return isDarkMode ? 'text-blue-400' : 'text-blue-600';
+        if (score >= 7) return isDarkMode ? 'text-orange-400' : 'text-orange-600';
+        return isDarkMode ? 'text-red-400' : 'text-red-600';
     };
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'active': return 'bg-blue-100 text-blue-700';
-            case 'completed': return 'bg-green-100 text-green-700';
-            case 'scheduled': return 'bg-blue-100 text-blue-700';
-            case 'pending': return 'bg-orange-100 text-orange-700';
-            default: return 'bg-slate-100 text-slate-700';
+            case 'active': return isDarkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-700';
+            case 'completed': return isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700';
+            case 'scheduled': return isDarkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-700';
+            case 'pending': return isDarkMode ? 'bg-orange-900 text-orange-300' : 'bg-orange-100 text-orange-700';
+            default: return isDarkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-700';
         }
     };
 

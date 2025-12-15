@@ -4,46 +4,67 @@ import { useDarkMode } from '../../contexts/DarkModeContext';
 
 export default function TechnicalAssessmentDetail({ onBack }) {
     const { isDarkMode } = useDarkMode();
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState('assessment-options');
 
-    const assessmentTypes = [
+    const assessmentOptions = [
         {
-            id: 'coding',
-            title: 'Coding Challenges',
-            icon: Code,
-            description: 'Real-time coding evaluation with automated testing',
+            id: 'i-got-it',
+            title: 'I Got It',
+            icon: CheckCircle,
+            description: 'Use existing pre-built assessments and templates ready for immediate deployment',
             features: [
-                'Multiple programming languages support',
-                'Automated test case execution',
-                'Performance and complexity analysis',
-                'Code quality scoring',
-                'Plagiarism detection'
+                'Ready-to-use assessment library',
+                'Industry-standard templates',
+                'Instant deployment capability',
+                'Proven question banks',
+                'Immediate candidate testing'
+            ],
+            benefits: [
+                'Zero setup time required',
+                'Tested and validated questions',
+                'Consistent evaluation standards',
+                'Quick implementation',
+                'Reliable results'
             ]
         },
         {
-            id: 'multiple-choice',
-            title: 'Technical MCQs',
+            id: 'give-me-template',
+            title: 'Give Me Template',
             icon: FileText,
-            description: 'Comprehensive technical knowledge assessment',
+            description: 'Customizable assessment templates that can be tailored to your specific requirements',
             features: [
-                'Domain-specific question banks',
-                'Adaptive difficulty levels',
-                'Time-bound assessments',
-                'Instant scoring and feedback',
-                'Detailed performance analytics'
+                'Modular template system',
+                'Custom question insertion',
+                'Adjustable difficulty levels',
+                'Role-specific customization',
+                'Flexible scoring criteria'
+            ],
+            benefits: [
+                'Semi-customized assessments',
+                'Faster than building from scratch',
+                'Professional structure maintained',
+                'Partial customization options',
+                'Balanced effort and personalization'
             ]
         },
         {
-            id: 'practical',
-            title: 'Practical Projects',
-            icon: Target,
-            description: 'Hands-on evaluation of real-world skills',
+            id: 'i-fully-create',
+            title: 'I Fully Create',
+            icon: Settings,
+            description: 'Build completely custom assessments from scratch with full control over every aspect',
             features: [
-                'Project-based assessments',
-                'Portfolio review capabilities',
-                'Collaborative coding exercises',
-                'System design challenges',
-                'Problem-solving scenarios'
+                'From-ground-up creation',
+                'Complete creative control',
+                'Advanced question types',
+                'Custom evaluation logic',
+                'Personalized branding'
+            ],
+            benefits: [
+                'Fully tailored experience',
+                'Unique assessment design',
+                'Complete brand alignment',
+                'Specialized requirements',
+                'Maximum flexibility'
             ]
         }
     ];
@@ -103,12 +124,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
         }
     ];
 
-    const metrics = [
-        { label: 'Assessment Completion Rate', value: '87%', trend: '+12%' },
-        { label: 'Average Score Accuracy', value: '92%', trend: '+8%' },
-        { label: 'Time-to-Evaluate', value: '4.2 min', trend: '-35%' },
-        { label: 'Skill Match Rate', value: '78%', trend: '+23%' }
-    ];
 
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
@@ -140,14 +155,14 @@ export default function TechnicalAssessmentDetail({ onBack }) {
 
                 {/* Navigation Tabs */}
                 <div className="flex space-x-1 mb-8 border-b">
-                    {['overview', 'assessment-types', 'workflow'].map((tab) => (
+                    {['assessment-options', 'overview', 'workflow'].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-6 py-3 font-medium transition-colors duration-200 border-b-2 ${activeTab === tab
                                 ? isDarkMode
-                                    ? 'text-orange-400 border-orange-400'
-                                    : 'text-orange-600 border-orange-600'
+                                    ? 'text-accent-400 border-accent-400'
+                                    : 'text-accent-600 border-accent-600'
                                 : isDarkMode
                                     ? 'text-gray-400 border-transparent hover:text-gray-300'
                                     : 'text-base-600 border-transparent hover:text-base-800'
@@ -159,6 +174,78 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                 </div>
 
                 {/* Content based on active tab */}
+                {activeTab === 'assessment-options' && (
+                    <div className="space-y-8">
+                        <div className="text-center mb-8">
+                            <h2 className={`text-3xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                Choose Your Assessment Approach
+                            </h2>
+                            <p className={`text-lg max-w-2xl mx-auto transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                Select the assessment creation method that best fits your timeline and customization needs
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {assessmentOptions.map((option) => {
+                                const Icon = option.icon;
+                                return (
+                                    <div key={option.id} className={`border rounded-xl p-6 transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'bg-slate-800 border-slate-700 hover:border-accent-400' : 'bg-white border-base-200 hover:border-accent-300'}`}>
+                                        <div className="flex items-center space-x-3 mb-4">
+                                            <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg flex items-center justify-center`}>
+                                                <Icon className="w-6 h-6 text-white" />
+                                            </div>
+                                            <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                                {option.title}
+                                            </h3>
+                                        </div>
+                                        <p className={`text-sm mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                            {option.description}
+                                        </p>
+
+                                        <div className="space-y-4">
+                                            <div>
+                                                <h4 className={`font-semibold mb-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>
+                                                    Key Features
+                                                </h4>
+                                                <ul className="space-y-1">
+                                                    {option.features.map((feature, index) => (
+                                                        <li key={index} className="flex items-start space-x-2">
+                                                            <CheckCircle className={`w-3 h-3 mt-1 flex-shrink-0 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`} />
+                                                            <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                                {feature}
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            <div>
+                                                <h4 className={`font-semibold mb-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`}>
+                                                    Benefits
+                                                </h4>
+                                                <ul className="space-y-1">
+                                                    {option.benefits.map((benefit, index) => (
+                                                        <li key={index} className="flex items-start space-x-2">
+                                                            <Award className={`w-3 h-3 mt-1 flex-shrink-0 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`} />
+                                                            <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                                {benefit}
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <button className={`w-full mt-6 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${isDarkMode ? 'bg-accent-500/20 text-accent-400 hover:bg-accent-500/30' : 'bg-accent-100 text-accent-700 hover:bg-accent-200'}`}>
+                                            Choose This Option
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
                 {activeTab === 'overview' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Overview */}
@@ -194,32 +281,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                                 </div>
                             </div>
 
-                            {/* Performance Metrics */}
-                            <div className={`border rounded-xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                                <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                    Performance Metrics
-                                </h2>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {metrics.map((metric, index) => (
-                                        <div key={index} className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                                    {metric.label}
-                                                </span>
-                                                <span className={`text-xs font-medium px-2 py-1 rounded-full ${metric.trend.startsWith('+')
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-blue-100 text-blue-700'
-                                                    }`}>
-                                                    {metric.trend}
-                                                </span>
-                                            </div>
-                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                                {metric.value}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         {/* Sidebar */}
@@ -247,39 +308,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                )}
-
-                {activeTab === 'assessment-types' && (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {assessmentTypes.map((type) => {
-                            const Icon = type.icon;
-                            return (
-                                <div key={type.id} className={`border rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                                    <div className="flex items-center space-x-3 mb-4">
-                                        <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg flex items-center justify-center`}>
-                                            <Icon className="w-6 h-6 text-white" />
-                                        </div>
-                                        <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                            {type.title}
-                                        </h3>
-                                    </div>
-                                    <p className={`text-sm mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                        {type.description}
-                                    </p>
-                                    <ul className="space-y-2">
-                                        {type.features.map((feature, index) => (
-                                            <li key={index} className="flex items-start space-x-2">
-                                                <CheckCircle className={`w-3 h-3 mt-1 flex-shrink-0 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
-                                                <span className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                                    {feature}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            );
-                        })}
                     </div>
                 )}
 

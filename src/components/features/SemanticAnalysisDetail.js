@@ -123,7 +123,7 @@ export default function SemanticAnalysisDetail({ onBack }) {
                                     <div
                                         key={step.id}
                                         className={`border rounded-xl p-6 transition-all duration-300 cursor-pointer ${activeStep === index
-                                            ? isDarkMode ? 'bg-slate-700 border-purple-500' : 'bg-white border-purple-300 shadow-lg'
+                                            ? isDarkMode ? 'bg-slate-700 border-accent-500' : 'bg-white border-accent-300 shadow-lg'
                                             : isDarkMode ? 'bg-slate-800 border-slate-700 hover:border-slate-600' : 'bg-white border-base-200 hover:border-base-300'
                                             }`}
                                         onClick={() => setActiveStep(index)}
@@ -148,7 +148,7 @@ export default function SemanticAnalysisDetail({ onBack }) {
                                                     <ul className="space-y-2 mt-4">
                                                         {step.details.map((detail, detailIndex) => (
                                                             <li key={detailIndex} className="flex items-start space-x-2">
-                                                                <CheckCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                                                                <CheckCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-accent-400' : 'text-accent-600'}`} />
                                                                 <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                                                     {detail}
                                                                 </span>
@@ -194,27 +194,6 @@ export default function SemanticAnalysisDetail({ onBack }) {
                                     </div>
                                 );
                             })}
-                        </div>
-
-                        {/* Performance Metrics */}
-                        <div className={`mt-8 border rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                            <h3 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                Performance Metrics
-                            </h3>
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Accuracy Rate</span>
-                                    <span className={`text-sm font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>94%</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Processing Speed</span>
-                                    <span className={`text-sm font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>2.3s/resume</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Match Improvement</span>
-                                    <span className={`text-sm font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>+67%</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

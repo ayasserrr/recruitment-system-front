@@ -7,6 +7,7 @@ import SemanticAnalysis from './components/SemanticAnalysis';
 import TechnicalAssessment from './components/TechnicalAssessment';
 import TechnicalInterview from './components/TechnicalInterview';
 import HRInterview from './components/HRInterview';
+import InterviewManagement from './components/InterviewManagement';
 import FinalRanking from './components/FinalRanking';
 import Analytics from './components/Analytics';
 import Shortlist from './components/Shortlist';
@@ -130,8 +131,7 @@ function RecruitmentSystemContent() {
         { id: 'job-post', icon: Share2, label: 'Job Post', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Manage postings' },
         { id: 'semantic-analysis', icon: Brain, label: 'Semantic Analysis', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'AI candidate matching' },
         { id: 'technical-assessment', icon: ClipboardCheck, label: 'Technical Assessment', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Test management' },
-        { id: 'technical-interview', icon: Video, label: 'Technical Interview', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Interview scheduling' },
-        { id: 'hr-interview', icon: Users, label: 'HR Interview', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Cultural fit assessment' },
+        { id: 'interview-management', icon: Video, label: 'Interview Management', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Two-phase interview system' },
         { id: 'final-ranking', icon: Award, label: 'Final Ranking', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Candidate ranking' },
         { id: 'shortlist', icon: Star, label: 'Shortlist', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Manage shortlisted CVs' },
         { id: 'applications', icon: List, label: 'Applications', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Application tracking' },
@@ -359,6 +359,14 @@ function RecruitmentSystemContent() {
             {/* Technical Assessment Page */}
             {currentPage === 'technical-assessment' && (
                 <TechnicalAssessment
+                    applications={applications}
+                    onBack={() => setCurrentPage('phases')}
+                />
+            )}
+
+            {/* Interview Management Page */}
+            {currentPage === 'interview-management' && (
+                <InterviewManagement
                     applications={applications}
                     onBack={() => setCurrentPage('phases')}
                 />
