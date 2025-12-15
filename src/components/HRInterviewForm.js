@@ -13,8 +13,10 @@ import {
     Zap,
     Heart,
 } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function HRInterviewForm({ formData, updateFormData }) {
+    const { isDarkMode } = useDarkMode();
     const [customQuestions, setCustomQuestions] = useState([]);
     const [newQuestion, setNewQuestion] = useState({
         text: '',
@@ -127,14 +129,14 @@ export default function HRInterviewForm({ formData, updateFormData }) {
     return (
         <div className="space-y-8">
             {/* Interview Type Selection */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-800">HR Interview Setup</h3>
-                        <p className="text-sm text-gray-600 mt-1">Choose how the HR/cultural fit interview will be conducted</p>
+                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>HR Interview Setup</h3>
+                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Choose how the HR/cultural fit interview will be conducted</p>
                     </div>
                 </div>
 
@@ -146,7 +148,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : 'border-gray-200 hover:border-accent-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
@@ -156,14 +158,14 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                         })}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-800">{option.title}</h4>
-                                        <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                                        <h4 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{option.title}</h4>
+                                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{option.description}</p>
                                     </div>
                                 </div>
 
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
-                                        <li key={index} className="flex items-center text-sm text-gray-600">
+                                        <li key={index} className={`flex items-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                             <div className="w-1.5 h-1.5 bg-gradient-to-r from-base-500 to-accent-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
@@ -182,17 +184,17 @@ export default function HRInterviewForm({ formData, updateFormData }) {
             </div>
 
             {/* Evaluation Criteria */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
                         <Star className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800">Evaluation Criteria</h3>
+                    <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Evaluation Criteria</h3>
                 </div>
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                        <label className={`block text-sm font-medium mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Select evaluation criteria for HR interview:
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -206,7 +208,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 { id: 'motivation', label: 'Motivation & Drive', icon: Zap },
                                 { id: 'emotional-intelligence', label: 'Emotional Intelligence', icon: Heart },
                             ].map((criteria) => (
-                                <label key={criteria.id} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <label key={criteria.id} className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors duration-300 ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}>
                                     <input
                                         type="checkbox"
                                         checked={formData.hrEvaluationCriteria?.includes(criteria.id) || false}
@@ -224,66 +226,66 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                             className: 'w-4 h-4 text-white',
                                         })}
                                     </div>
-                                    <span className="text-gray-700">{criteria.label}</span>
+                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
                                 </label>
                             ))}
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Company Culture Values to Assess</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Company Culture Values to Assess</label>
                         <textarea
                             value={formData.cultureValues || ''}
                             onChange={(e) => updateFormData({ cultureValues: e.target.value })}
                             placeholder="Enter your company's core values (e.g., Innovation, Collaboration, Customer Focus)..."
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
-                        <p className="mt-1 text-sm text-gray-500">AI will evaluate candidates against these values</p>
+                        <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>AI will evaluate candidates against these values</p>
                     </div>
                 </div>
 
                 {/* Question Setup */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center">
                             <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
                                 <MessageSquare className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">HR Interview Questions</h3>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>HR Interview Questions</h3>
+                                <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                     Add questions now (we will generate additional questions later if needed)
                                 </p>
                             </div>
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Questions: <span className="font-bold text-accent-600">{customQuestions.length}</span>
                         </div>
                     </div>
 
-                    <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                        <h4 className="font-bold text-gray-800 mb-4">Add HR Interview Question</h4>
+                    <div className={`rounded-lg p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-gray-50'}`}>
+                        <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Add HR Interview Question</h4>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Question Text *</label>
+                                <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Question Text *</label>
                                 <textarea
                                     value={newQuestion.text}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
                                     placeholder="Enter HR interview question..."
                                     rows="3"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                    <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                                     <select
                                         value={newQuestion.category}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                     >
                                         {questionCategories.map((cat) => (
                                             <option key={cat.id} value={cat.id}>
@@ -294,11 +296,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Importance</label>
+                                    <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Importance</label>
                                     <select
                                         value={newQuestion.importance}
                                         onChange={(e) => setNewQuestion({ ...newQuestion, importance: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                     >
                                         <option value="low">Low</option>
                                         <option value="medium">Medium</option>
@@ -322,20 +324,20 @@ export default function HRInterviewForm({ formData, updateFormData }) {
 
                     {(
                         <div className="mb-6">
-                            <h4 className="font-bold text-gray-800 mb-4">Sample HR Questions</h4>
+                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Sample HR Questions</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {sampleQuestions.map((question) => (
-                                    <div key={question.id} className="border border-gray-200 rounded-lg p-4">
+                                    <div key={question.id} className={`border rounded-lg p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
                                         <div className="flex items-start mb-3">
                                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
                                                 {React.createElement(iconComponentsForCategories[question.category], {
                                                     className: 'w-4 h-4 text-white',
                                                 })}
                                             </div>
-                                            <p className="text-gray-800">{question.text}</p>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{question.text}</p>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">{questionCategories.find((c) => c.id === question.category)?.name}</span>
+                                            <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{questionCategories.find((c) => c.id === question.category)?.name}</span>
                                             <button
                                                 type="button"
                                                 onClick={() => addSample(question)}
@@ -352,10 +354,10 @@ export default function HRInterviewForm({ formData, updateFormData }) {
 
                     {customQuestions.length > 0 && (
                         <div>
-                            <h4 className="font-bold text-gray-800 mb-4">Your HR Interview Questions</h4>
+                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Your HR Interview Questions</h4>
                             <div className="space-y-3">
                                 {customQuestions.map((question) => (
-                                    <div key={question.id} className="border border-gray-200 rounded-lg p-4">
+                                    <div key={question.id} className={`border rounded-lg p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
                                         <div className="flex justify-between items-start">
                                             <div className="flex-1">
                                                 <div className="flex items-center mb-2">
@@ -364,10 +366,10 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                                             className: 'w-4 h-4 text-white',
                                                         })}
                                                     </div>
-                                                    <p className="text-gray-800">{question.text}</p>
+                                                    <p className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{question.text}</p>
                                                 </div>
-                                                <div className="flex items-center text-sm text-gray-600 ml-9">
-                                                    <span className="px-2 py-1 bg-gray-100 rounded mr-3">{question.importance}</span>
+                                                <div className={`flex items-center text-sm ml-9 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                    <span className={`px-2 py-1 rounded mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-gray-100'}`}>{question.importance}</span>
                                                     <span>{questionCategories.find((c) => c.id === question.category)?.name}</span>
                                                 </div>
                                             </div>
@@ -384,16 +386,16 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                 </div>
 
                 {/* Interview Settings */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-6">HR Interview Settings</h3>
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
+                    <h3 className={`text-lg font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>HR Interview Settings</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Interview Duration (Minutes) *</label>
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Interview Duration (Minutes) *</label>
                             <select
                                 value={formData.hrInterviewDuration || '45'}
                                 onChange={(e) => updateFormData({ hrInterviewDuration: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             >
                                 <option value="30">30 minutes</option>
                                 <option value="45">45 minutes</option>
@@ -402,11 +404,11 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Interview Format</label>
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Interview Format</label>
                             <select
                                 value={formData.hrInterviewFormat || 'conversational'}
                                 onChange={(e) => updateFormData({ hrInterviewFormat: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             >
                                 <option value="conversational">Conversational</option>
                                 <option value="structured">Structured Q&A</option>
@@ -416,22 +418,22 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Candidates to advance after this phase</label>
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Candidates to advance after this phase</label>
                             <input
                                 type="number"
                                 min="1"
                                 value={formData.hrInterviewCandidatesToAdvance || 3}
                                 onChange={(e) => updateFormData({ hrInterviewCandidatesToAdvance: parseInt(e.target.value) })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Decision Timeline</label>
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Decision Timeline</label>
                             <select
                                 value={formData.hrDecisionTimeline || '48'}
                                 onChange={(e) => updateFormData({ hrDecisionTimeline: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             >
                                 <option value="24">24 hours</option>
                                 <option value="48">48 hours</option>
@@ -442,13 +444,13 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div className="mt-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Notes for HR Interviewers</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Notes for HR Interviewers</label>
                         <textarea
                             value={formData.hrInterviewerNotes || ''}
                             onChange={(e) => updateFormData({ hrInterviewerNotes: e.target.value })}
                             placeholder="Specific instructions, red flags to watch for, culture points to emphasize..."
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
                 </div>

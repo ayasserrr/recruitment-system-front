@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Zap, Eye, EyeOff } from 'lucide-react';
 import userDatabase from '../utils/userDatabase';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Login({ onLoginSuccess, onBackClick }) {
+    const { isDarkMode } = useDarkMode();
     const [activeTab, setActiveTab] = useState('signin');
     const [showPassword, setShowPassword] = useState(false);
     const [showSignUpPassword, setShowSignUpPassword] = useState(false);
@@ -79,13 +81,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 flex items-center justify-center px-6">
-            <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <div className={`min-h-screen flex items-center justify-center px-6 transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
+            <div className={`rounded-2xl shadow-xl p-8 w-full max-w-md transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                 {/* Message Display */}
                 {message && (
-                    <div className={`mb-4 p-3 rounded-lg text-sm ${messageType === 'success'
-                        ? 'bg-green-100 text-green-700 border border-green-200'
-                        : 'bg-red-100 text-red-700 border border-red-200'
+                    <div className={`mb-4 p-3 rounded-lg text-sm transition-colors duration-300 ${messageType === 'success'
+                        ? isDarkMode ? 'bg-green-900 text-green-200 border border-green-700' : 'bg-green-100 text-green-700 border border-green-200'
+                        : isDarkMode ? 'bg-red-900 text-red-200 border border-red-700' : 'bg-red-100 text-red-700 border border-red-200'
                         }`}>
                         {message}
                     </div>
@@ -95,21 +97,21 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                     <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl mx-auto mb-4">
                         <Zap className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-base-900">
+                    <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                         {activeTab === 'signin' ? 'Welcome Back' : 'Welcome'}
                     </h2>
-                    <p className="text-base-600 mt-2">
+                    <p className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                         {activeTab === 'signin' ? 'Sign in to your account' : 'Create your account'}
                     </p>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex mb-6 border-b border-base-200">
+                <div className={`flex mb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-700' : 'border-base-200'}`}>
                     <button
                         onClick={() => setActiveTab('signin')}
                         className={`flex-1 pb-3 text-center font-medium transition-colors ${activeTab === 'signin'
-                            ? 'text-accent-600 border-b-2 border-accent-600'
-                            : 'text-base-500 hover:text-base-700'
+                            ? isDarkMode ? 'text-accent-400 border-b-2 border-accent-400' : 'text-accent-600 border-b-2 border-accent-600'
+                            : isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-500 hover:text-base-700'
                             }`}
                     >
                         Sign In
@@ -117,8 +119,8 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                     <button
                         onClick={() => setActiveTab('signup')}
                         className={`flex-1 pb-3 text-center font-medium transition-colors ${activeTab === 'signup'
-                            ? 'text-accent-600 border-b-2 border-accent-600'
-                            : 'text-base-500 hover:text-base-700'
+                            ? isDarkMode ? 'text-accent-400 border-b-2 border-accent-400' : 'text-accent-600 border-b-2 border-accent-600'
+                            : isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-500 hover:text-base-700'
                             }`}
                     >
                         Sign Up
@@ -129,7 +131,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 {activeTab === 'signin' && (
                     <form onSubmit={handleSignIn}>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Email Address
                             </label>
                             <input
@@ -138,13 +140,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                 required
                             />
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Password
                             </label>
                             <div className="relative">
@@ -154,13 +156,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Enter your password"
-                                    className="w-full px-4 py-3 pr-12 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                    className={`w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-500 hover:text-base-700"
+                                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-500 hover:text-base-700'}`}
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -180,7 +182,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 {activeTab === 'signup' && (
                     <form onSubmit={handleSignUp}>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Full Name
                             </label>
                             <input
@@ -189,13 +191,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="Enter your full name"
-                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                 required
                             />
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Email Address
                             </label>
                             <input
@@ -204,13 +206,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                 required
                             />
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Password
                             </label>
                             <div className="relative">
@@ -220,13 +222,13 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Create a password"
-                                    className="w-full px-4 py-3 pr-12 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                    className={`w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowSignUpPassword(!showSignUpPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-500 hover:text-base-700"
+                                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-500 hover:text-base-700'}`}
                                 >
                                     {showSignUpPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -234,7 +236,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-base-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                 Confirm Password
                             </label>
                             <input
@@ -243,7 +245,7 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                                 placeholder="Confirm your password"
-                                className="w-full px-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-colors"
+                                className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                                 required
                             />
                         </div>
@@ -259,11 +261,11 @@ export default function Login({ onLoginSuccess, onBackClick }) {
 
                 {/* Footer */}
                 <div className="mt-6 text-center">
-                    <p className="text-base-600">
+                    <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                         Don't have an account?{' '}
                         <button
                             onClick={() => setActiveTab('signup')}
-                            className="text-accent-600 hover:text-accent-700 font-medium"
+                            className={`font-medium transition-colors ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-700'}`}
                         >
                             Sign up
                         </button>

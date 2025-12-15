@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { ChevronRight, Briefcase, Users, FileText, Star, ArrowLeft, CheckCircle, X, Eye, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Star, Download, Users, Eye, X, Briefcase, ChevronRight } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
-export default function Shortlist({ onBack }) {
+export default function Shortlist({ applications, onBack }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
     const [shortlistedApplications, setShortlistedApplications] = useState([]);
@@ -155,18 +157,18 @@ export default function Shortlist({ onBack }) {
 
         if (!foundApplication) {
             return (
-                <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+                <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
                     <div className="max-w-7xl mx-auto">
                         <button
                             onClick={() => setSelectedApplication(null)}
-                            className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
+                            className={`mb-6 font-semibold flex items-center transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                         >
                             <ArrowLeft className="w-5 h-5 mr-2" />
                             Back to Applications
                         </button>
-                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-12 text-center">
-                            <h3 className="text-xl font-semibold text-base-700 mb-2">Application Not Found</h3>
-                            <p className="text-base-500">The selected application could not be found.</p>
+                        <div className={`rounded-2xl shadow-lg p-12 text-center transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                            <h3 className={`text-xl font-semibold mb-2 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Application Not Found</h3>
+                            <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>The selected application could not be found.</p>
                         </div>
                     </div>
                 </div>
@@ -174,17 +176,17 @@ export default function Shortlist({ onBack }) {
         }
 
         return (
-            <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+            <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => setSelectedApplication(null)}
-                        className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
+                        className={`mb-6 font-semibold flex items-center transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                     >
                         <ArrowLeft className="w-5 h-5 mr-2" />
                         Back to Applications
                     </button>
 
-                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8 mb-8">
+                    <div className={`rounded-2xl shadow-lg p-8 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                         <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h1 className="text-3xl font-bold text-base-900 mb-2">{foundApplication.jobTitle}</h1>

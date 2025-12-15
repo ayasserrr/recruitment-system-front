@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Award, ChevronRight, Eye, Download, Filter, Star, TrendingUp, Trophy, CheckCircle, Users, BarChart, Target, Crown, Heart, Sparkles, ArrowLeft, Briefcase, FileText, Calendar, Clock, Award as AwardIcon, User, Mail, Phone, MapPin, Code, MessageSquare, Brain } from 'lucide-react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { ArrowLeft, Trophy, Download, TrendingUp, Star, Heart, BarChart, Sparkles, Target, Award, Users, Filter, Briefcase, FileText, CheckCircle, Code, MessageSquare } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function FinalRanking({ applications, onBack }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedAppId, setSelectedAppId] = useState(null);
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [sortBy, setSortBy] = useState('overallScore');
@@ -454,31 +456,31 @@ export default function FinalRanking({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {onBack && (
-                                <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-base-600" />
+                                <button onClick={onBack} className={`mr-4 p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-white'}`}>
+                                    <ArrowLeft className={`w-6 h-6 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                 </button>
                             )}
                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-16 h-16 rounded-lg mr-4">
                                 <Trophy className="w-8 h-8 text-white" />
                             </div>
-                            <div>
-                                <h1 className="text-4xl font-bold text-base-900">Final Candidate Ranking</h1>
-                                <p className="text-base-600">Comprehensive evaluation and ranking of top candidates</p>
+                            <div className="ml-6">
+                                <h1 className={`text-4xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Final Ranking</h1>
+                                <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Comprehensive candidate evaluation and ranking</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Application Selector */}
-                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                    <h2 className="text-xl font-bold text-base-900 mb-4">Select Application</h2>
+                <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                    <h2 className={`text-xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Select Application</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {applications.map(app => {
                             const finalCandidates = app.hrInterview || 0;
@@ -487,13 +489,13 @@ export default function FinalRanking({ applications, onBack }) {
                                     key={app.id}
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
-                                        : 'border-base-200 hover:border-accent-300'
+                                        ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-base-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
-                                        <h3 className="font-bold text-base-900">{app.jobTitle}</h3>
-                                        <div className="text-sm text-base-600 mt-1">
+                                        <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</h3>
+                                        <div className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <div>Final Candidates: {finalCandidates}</div>
                                             <div>Top Score: {finalCandidates > 0 ? Math.round(85 + Math.random() * 10) : 'N/A'}</div>
                                             <div>Status: {finalCandidates > 0 ? 'Ready' : 'Pending'}</div>
@@ -506,448 +508,419 @@ export default function FinalRanking({ applications, onBack }) {
                 </div>
 
                 {selectedApp ? (
-                    <>
+                    <div>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-2xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.finalists}</div>
-                                        <div className="text-sm text-base-600">Final Candidates</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Final Candidates</div>
                                     </div>
                                     <Trophy className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-base-500">Selected from {hiringStats.totalCandidates} applicants</div>
+                                <div className={`mt-3 text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Selected from {hiringStats.totalCandidates} applicants</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-2xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.topScore}</div>
-                                        <div className="text-sm text-base-600">Top Score</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Top Score</div>
                                     </div>
                                     <Star className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-base-500">Overall maximum score achieved</div>
+                                <div className={`mt-3 text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Overall maximum score achieved</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-2xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold text-accent-600 mb-2">{hiringStats.avgOverallScore}</div>
-                                        <div className="text-sm text-base-600">Average Score</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Average Score</div>
                                     </div>
                                     <TrendingUp className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-base-500">Across all final candidates</div>
+                                <div className={`mt-3 text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Across all final candidates</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-2xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-2xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-100 to-accent-100 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-base-600 mb-2">{hiringStats.offerAcceptanceRate}%</div>
-                                        <div className="text-sm text-base-600">Acceptance Rate</div>
+                                        <div className={`text-3xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{hiringStats.offerAcceptanceRate}%</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Acceptance Rate</div>
                                     </div>
                                     <Heart className="w-10 h-10 text-accent-400" />
                                 </div>
-                                <div className="mt-3 text-xs text-base-500">Estimated offer acceptance probability</div>
+                                <div className={`mt-3 text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Estimated offer acceptance probability</div>
                             </div>
                         </div>
 
                         {/* Stage Performance */}
-                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                            <h2 className="text-2xl font-bold text-base-900 mb-6 flex items-center">
+                        <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                            <h2 className={`text-2xl font-bold mb-6 flex items-center transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                                 <BarChart className="w-6 h-6 mr-3 text-accent-600" />
                                 Stage Performance Analysis
                             </h2>
 
+                            <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                Range: {stageScores.semantic.min} - {stageScores.semantic.max}
+                            </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
+                                <div className={`p-6 rounded-xl transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
                                     <div className="flex items-center mb-4">
                                         <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Sparkles className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
                                             <div className="text-2xl font-bold text-accent-600">{stageScores.semantic.avg}</div>
-                                            <div className="text-sm text-base-600">Semantic Analysis</div>
+                                            <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Semantic Analysis</div>
                                         </div>
-                                    </div>
-                                    <div className="text-sm text-base-600">
-                                        Range: {stageScores.semantic.min} - {stageScores.semantic.max}
                                     </div>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
+                                <div className={`p-6 rounded-xl transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
                                     <div className="flex items-center mb-4">
                                         <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
-                                            <Target className="w-6 h-6 text-white" />
+                                            <Code className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
                                             <div className="text-2xl font-bold text-accent-600">{stageScores.technical.avg}</div>
-                                            <div className="text-sm text-base-600">Technical Test</div>
+                                            <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Technical Test</div>
                                         </div>
-                                    </div>
-                                    <div className="text-sm text-base-600">
-                                        Range: {stageScores.technical.min} - {stageScores.technical.max}
                                     </div>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl">
-                                    <div className="flex items-center mb-4">
-                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
-                                            <Award className="w-6 h-6 text-white" />
-                                        </div>
-                                        <div>
-                                            <div className="text-2xl font-bold text-accent-600">{stageScores.techInterview.avg}/10</div>
-                                            <div className="text-sm text-base-600">Tech Interview</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-sm text-base-600">
-                                        Range: {stageScores.techInterview.min} - {stageScores.techInterview.max}/10
-                                    </div>
-                                </div>
-
-                                <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl">
+                                <div className={`p-6 rounded-xl transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
                                     <div className="flex items-center mb-4">
                                         <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
                                             <Users className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <div className="text-2xl font-bold text-base-600">{stageScores.hrInterview.avg}/10</div>
-                                            <div className="text-sm text-base-600">HR Interview</div>
+                                            <div className="text-2xl font-bold text-accent-600">{stageScores.techInterview.avg}</div>
+                                            <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Tech Interview</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm text-base-600">
-                                        Range: {stageScores.hrInterview.min} - {stageScores.hrInterview.max}/10
+                                </div>
+
+                                <div className={`p-6 rounded-xl transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-100 to-accent-100'}`}>
+                                    <div className="flex items-center mb-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-base-500 to-accent-500 rounded-lg flex items-center justify-center mr-4">
+                                            <MessageSquare className="w-6 h-6 text-white" />
+                                        </div>
+                                        <div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-600'}`}>{stageScores.hrInterview.avg}</div>
+                                            <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>HR Interview</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Filters and Controls */}
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-2xl shadow-lg shadow-blue-200 p-6 mb-8">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-base-900">Final Candidates Ranking</h2>
-                                    <p className="text-base-600">Ranked by overall performance across all stages</p>
-                                </div>
-
-                                <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                                    <div className="flex items-center space-x-2">
-                                        <Filter className="w-5 h-5 text-base-600" />
-                                        <select
-                                            value={selectedFilter}
-                                            onChange={(e) => setSelectedFilter(e.target.value)}
-                                            className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
-                                        >
-                                            <option value="all">All Candidates</option>
-                                            <option value="top">Top Candidates</option>
-                                            <option value="recommended">Recommended</option>
-                                            <option value="consider">Consider</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="flex items-center space-x-2">
-                                        <span className="text-base-600">Sort by:</span>
-                                        <select
-                                            value={sortBy}
-                                            onChange={(e) => setSortBy(e.target.value)}
-                                            className="border border-base-300 rounded-lg px-4 py-2 text-base-700 focus:outline-none focus:ring-2 focus:ring-accent-500"
-                                        >
-                                            <option value="overallScore">Overall Score</option>
-                                            <option value="technical">Technical Score</option>
-                                            <option value="hrInterview">HR Score</option>
-                                            <option value="name">Name</option>
-                                        </select>
-                                    </div>
-
-                                    <button
-                                        onClick={downloadReport}
-                                        className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
-                                    >
-                                        <Download className="w-5 h-5 mr-2" />
-                                        Export Report
-                                    </button>
-                                </div>
+                        {/* Header and Controls */}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                            <div>
+                                <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Final Candidates Ranking</h2>
+                                <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Ranked by overall performance across all stages</p>
                             </div>
 
-                            {/* Candidates Ranking */}
-                            <div className="space-y-6">
-                                {filteredCandidates.map((candidate, index) => (
-                                    <div
-                                        key={candidate.id}
-                                        className={`border-2 rounded-2xl p-6 transition-all duration-300 hover:shadow-2xl ${index === 0 ? 'border-yellow-400 bg-gradient-to-r from-yellow-50 to-amber-50' :
-                                            index === 1 ? 'border-blue-300 bg-gradient-to-r from-blue-50 to-sky-50' :
-                                                index === 2 ? 'border-green-300 bg-gradient-to-r from-green-50 to-emerald-50' :
-                                                    'border-slate-200 bg-white'
-                                            }`}
+                            <div className="flex items-center space-x-4 mt-4 md:mt-0">
+                                <div className="flex items-center space-x-2">
+                                    <Filter className={`w-5 h-5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
+                                    <select
+                                        value={selectedFilter}
+                                        onChange={(e) => setSelectedFilter(e.target.value)}
+                                        className={`border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700 text-gray-200' : 'border-base-300 text-base-700'}`}
                                     >
-                                        <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-6">
-                                            <div className="flex items-start mb-4 lg:mb-0">
-                                                <div className={`relative flex-shrink-0 ${index === 0 ? 'w-16 h-16' : 'w-14 h-14'
+                                        <option value="all">All Candidates</option>
+                                        <option value="top">Top Candidates</option>
+                                        <option value="recommended">Recommended</option>
+                                        <option value="consider">Consider</option>
+                                    </select>
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Sort by:</span>
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value)}
+                                        className={`border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700 text-gray-200' : 'border-base-300 text-base-700'}`}
+                                    >
+                                        <option value="overallScore">Overall Score</option>
+                                        <option value="technical">Technical Score</option>
+                                        <option value="hrInterview">HR Score</option>
+                                        <option value="name">Name</option>
+                                        <option value="experience">Experience</option>
+                                    </select>
+                                </div>
+
+                                <button
+                                    onClick={downloadReport}
+                                    className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center"
+                                >
+                                    <Download className="w-5 h-5 mr-2" />
+                                    Export Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            {filteredCandidates.map((candidate, index) => (
+                                <div
+                                    key={candidate.id}
+                                    className={`border-2 rounded-2xl p-6 transition-all duration-300 hover:shadow-2xl ${index === 0 ?
+                                        isDarkMode ? 'border-yellow-500 bg-slate-800' : 'border-yellow-400 bg-gradient-to-r from-yellow-50 to-amber-50' :
+                                        index === 1 ?
+                                            isDarkMode ? 'border-blue-500 bg-slate-800' : 'border-blue-300 bg-gradient-to-r from-blue-50 to-sky-50' :
+                                            index === 2 ?
+                                                isDarkMode ? 'border-green-500 bg-slate-800' : 'border-green-300 bg-gradient-to-r from-green-50 to-emerald-50' :
+                                                isDarkMode ? 'border-slate-600 bg-slate-800' : 'border-slate-200 bg-white'
+                                        }`}
+                                >
+                                    <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-6">
+                                        <div className="flex items-start mb-4 lg:mb-0">
+                                            <div className={`relative flex-shrink-0 ${index === 0 ? 'w-16 h-16' : 'w-14 h-14'}`}>
+                                                <div className={`w-full h-full rounded-xl flex items-center justify-center font-bold ${index === 0 ? 'bg-gradient-to-br from-yellow-500 to-amber-600 text-white text-2xl' :
+                                                    index === 1 ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xl' :
+                                                        index === 2 ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white text-xl' :
+                                                            'bg-gradient-to-br from-slate-500 to-slate-600 text-white'
                                                     }`}>
-                                                    <div className={`w-full h-full rounded-xl flex items-center justify-center font-bold ${index === 0 ? 'bg-gradient-to-br from-yellow-500 to-amber-600 text-white text-2xl' :
-                                                        index === 1 ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xl' :
-                                                            index === 2 ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white text-xl' :
-                                                                'bg-gradient-to-br from-slate-500 to-slate-600 text-white'
-                                                        }`}>
-                                                        {index + 1}
-                                                        {index < 3 && (
-                                                            <div className="absolute -top-2 -right-2">
-                                                                <Trophy className={`w-6 h-6 ${index === 0 ? 'text-yellow-400' :
-                                                                    index === 1 ? 'text-blue-400' :
-                                                                        'text-green-400'
-                                                                    }`} />
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                    {index + 1}
+                                                    {index < 3 && (
+                                                        <div className="absolute -top-2 -right-2">
+                                                            <Trophy className={`w-6 h-6 ${index === 0 ? 'text-yellow-400' :
+                                                                index === 1 ? 'text-blue-400' :
+                                                                    'text-green-400'
+                                                                }`} />
+                                                        </div>
+                                                    )}
                                                 </div>
+                                            </div>
 
-                                                <div className="ml-6">
-                                                    <div className="flex flex-wrap items-center gap-3 mb-2">
-                                                        <h3 className="text-2xl font-bold text-slate-800">{candidate.name}</h3>
-                                                        <span className={`px-4 py-1 rounded-full text-sm font-semibold ${getStatusColor(candidate.status)}`}>
-                                                            {candidate.status}
-                                                        </span>
-                                                        <span className={`px-4 py-1 rounded-full text-sm font-semibold ${getRecommendationColor(candidate.recommendation)}`}>
-                                                            {candidate.recommendation}
-                                                        </span>
-                                                    </div>
+                                            <div className="ml-4">
+                                                <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{candidate.name}</h3>
+                                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(candidate.status)}`}>
+                                                        {candidate.status}
+                                                    </span>
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${getRecommendationColor(candidate.recommendation)}`}>
+                                                        {candidate.recommendation}
+                                                    </span>
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${getHireProbabilityColor(candidate.hireProbability)} text-white`}>
+                                                        {candidate.hireProbability}% Hire Probability
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                    <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
-                                                        <span className="flex items-center">
-                                                            <Briefcase className="w-4 h-4 mr-2" />
-                                                            {candidate.experience} experience
-                                                        </span>
-                                                        <span className="flex items-center">
-                                                            <GraduationCap className="w-4 h-4 mr-2" />
-                                                            {candidate.education}
-                                                        </span>
-                                                        <div className="relative">
-                                                            <div className="w-32 h-3 bg-slate-200 rounded-full overflow-hidden">
-                                                                <div
-                                                                    className={`h-full rounded-full ${getHireProbabilityColor(candidate.hireProbability)}`}
-                                                                    style={{ width: `${candidate.hireProbability}%` }}
-                                                                />
-                                                            </div>
-                                                            <span className="text-xs font-semibold ml-2">{candidate.hireProbability}% Hire Probability</span>
+                                        <div className="flex items-center space-x-2">
+                                            <div className={`text-center px-4 py-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                                <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall Score</div>
+                                                <div className={`text-3xl font-bold ${getScoreColor(candidate.overallScore)}`}>{candidate.overallScore}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                                        <div className={`p-4 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Semantic Analysis</div>
+                                            <div className="text-2xl font-bold text-accent-600">{candidate.semantic}</div>
+                                            <div className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>Match Score</div>
+                                        </div>
+
+                                        <div className={`p-4 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Technical Test</div>
+                                            <div className="text-2xl font-bold text-accent-600">{candidate.technical}</div>
+                                            <div className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>Technical Score</div>
+                                        </div>
+
+                                        <div className={`p-4 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Tech Interview</div>
+                                            <div className="text-2xl font-bold text-accent-600">{candidate.techInterview}</div>
+                                            <div className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>/10 Rating</div>
+                                        </div>
+
+                                        <div className={`p-4 rounded-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-100 to-accent-100'}`}>
+                                            <div className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>HR Interview</div>
+                                            <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-600'}`}>{candidate.hrInterview}</div>
+                                            <div className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>/10 Rating</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Skills and Notes */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                                        <div>
+                                            <h4 className={`text-lg font-semibold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Key Skills</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                {candidate.skills.map((skill, skillIndex) => (
+                                                    <span
+                                                        key={skillIndex}
+                                                        className={`px-4 py-2 rounded-lg font-medium transition-all ${isDarkMode ? 'bg-slate-600 text-gray-200 hover:bg-slate-500' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 hover:from-base-200 hover:to-accent-200'}`}
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h4 className={`text-lg font-semibold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Evaluation Notes</h4>
+                                            <p className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-400 bg-slate-700' : 'text-base-600 bg-base-50'}`}>{candidate.notes}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className={`flex flex-wrap justify-between items-center pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                        <div className="flex items-center space-x-4">
+                                            <button
+                                                onClick={() => {
+                                                    const shortlistData = {
+                                                        ...candidate,
+                                                        jobTitle: selectedApp?.jobTitle || 'Unknown Application',
+                                                        shortlistedFrom: 'Final Ranking',
+                                                        shortlistedDate: new Date().toISOString().slice(0, 10)
+                                                    };
+                                                    const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                                    const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === candidate.email);
+                                                    if (!existingCV) {
+                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                        alert(`${candidate.name} has been added to your shortlist!`);
+                                                    } else {
+                                                        alert(`${candidate.name} is already in your shortlist.`);
+                                                    }
+                                                }}
+                                                className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-800'}`}
+                                            >
+                                                <Star className="w-5 h-5 mr-2" />
+                                                Add to Shortlist
+                                            </button>
+                                            <button
+                                                onClick={() => setShowCVModal(candidate)}
+                                                className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-gray-300 hover:text-gray-100' : 'text-base-600 hover:text-base-800'}`}
+                                            >
+                                                <FileText className="w-5 h-5 mr-2" />
+                                                View CV
+                                            </button>
+                                            <button
+                                                onClick={() => setShowFullReportModal(candidate)}
+                                                className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-800'}`}
+                                            >
+                                                <FileText className="w-5 h-5 mr-2" />
+                                                Full Report
+                                            </button>
+                                        </div>
+
+                                        <div className="flex items-center space-x-4 mt-4 md:mt-0">
+                                            <button
+                                                onClick={() => scheduleFollowUp(candidate)}
+                                                className={`border-2 px-6 py-3 rounded-lg font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
+                                            >
+                                                Schedule Follow-up
+                                            </button>
+                                            <button
+                                                onClick={() => extendOffer(candidate)}
+                                                className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
+                                            >
+                                                <CheckCircle className="w-5 h-5 mr-2" />
+                                                Extend Offer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Comparative Analysis */}
+                        <div className={`rounded-2xl shadow-lg p-6 mb-8 mt-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                            <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Comparative Analysis</h2>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Score Distribution */}
+                                <div>
+                                    <h3 className={`text-lg font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Score Distribution</h3>
+                                    <div className="space-y-4">
+                                        {filteredCandidates.map((candidate) => (
+                                            <div key={candidate.id} className="flex items-center">
+                                                <div className={`w-32 text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>{candidate.name}</div>
+                                                <div className="flex-1 ml-4">
+                                                    <div className="relative h-8 rounded-lg overflow-hidden">
+                                                        <div className={`absolute inset-0 transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-r from-slate-600 to-slate-700' : 'bg-gradient-to-r from-base-100 to-base-200'}`}></div>
+                                                        <div
+                                                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-1000"
+                                                            style={{ width: `${candidate.overallScore}%` }}
+                                                        />
+                                                        <div className={`absolute inset-0 flex items-center justify-center text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                                            {candidate.overallScore}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div className="text-right">
-                                                <div className={`text-5xl font-bold mb-2 ${getScoreColor(candidate.overallScore)}`}>
-                                                    {candidate.overallScore}
-                                                </div>
-                                                <div className="text-sm text-slate-600">Overall Score</div>
-                                            </div>
-                                        </div>
-
-                                        {/* Score Breakdown */}
-                                        <div className="mb-6">
-                                            <h4 className="text-lg font-semibold text-base-900 mb-4">Stage Performance Breakdown</h4>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
-                                                    <div className="text-sm text-base-600 mb-1">Semantic Analysis</div>
-                                                    <div className="text-2xl font-bold text-accent-600">{candidate.semantic}</div>
-                                                    <div className="text-xs text-base-500">Match Score</div>
-                                                </div>
-
-                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
-                                                    <div className="text-sm text-base-600 mb-1">Technical Test</div>
-                                                    <div className="text-2xl font-bold text-accent-600">{candidate.technical}</div>
-                                                    <div className="text-xs text-base-500">Technical Score</div>
-                                                </div>
-
-                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-xl">
-                                                    <div className="text-sm text-base-600 mb-1">Tech Interview</div>
-                                                    <div className="text-2xl font-bold text-accent-600">{candidate.techInterview}</div>
-                                                    <div className="text-xs text-base-500">/10 Rating</div>
-                                                </div>
-
-                                                <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-xl">
-                                                    <div className="text-sm text-base-600 mb-1">HR Interview</div>
-                                                    <div className="text-2xl font-bold text-base-600">{candidate.hrInterview}</div>
-                                                    <div className="text-xs text-base-500">/10 Rating</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Skills and Notes */}
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                                            <div>
-                                                <h4 className="text-lg font-semibold text-base-900 mb-3">Key Skills</h4>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {candidate.skills.map((skill, skillIndex) => (
-                                                        <span
-                                                            key={skillIndex}
-                                                            className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded-lg font-medium hover:from-base-200 hover:to-accent-200 transition-all"
-                                                        >
-                                                            {skill}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <h4 className="text-lg font-semibold text-base-900 mb-3">Evaluation Notes</h4>
-                                                <p className="text-base-600 bg-base-50 p-4 rounded-lg">{candidate.notes}</p>
-                                            </div>
-                                        </div>
-
-                                        {/* Actions */}
-                                        <div className="flex flex-wrap justify-between items-center pt-6 border-t border-base-200">
-                                            <div className="flex items-center space-x-4">
-                                                <button
-                                                    onClick={() => {
-                                                        const shortlistData = {
-                                                            ...candidate,
-                                                            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-                                                            shortlistedFrom: 'Final Ranking',
-                                                            shortlistedDate: new Date().toISOString().slice(0, 10)
-                                                        };
-                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-                                                        const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === candidate.email);
-                                                        if (!existingCV) {
-                                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
-                                                            alert(`${candidate.name} has been added to your shortlist!`);
-                                                        } else {
-                                                            alert(`${candidate.name} is already in your shortlist.`);
-                                                        }
-                                                    }}
-                                                    className="text-accent-600 hover:text-accent-800 font-semibold flex items-center"
-                                                >
-                                                    <Star className="w-5 h-5 mr-2" />
-                                                    Add to Shortlist
-                                                </button>
-                                                <button
-                                                    onClick={() => setShowCVModal(candidate)}
-                                                    className="text-base-600 hover:text-base-800 font-semibold flex items-center"
-                                                >
-                                                    <FileText className="w-5 h-5 mr-2" />
-                                                    View CV
-                                                </button>
-                                                <button
-                                                    onClick={() => setShowFullReportModal(candidate)}
-                                                    className="text-accent-600 hover:text-accent-800 font-semibold flex items-center"
-                                                >
-                                                    <FileText className="w-5 h-5 mr-2" />
-                                                    Full Report
-                                                </button>
-                                            </div>
-
-                                            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                                                <button
-                                                    onClick={() => scheduleFollowUp(candidate)}
-                                                    className="border-2 border-base-300 text-base-600 hover:bg-base-50 px-6 py-3 rounded-lg font-semibold transition-colors"
-                                                >
-                                                    Schedule Follow-up
-                                                </button>
-                                                <button
-                                                    onClick={() => extendOffer(candidate)}
-                                                    className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
-                                                >
-                                                    <CheckCircle className="w-5 h-5 mr-2" />
-                                                    Extend Offer
-                                                </button>
-                                            </div>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                </div>
 
-                            {/* Comparative Analysis */}
-                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                                <h2 className="text-2xl font-bold text-base-900 mb-6">Comparative Analysis</h2>
-
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {/* Score Distribution */}
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-base-900 mb-4">Score Distribution</h3>
-                                        <div className="space-y-4">
-                                            {filteredCandidates.map((candidate) => (
-                                                <div key={candidate.id} className="flex items-center">
-                                                    <div className="w-32 text-sm font-medium text-base-700">{candidate.name}</div>
-                                                    <div className="flex-1 ml-4">
-                                                        <div className="relative h-8 rounded-lg overflow-hidden">
-                                                            <div className="absolute inset-0 bg-gradient-to-r from-base-100 to-base-200"></div>
-                                                            <div
-                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-1000"
-                                                                style={{ width: `${candidate.overallScore}%` }}
-                                                            />
-                                                            <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-base-900">
-                                                                {candidate.overallScore}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                {/* Recommendations Summary */}
+                                <div>
+                                    <h3 className={`text-lg font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recommendation Summary</h3>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div className={`p-6 rounded-xl text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className="text-3xl font-bold text-accent-600 mb-2">
+                                                {filteredCandidates.filter(c => c.recommendation === 'Strongly Recommend').length}
+                                            </div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Strongly Recommend</div>
+                                        </div>
+                                        <div className={`p-6 rounded-xl text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <div className="text-3xl font-bold text-accent-600 mb-2">
+                                                {filteredCandidates.filter(c => c.recommendation === 'Recommend').length}
+                                            </div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Recommend</div>
+                                        </div>
+                                        <div className={`p-6 rounded-xl text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-100 to-accent-100'}`}>
+                                            <div className={`text-3xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-600'}`}>
+                                                {filteredCandidates.filter(c => c.recommendation === 'Consider').length}
+                                            </div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Consider</div>
                                         </div>
                                     </div>
 
-                                    {/* Recommendations Summary */}
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-base-900 mb-4">Recommendation Summary</h3>
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-accent-600 mb-2">
-                                                    {filteredCandidates.filter(c => c.recommendation === 'Strongly Recommend').length}
-                                                </div>
-                                                <div className="text-sm text-base-600">Strongly Recommend</div>
-                                            </div>
-                                            <div className="bg-gradient-to-br from-base-50 to-accent-50 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-accent-600 mb-2">
-                                                    {filteredCandidates.filter(c => c.recommendation === 'Recommend').length}
-                                                </div>
-                                                <div className="text-sm text-base-600">Recommend</div>
-                                            </div>
-                                            <div className="bg-gradient-to-br from-base-100 to-accent-100 p-6 rounded-xl text-center">
-                                                <div className="text-3xl font-bold text-base-600 mb-2">
-                                                    {filteredCandidates.filter(c => c.recommendation === 'Consider').length}
-                                                </div>
-                                                <div className="text-sm text-base-600">Consider</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-6 p-4 bg-gradient-to-r from-base-50 to-accent-50 rounded-xl border border-base-200">
-                                            <div className="flex items-center">
-                                                <CheckCircle className="w-6 h-6 text-accent-600 mr-3" />
-                                                <div>
-                                                    <h4 className="font-bold text-base-900">Ready for Hiring Decision</h4>
-                                                    <p className="text-sm text-base-600">
-                                                        All {filteredCandidates.length} candidates have completed all evaluation stages and are ready for final hiring decisions.
-                                                    </p>
-                                                </div>
+                                    <div className={`mt-6 p-4 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
+                                        <div className="flex items-center">
+                                            <CheckCircle className="w-6 h-6 text-accent-600 mr-3" />
+                                            <div>
+                                                <h4 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Ready for Hiring Decision</h4>
+                                                <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                                    All {filteredCandidates.length} candidates have completed all evaluation stages and are ready for final hiring decisions.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Final Actions */}
-                            <div className="flex justify-end space-x-4">
-                                <button
-                                    onClick={() => alert('Ranking saved for later!')}
-                                    className="px-8 py-4 border-2 border-base-300 text-base-600 rounded-xl font-semibold hover:bg-base-50 transition-colors"
-                                >
-                                    Save for Later
-                                </button>
-                                <button
-                                    onClick={makeFinalSelection}
-                                    className="px-8 py-4 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-xl font-semibold transition-all flex items-center"
-                                >
-                                    <CheckCircle className="w-6 h-6 mr-3" />
-                                    Make Final Selection
-                                </button>
-                            </div>
                         </div>
-                    </>
+
+                        {/* Final Actions */}
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => alert('Ranking saved for later!')}
+                                className={`px-8 py-4 border-2 rounded-xl font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
+                            >
+                                Save for Later
+                            </button>
+                            <button
+                                onClick={makeFinalSelection}
+                                className="px-8 py-4 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-xl font-semibold transition-all flex items-center"
+                            >
+                                <CheckCircle className="w-6 h-6 mr-3" />
+                                Make Final Selection
+                            </button>
+                        </div>
+                    </div>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-                        <Award className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-slate-700 mb-2">Select an Application</h3>
-                        <p className="text-slate-500">Choose an application from the list above to view final candidate rankings</p>
+                    <div className={`rounded-2xl shadow-xl p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                        <Award className={`w-16 h-16 mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-slate-300'}`} />
+                        <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Select an Application</h3>
+                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-slate-500'}`}>Choose an application from the list above to view final candidate rankings</p>
                     </div>
                 )}
             </div>

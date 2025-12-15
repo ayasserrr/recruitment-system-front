@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Users, ChevronRight, Calendar, Clock, MessageSquare, TrendingUp, CheckCircle, FileText, ArrowLeft, Award, Star, Briefcase } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { ArrowLeft, Users, Download, TrendingUp, Calendar, CheckCircle, Clock, MessageSquare, FileText, ChevronRight, Star } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function HRInterview({ applications, onBack }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedAppId, setSelectedAppId] = useState(null);
     const [showFeedbackModal, setShowFeedbackModal] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
@@ -242,30 +244,30 @@ export default function HRInterview({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {onBack && (
-                                <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-base-600" />
+                                <button onClick={onBack} className={`mr-4 p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-white'}`}>
+                                    <ArrowLeft className={`w-6 h-6 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                 </button>
                             )}
                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-14 h-14 rounded-lg mr-4">
                                 <Users className="w-8 h-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-4xl font-bold text-base-900">HR Interviews</h1>
-                                <p className="text-base-600">Evaluate candidates' cultural fit and soft skills</p>
+                                <h1 className={`text-4xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HR Interviews</h1>
+                                <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Evaluate candidates' cultural fit and soft skills</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Application Selector */}
-                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                    <h2 className="text-xl font-bold text-base-900 mb-4">Select Application</h2>
+                <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                    <h2 className={`text-xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Select Application</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {applications.map(app => {
                             const interview = interviewData.find(i => i.id === app.id);
@@ -274,13 +276,13 @@ export default function HRInterview({ applications, onBack }) {
                                     key={app.id}
                                     onClick={() => setSelectedAppId(app.id)}
                                     className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                        ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
-                                        : 'border-base-200 hover:border-accent-300'
+                                        ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                        : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-base-200 hover:border-accent-300'
                                         }`}
                                 >
                                     <div className="text-left">
-                                        <h3 className="font-bold text-base-900">{app.jobTitle}</h3>
-                                        <div className="text-sm text-base-600 mt-1">
+                                        <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</h3>
+                                        <div className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <div>Candidates Ready: {app.techInterview || 0}</div>
                                             <div>Interview Status: {interview?.status || 'pending'}</div>
                                             <div>Completed: {interview?.completed || 0}</div>
@@ -296,11 +298,11 @@ export default function HRInterview({ applications, onBack }) {
                     <>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold bg-gradient-to-r from-base-600 to-accent-600 bg-clip-text text-transparent mb-2">{interviewStats.totalScheduled}</div>
-                                        <div className="text-sm text-base-600">Total Scheduled</div>
+                                        <div className={`text-3xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-base-600 to-accent-600 bg-clip-text text-transparent'}`}>{interviewStats.totalScheduled}</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Total Scheduled</div>
                                     </div>
                                     <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-base-400 to-accent-400 flex items-center justify-center">
                                         <Calendar className="w-6 h-6 text-white" />
@@ -308,31 +310,31 @@ export default function HRInterview({ applications, onBack }) {
                                 </div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold text-accent-600 mb-2">{interviewStats.totalCompleted}</div>
-                                        <div className="text-sm text-base-600">Completed</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Completed</div>
                                     </div>
                                     <CheckCircle className="w-10 h-10 text-accent-400" />
                                 </div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <div className="text-3xl font-bold text-accent-600 mb-2">{interviewStats.totalPending}</div>
-                                        <div className="text-sm text-base-600">Pending</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Pending</div>
                                     </div>
                                     <Clock className="w-10 h-10 text-accent-400" />
                                 </div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-100 to-accent-100 shadow-base-200'}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="text-3xl font-bold text-base-600 mb-2">{interviewStats.avgScoreOverall}</div>
-                                        <div className="text-sm text-base-600">Avg Score</div>
+                                        <div className={`text-3xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{interviewStats.avgScoreOverall}</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Avg Score</div>
                                     </div>
                                     <MessageSquare className="w-10 h-10 text-accent-400" />
                                 </div>
@@ -341,16 +343,16 @@ export default function HRInterview({ applications, onBack }) {
 
                         {/* Interview Progress */}
                         {selectedInterview && (
-                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                            <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                                 <div className="flex items-start justify-between mb-6">
                                     <div>
                                         <div className="flex items-center mb-2">
                                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3">
                                                 <Users className="w-5 h-5 text-white" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-base-900">{selectedInterview.jobTitle}</h3>
+                                            <h3 className={`text-xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{selectedInterview.jobTitle}</h3>
                                         </div>
-                                        <div className="flex items-center space-x-4 text-sm text-base-600">
+                                        <div className={`flex items-center space-x-4 text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <span>{selectedInterview.duration}</span>
                                             <span>•</span>
                                             <span>Interviewer: {selectedInterview.interviewer}</span>
@@ -365,25 +367,25 @@ export default function HRInterview({ applications, onBack }) {
 
                                 <div className="space-y-6">
                                     <div className="grid grid-cols-3 gap-4">
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <p className="text-sm text-base-600 mb-1">Scheduled</p>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <p className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Scheduled</p>
                                             <p className="text-2xl font-bold text-accent-600">{selectedInterview.scheduled}</p>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <p className="text-sm text-base-600 mb-1">Completed</p>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <p className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Completed</p>
                                             <p className="text-2xl font-bold text-accent-600">{selectedInterview.completed}</p>
                                         </div>
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                            <p className="text-sm text-base-600 mb-1">Pending</p>
+                                        <div className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <p className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Pending</p>
                                             <p className="text-2xl font-bold text-accent-600">{selectedInterview.pending}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <p className="text-sm text-base-600 mb-2">
-                                            Next Interview: <span className="font-semibold text-base-900">{selectedInterview.nextInterview}</span>
+                                        <p className={`text-sm mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                            Next Interview: <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{selectedInterview.nextInterview}</span>
                                         </p>
-                                        <div className="w-full bg-base-200 rounded-full h-3">
+                                        <div className={`w-full rounded-full h-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                             <div
                                                 className="bg-gradient-to-r from-base-600 to-accent-600 h-3 rounded-full transition-all duration-500"
                                                 style={{ width: `${selectedInterview.scheduled > 0 ? (selectedInterview.completed / selectedInterview.scheduled) * 100 : 0}%` }}
@@ -399,7 +401,7 @@ export default function HRInterview({ applications, onBack }) {
                                             <Users className="w-4 h-4 mr-2" />
                                             Schedule Interview
                                         </button>
-                                        <button className="flex-1 border border-base-600 text-base-600 hover:bg-base-50 py-2 rounded-lg font-semibold transition-colors text-sm">
+                                        <button className={`flex-1 border py-2 rounded-lg font-semibold transition-colors text-sm ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-600 text-base-600 hover:bg-base-50'}`}>
                                             View Candidates
                                         </button>
                                     </div>
@@ -409,28 +411,28 @@ export default function HRInterview({ applications, onBack }) {
 
                         {/* Candidate Results */}
                         {candidateResults.length > 0 && (
-                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                                <h3 className="text-xl font-bold text-base-900 mb-6">HR Interview Results</h3>
+                            <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                                <h3 className={`text-xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HR Interview Results</h3>
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
                                         <thead>
-                                            <tr className="border-b border-base-200">
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Candidate</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Culture Fit</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Communication</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Leadership</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Teamwork</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Overall</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Status</th>
-                                                <th className="text-left py-4 px-4 text-base-600 font-semibold">Actions</th>
+                                            <tr className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Candidate</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Culture Fit</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Communication</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Leadership</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Teamwork</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Status</th>
+                                                <th className={`text-left py-4 px-4 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {candidateResults.map((candidate) => (
-                                                <tr key={candidate.id} className="border-b border-base-100 hover:bg-base-50 transition-colors">
+                                                <tr key={candidate.id} className={`border-b transition-colors ${isDarkMode ? 'border-slate-700 hover:bg-slate-700' : 'border-base-100 hover:bg-base-50'}`}>
                                                     <td className="py-4 px-4">
-                                                        <div className="font-semibold text-base-900">{candidate.name}</div>
-                                                        <div className="text-sm text-base-600">{candidate.interviewer} • {candidate.date}</div>
+                                                        <div className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{candidate.name}</div>
+                                                        <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{candidate.interviewer} • {candidate.date}</div>
                                                     </td>
                                                     <td className="py-4 px-4">
                                                         <div className={`font-bold ${getScoreColor(candidate.cultureFit)}`}>
@@ -504,34 +506,34 @@ export default function HRInterview({ applications, onBack }) {
                         )}
                     </>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-12 text-center">
-                        <div className="flex items-center justify-center bg-gradient-to-r from-base-100 to-accent-100 w-20 h-20 rounded-lg mx-auto mb-4">
-                            <Users className="w-10 h-10 text-base-400" />
+                    <div className={`rounded-2xl shadow-lg p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                        <div className={`flex items-center justify-center w-20 h-20 rounded-lg mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-r from-base-100 to-accent-100'}`}>
+                            <Users className={`w-10 h-10 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`} />
                         </div>
-                        <h3 className="text-xl font-semibold text-base-700 mb-2">Select an Application</h3>
-                        <p className="text-base-500">Choose an application from the list above to view HR interview results</p>
+                        <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-700'}`}>Select an Application</h3>
+                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Choose an application from the list above to view HR interview results</p>
                     </div>
                 )}
 
                 {/* Feedback Modal */}
                 {showFeedbackModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-8 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className={`rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-base-900">HR Interview Feedback</h2>
+                                    <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HR Interview Feedback</h2>
                                     <button
                                         onClick={() => setShowFeedbackModal(null)}
-                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
+                                        className={`p-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-base-100'}`}
                                     >
-                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
+                                        <ChevronRight className={`w-5 h-5 rotate-180 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Candidate Header */}
-                                    <div className="text-center pb-6 border-b border-base-200">
-                                        <h3 className="text-2xl font-bold text-base-900">{showFeedbackModal.name}</h3>
+                                    <div className={`text-center pb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                        <h3 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{showFeedbackModal.name}</h3>
                                         <div className="flex items-center justify-center mt-3">
                                             <span className={`text-3xl font-bold ${getScoreColor(showFeedbackModal.overall)} mr-4`}>
                                                 {showFeedbackModal.overall}
@@ -544,35 +546,35 @@ export default function HRInterview({ applications, onBack }) {
 
                                     {/* Score Breakdown */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Culture Fit</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Culture Fit</h4>
                                             <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.cultureFit}</div>
-                                            <div className="text-sm text-base-700">Alignment with company values</div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Alignment with company values</div>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Communication</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Communication</h4>
                                             <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.communication}</div>
-                                            <div className="text-sm text-base-700">Clarity and articulation</div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Clarity and articulation</div>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Leadership</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Leadership</h4>
                                             <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.leadership}</div>
-                                            <div className="text-sm text-base-700">Initiative and influence</div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Initiative and influence</div>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Teamwork</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Teamwork</h4>
                                             <div className="text-2xl font-bold text-accent-600 mb-2">{showFeedbackModal.teamwork}</div>
-                                            <div className="text-sm text-base-700">Collaboration skills</div>
+                                            <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Collaboration skills</div>
                                         </div>
                                     </div>
 
                                     {/* Feedback Summary */}
-                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-base-200">
-                                        <h4 className="font-bold text-base-900 mb-3">Interview Summary</h4>
-                                        <div className="space-y-2 text-base-700">
+                                    <div className={`rounded-xl p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
+                                        <h4 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Interview Summary</h4>
+                                        <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                             <p>• Interview conducted by {showFeedbackModal.interviewer} on {showFeedbackModal.date}</p>
                                             <p>• Overall performance: {showFeedbackModal.overall >= 8 ? 'Excellent' : showFeedbackModal.overall >= 7 ? 'Good' : 'Needs Improvement'}</p>
                                             <p>• {showFeedbackModal.feedback}</p>
@@ -581,13 +583,13 @@ export default function HRInterview({ applications, onBack }) {
                                     </div>
 
                                     {/* Detailed Assessment */}
-                                    <div className="bg-base-50 rounded-xl p-6">
-                                        <h4 className="font-bold text-base-900 mb-3">Detailed Assessment</h4>
+                                    <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                        <h4 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Detailed Assessment</h4>
                                         <div className="space-y-3">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-base-600">Culture Fit</span>
+                                                <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Culture Fit</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                    <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                         <div
                                                             className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.cultureFit * 10}%` }}
@@ -597,9 +599,9 @@ export default function HRInterview({ applications, onBack }) {
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-base-600">Communication</span>
+                                                <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Communication</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                    <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                         <div
                                                             className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.communication * 10}%` }}
@@ -609,9 +611,9 @@ export default function HRInterview({ applications, onBack }) {
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-base-600">Teamwork</span>
+                                                <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Teamwork</span>
                                                 <div className="flex items-center">
-                                                    <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                    <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                         <div
                                                             className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                             style={{ width: `${showFeedbackModal.teamwork * 10}%` }}
@@ -627,7 +629,7 @@ export default function HRInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowFeedbackModal(null)}
-                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
+                                        className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
                                     >
                                         Close
                                     </button>
@@ -643,50 +645,50 @@ export default function HRInterview({ applications, onBack }) {
                 {/* CV Modal */}
                 {showCVModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-8 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className={`rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-base-900">Candidate CV</h2>
+                                    <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Candidate CV</h2>
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
+                                        className={`p-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-base-100'}`}
                                     >
-                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
+                                        <ChevronRight className={`w-5 h-5 rotate-180 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <div className="text-center pb-6 border-b border-base-200">
-                                        <h3 className="text-xl font-bold text-base-900">{mockCV.name}</h3>
-                                        <div className="text-base-600 mt-2">
+                                    <div className={`text-center pb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{mockCV.name}</h3>
+                                        <div className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <div>{mockCV.email}</div>
                                             <div>{mockCV.phone}</div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-base-700 mb-2">Professional Summary</h4>
-                                        <p className="text-base-600">{mockCV.summary}</p>
+                                        <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Professional Summary</h4>
+                                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.summary}</p>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <h4 className="font-semibold text-base-700 mb-2">Experience</h4>
-                                            <p className="text-base-600">{mockCV.experience}</p>
+                                            <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Experience</h4>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.experience}</p>
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-base-700 mb-2">Education</h4>
-                                            <p className="text-base-600">{mockCV.education}</p>
+                                            <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Education</h4>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.education}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-base-700 mb-2">Key Projects</h4>
+                                        <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Key Projects</h4>
                                         <ul className="space-y-2">
                                             {mockCV.projects.map((project, index) => (
                                                 <li key={index} className="flex items-start">
                                                     <ChevronRight className="w-4 h-4 text-accent-600 mr-2 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-base-600">{project}</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{project}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -696,7 +698,7 @@ export default function HRInterview({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
+                                        className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
                                     >
                                         Close
                                     </button>

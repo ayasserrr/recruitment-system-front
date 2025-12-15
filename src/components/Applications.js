@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { List, ChevronRight, Briefcase, Calendar, ArrowLeft, CheckCircle } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Applications({ applications, onBackToDashboard }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedId, setSelectedId] = useState(null);
 
     const selectedApplication = useMemo(() => {
@@ -55,27 +57,27 @@ export default function Applications({ applications, onBackToDashboard }) {
         ];
 
         return (
-            <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
+            <div className={`min-h-screen transition-colors duration-300 p-6 md:p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
                 <div className="max-w-7xl mx-auto">
                     <button
                         type="button"
                         onClick={() => setSelectedId(null)}
-                        className="mb-6 text-base-600 hover:text-base-800 font-semibold flex items-center"
+                        className={`mb-6 font-semibold flex items-center transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                     >
                         <ArrowLeft className="w-5 h-5 mr-2" />
                         Back to Applications
                     </button>
 
-                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
+                    <div className={`rounded-2xl shadow-lg p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                             <div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg">
                                         <Briefcase className="w-6 h-6 text-white" />
                                     </div>
-                                    <h1 className="text-3xl font-bold text-base-900">{selectedApplication.jobTitle}</h1>
+                                    <h1 className={`text-3xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{selectedApplication.jobTitle}</h1>
                                 </div>
-                                <div className="mt-2 flex items-center text-base-600">
+                                <div className={`mt-2 flex items-center transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                     <Calendar className="w-4 h-4 mr-2" />
                                     <span>Posted on {selectedApplication.posted}</span>
                                 </div>
@@ -88,8 +90,8 @@ export default function Applications({ applications, onBackToDashboard }) {
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
                             {stages.map((s) => (
-                                <div key={s.label} className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg">
-                                    <div className="text-sm text-base-600 mb-1">{s.label}</div>
+                                <div key={s.label} className={`p-4 rounded-lg transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                    <div className={`text-sm mb-1 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>{s.label}</div>
                                     <div className="text-2xl font-bold text-accent-600">{s.value}</div>
                                 </div>
                             ))}
@@ -97,28 +99,28 @@ export default function Applications({ applications, onBackToDashboard }) {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div className="lg:col-span-2">
-                                <h2 className="text-xl font-bold text-base-900 mb-4">Process</h2>
+                                <h2 className={`text-xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Process</h2>
 
                                 <div className="space-y-4">
                                     {process.map((p, idx) => (
-                                        <div key={idx} className="border border-base-200 rounded-xl p-5 hover:shadow-lg hover:shadow-base-200 transition-all">
+                                        <div key={idx} className={`border rounded-xl p-5 transition-all ${isDarkMode ? 'border-slate-600 hover:shadow-lg hover:shadow-slate-900' : 'border-base-200 hover:shadow-lg hover:shadow-base-200'}`}>
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
                                                     <div className="flex items-center gap-2">
                                                         <CheckCircle className="w-5 h-5 text-accent-600" />
-                                                        <h3 className="text-lg font-semibold text-base-900">{p.title}</h3>
+                                                        <h3 className={`text-lg font-semibold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{p.title}</h3>
                                                     </div>
-                                                    <p className="text-sm text-base-600 mt-1">{p.description}</p>
+                                                    <p className={`text-sm mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{p.description}</p>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="text-sm text-base-600">Count</div>
-                                                    <div className="text-2xl font-bold text-base-900">{p.value}</div>
+                                                    <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Count</div>
+                                                    <div className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{p.value}</div>
                                                 </div>
                                             </div>
 
                                             {typeof p.threshold === 'number' && (
-                                                <div className="mt-3 text-sm text-base-600">
-                                                    Candidates to advance after this phase: <span className="font-semibold text-base-900">{p.threshold}</span>
+                                                <div className={`mt-3 text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                                    Candidates to advance after this phase: <span className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-900'}`}>{p.threshold}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -127,42 +129,42 @@ export default function Applications({ applications, onBackToDashboard }) {
                             </div>
 
                             <div>
-                                <h2 className="text-xl font-bold text-base-900 mb-4">Requisition Details</h2>
-                                <div className="border border-base-200 rounded-xl p-5 space-y-4">
+                                <h2 className={`text-xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Requisition Details</h2>
+                                <div className={`border rounded-xl p-5 space-y-4 transition-colors ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
                                     <div>
-                                        <div className="text-sm text-base-600">Platforms</div>
-                                        <div className="font-semibold text-base-900">
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Platforms</div>
+                                        <div className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-900'}`}>
                                             {(req.selectedPlatforms || []).length ? (req.selectedPlatforms || []).join(', ') : 'Not set'}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-base-600">CV Collection Window</div>
-                                        <div className="font-semibold text-base-900">
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>CV Collection Window</div>
+                                        <div className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-900'}`}>
                                             {(req.postingStartDate || '—') + ' to ' + (req.postingEndDate || '—')}
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-base-600">Assessment Type</div>
-                                        <div className="font-semibold text-base-900">{req.assessmentType || 'Not set'}</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Assessment Type</div>
+                                        <div className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-900'}`}>{req.assessmentType || 'Not set'}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-base-600">Technical Interview Duration</div>
-                                        <div className="font-semibold text-base-900">{(req.technicalInterviewDuration || '45') + ' minutes'}</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Technical Interview Duration</div>
+                                        <div className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-900'}`}>{(req.technicalInterviewDuration || '45') + ' minutes'}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-base-600">HR Interview Duration</div>
-                                        <div className="font-semibold text-base-900">{(req.hrInterviewDuration || '45') + ' minutes'}</div>
+                                        <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>HR Interview Duration</div>
+                                        <div className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-900'}`}>{(req.hrInterviewDuration || '45') + ' minutes'}</div>
                                     </div>
                                 </div>
 
-                                <div className="mt-6 border border-base-200 rounded-xl p-5">
+                                <div className={`mt-6 border rounded-xl p-5 transition-colors ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
                                     <div className="flex items-center justify-between mb-3">
-                                        <span className="text-sm font-semibold text-base-600">Overall Progress</span>
-                                        <span className="text-sm font-semibold text-base-600">
+                                        <span className={`text-sm font-semibold transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall Progress</span>
+                                        <span className={`text-sm font-semibold transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             {safePercent(selectedApplication.finalCandidates || 0, selectedApplication.cvs || 0)}%
                                         </span>
                                     </div>
-                                    <div className="w-full bg-base-200 rounded-full h-3">
+                                    <div className={`w-full rounded-full h-3 transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-base-200'}`}>
                                         <div
                                             className="bg-gradient-to-r from-base-500 to-accent-500 h-3 rounded-full transition-all"
                                             style={{ width: `${safePercent(selectedApplication.finalCandidates || 0, selectedApplication.cvs || 0)}%` }}

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Phases({ onNavigateToPhase }) {
+    const { isDarkMode } = useDarkMode();
     const menuItems = [
         { id: 'job-requisition', icon: Plus, label: 'Create Job Requisition', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Capture requisition requirements' },
         { id: 'job-post', icon: Share2, label: 'Job Post', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Manage postings' },
@@ -16,14 +18,14 @@ export default function Phases({ onNavigateToPhase }) {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
                     <div className="flex items-center justify-center mb-4">
-                        <Briefcase className="w-16 h-16 text-base-600" />
+                        <Briefcase className={`w-16 h-16 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                     </div>
-                    <h1 className="text-5xl font-bold text-base-900 mb-4">Recruitment Dashboard</h1>
-                    <p className="text-xl text-base-600">Manage your hiring process with AI-powered tools</p>
+                    <h1 className={`text-5xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recruitment Dashboard</h1>
+                    <p className={`text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Manage your hiring process with AI-powered tools</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -32,6 +34,7 @@ export default function Phases({ onNavigateToPhase }) {
                             key={item.id}
                             item={item}
                             onNavigateToPhase={onNavigateToPhase}
+                            isDarkMode={isDarkMode}
                         />
                     ))}
                 </div>
@@ -40,7 +43,7 @@ export default function Phases({ onNavigateToPhase }) {
     );
 }
 
-function PhaseCard({ item, onNavigateToPhase }) {
+function PhaseCard({ item, onNavigateToPhase, isDarkMode }) {
     const [ripples, setRipples] = useState([]);
     const cardRef = useRef(null);
 
@@ -48,21 +51,21 @@ function PhaseCard({ item, onNavigateToPhase }) {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         // Calculate the maximum distance from click point to corners
         const corners = [
-            {x: 0, y: 0},
-            {x: rect.width, y: 0},
-            {x: 0, y: rect.height},
-            {x: rect.width, y: rect.height}
+            { x: 0, y: 0 },
+            { x: rect.width, y: 0 },
+            { x: 0, y: rect.height },
+            { x: rect.width, y: rect.height }
         ];
-        
-        const distances = corners.map(corner => 
+
+        const distances = corners.map(corner =>
             Math.sqrt(Math.pow(corner.x - x, 2) + Math.pow(corner.y - y, 2))
         );
-        
+
         const maxDistance = Math.max(...distances);
-        
+
         // Create multiple ripples with staggered timing
         const newRipples = [];
         for (let i = 0; i < 3; i++) {
@@ -74,7 +77,7 @@ function PhaseCard({ item, onNavigateToPhase }) {
                 delay: i * 100 // Stagger each ripple
             });
         }
-        
+
         setRipples(newRipples);
     };
 
@@ -89,14 +92,14 @@ function PhaseCard({ item, onNavigateToPhase }) {
             onClick={() => onNavigateToPhase(item.id)}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left border border-base-100 hover:border-accent-100 transform hover:-translate-y-1 overflow-hidden"
+            className={`group relative rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left transform hover:-translate-y-1 overflow-hidden border ${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-accent-400' : 'bg-white border-base-100 hover:border-accent-100'}`}
         >
             {/* Ripple container */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 {ripples.map((ripple) => (
                     <div
                         key={ripple.id}
-                        className="absolute rounded-full bg-gradient-to-r from-blue-100/40 to-cyan-100/40"
+                        className={`absolute rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20' : 'bg-gradient-to-r from-blue-100/40 to-cyan-100/40'}`}
                         style={{
                             left: ripple.x - ripple.size / 2,
                             top: ripple.y - ripple.size / 2,
@@ -116,11 +119,11 @@ function PhaseCard({ item, onNavigateToPhase }) {
                     <item.icon className="w-6 h-6 text-white transition-transform duration-500 group-hover:rotate-180" />
                 </div>
 
-                <h3 className="text-xl font-bold text-base-900 mb-2 group-hover:text-accent-600 transition-colors duration-300">
+                <h3 className={`text-xl font-bold mb-2 group-hover:text-accent-600 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                     {item.label}
                 </h3>
 
-                <p className="text-base-500 text-sm mb-4 min-h-[40px]">
+                <p className={`text-sm mb-4 min-h-[40px] transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>
                     {item.description}
                 </p>
 
@@ -130,7 +133,7 @@ function PhaseCard({ item, onNavigateToPhase }) {
                 </div>
 
                 {/* Animated progress bar */}
-                <div className="mt-4 h-1.5 w-full rounded-full bg-base-100 overflow-hidden">
+                <div className={`mt-4 h-1.5 w-full rounded-full overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-100'}`}>
                     <div className="h-full w-0 group-hover:w-full bg-gradient-to-r from-base-500 to-accent-500 transition-all duration-500 ease-out"></div>
                 </div>
             </div>

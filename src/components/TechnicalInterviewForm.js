@@ -12,8 +12,10 @@ import {
     CheckSquare,
     Cpu,
 } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function TechnicalInterviewForm({ formData, updateFormData }) {
+    const { isDarkMode } = useDarkMode();
     const [customQuestions, setCustomQuestions] = useState([]);
     const [newQuestion, setNewQuestion] = useState({
         text: '',
@@ -97,14 +99,14 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
     return (
         <div className="space-y-8">
             {/* Interview Type Selection */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Video className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-800">Technical Interview Setup</h3>
-                        <p className="text-sm text-gray-600 mt-1">Choose how the technical interview will be conducted</p>
+                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Technical Interview Setup</h3>
+                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Choose how the technical interview will be conducted</p>
                     </div>
                 </div>
 
@@ -116,7 +118,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             <div
                                 key={option.id}
                                 onClick={() => handleInterviewTypeSelect(option.id)}
-                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : 'border-gray-200 hover:border-accent-300'
+                                className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50' : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-start mb-4">
@@ -126,14 +128,14 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                         })}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-800">{option.title}</h4>
-                                        <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                                        <h4 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{option.title}</h4>
+                                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{option.description}</p>
                                     </div>
                                 </div>
 
                                 <ul className="space-y-2">
                                     {option.features.map((feature, index) => (
-                                        <li key={index} className="flex items-center text-sm text-gray-600">
+                                        <li key={index} className={`flex items-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                             <div className="w-1.5 h-1.5 bg-gradient-to-r from-base-500 to-accent-500 rounded-full mr-2"></div>
                                             {feature}
                                         </li>
@@ -152,23 +154,23 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
             </div>
 
             {/* Evaluation Criteria */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
                         <Brain className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800">Evaluation Criteria</h3>
+                    <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Evaluation Criteria</h3>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className={`block text-sm font-medium mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         Select evaluation criteria for technical interview:
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {criteriaOptions.map((criteria) => (
                             <label
                                 key={criteria.id}
-                                className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
+                                className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors duration-300 ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}
                             >
                                 <input
                                     type="checkbox"
@@ -181,7 +183,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                         className: 'w-4 h-4 text-white',
                                     })}
                                 </div>
-                                <span className="text-gray-700">{criteria.label}</span>
+                                <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
                             </label>
                         ))}
                     </div>
@@ -189,11 +191,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
 
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Interview Duration (Minutes) *</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Interview Duration (Minutes) *</label>
                         <select
                             value={formData.technicalInterviewDuration || '45'}
                             onChange={(e) => updateFormData({ technicalInterviewDuration: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         >
                             <option value="30">30 minutes</option>
                             <option value="45">45 minutes</option>
@@ -204,11 +206,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">AI Feedback Level</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>AI Feedback Level</label>
                         <select
                             value={formData.aiFeedbackLevel || 'detailed'}
                             onChange={(e) => updateFormData({ aiFeedbackLevel: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         >
                             <option value="summary">Summary</option>
                             <option value="detailed">Detailed</option>
@@ -217,11 +219,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Number of Interviewers</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Number of Interviewers</label>
                         <select
                             value={formData.numberOfInterviewers || '1'}
                             onChange={(e) => updateFormData({ numberOfInterviewers: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         >
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -231,11 +233,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Scoring System</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Scoring System</label>
                         <select
                             value={formData.scoringSystem || '1-5'}
                             onChange={(e) => updateFormData({ scoringSystem: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         >
                             <option value="1-5">1-5 Scale</option>
                             <option value="1-10">1-10 Scale</option>
@@ -244,71 +246,71 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Candidates to advance after this phase</label>
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Candidates to advance after this phase</label>
                         <input
                             type="number"
                             min="1"
                             value={formData.technicalInterviewCandidatesToAdvance || 5}
                             onChange={(e) => updateFormData({ technicalInterviewCandidatesToAdvance: parseInt(e.target.value) })}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
                 </div>
 
                 <div className="mt-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Notes for Interviewers</label>
+                    <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Notes for Interviewers</label>
                     <textarea
                         value={formData.interviewerNotes || ''}
                         onChange={(e) => updateFormData({ interviewerNotes: e.target.value })}
                         placeholder="Specific instructions, focus areas, red flags..."
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                     />
                 </div>
             </div>
 
             {/* Question Setup */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center">
                         <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
                             <MessageSquare className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-800">Technical Interview Questions</h3>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <h3 className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Technical Interview Questions</h3>
+                            <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Add questions now (we will generate additional questions later if needed)
                             </p>
                         </div>
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         Questions: <span className="font-bold text-accent-600">{customQuestions.length}</span>
                     </div>
                 </div>
 
                 {/* Add Question Form */}
-                <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                    <h4 className="font-bold text-gray-800 mb-4">Add Interview Question</h4>
+                <div className={`rounded-lg p-6 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-gray-50'}`}>
+                    <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Add Interview Question</h4>
 
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Question Text *</label>
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Question Text *</label>
                             <textarea
                                 value={newQuestion.text}
                                 onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
                                 placeholder="Enter technical interview question..."
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                                 <select
                                     value={newQuestion.category}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 >
                                     {questionCategories.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
@@ -319,11 +321,11 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+                                <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Difficulty</label>
                                 <select
                                     value={newQuestion.difficulty}
                                     onChange={(e) => setNewQuestion({ ...newQuestion, difficulty: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 >
                                     <option value="easy">Easy</option>
                                     <option value="medium">Medium</option>
@@ -347,16 +349,16 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                 {/* Custom Questions List */}
                 {customQuestions.length > 0 && (
                     <div>
-                        <h4 className="font-bold text-gray-800 mb-4">Your Questions</h4>
+                        <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Your Questions</h4>
                         <div className="space-y-3">
                             {customQuestions.map((question) => (
-                                <div key={question.id} className="border border-gray-200 rounded-lg p-4">
+                                <div key={question.id} className={`border rounded-lg p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
                                     <div className="flex justify-between items-start">
                                         <div className="flex-1">
-                                            <p className="text-gray-800 mb-2">{question.text}</p>
-                                            <div className="flex items-center text-sm text-gray-600">
-                                                <span className="px-2 py-1 bg-gray-100 rounded mr-3">{question.category}</span>
-                                                <span className="px-2 py-1 bg-gray-100 rounded mr-3">{question.difficulty}</span>
+                                            <p className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{question.text}</p>
+                                            <div className={`flex items-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                <span className={`px-2 py-1 rounded mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-gray-100'}`}>{question.category}</span>
+                                                <span className={`px-2 py-1 rounded mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-gray-100'}`}>{question.difficulty}</span>
                                             </div>
                                         </div>
                                         <button

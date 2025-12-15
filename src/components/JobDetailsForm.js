@@ -1,7 +1,9 @@
 import React from 'react';
 import { Briefcase, MapPin, Target, GraduationCap, DollarSign, Calendar, Mail } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function JobDetailsForm({ formData, updateFormData }) {
+    const { isDarkMode } = useDarkMode();
     const seniorityLevels = [
         'Intern',
         'Entry Level',
@@ -70,17 +72,17 @@ export default function JobDetailsForm({ formData, updateFormData }) {
     return (
         <div className="space-y-8">
             {/* Basic Information Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Briefcase className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Basic Information</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Basic Information</h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Job Title *
                         </label>
                         <input
@@ -88,13 +90,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.jobTitle || ''}
                             onChange={(e) => handleInputChange('jobTitle', e.target.value)}
                             placeholder="e.g., Senior Frontend Developer"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Department
                         </label>
                         <input
@@ -102,18 +104,18 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.department || ''}
                             onChange={(e) => handleInputChange('department', e.target.value)}
                             placeholder="e.g., Engineering"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Seniority Level *
                         </label>
                         <select
                             value={formData.seniorityLevel || ''}
                             onChange={(e) => handleInputChange('seniorityLevel', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         >
                             <option value="">Select Level</option>
@@ -126,13 +128,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Employment Type *
                         </label>
                         <select
                             value={formData.employmentType || ''}
                             onChange={(e) => handleInputChange('employmentType', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         >
                             <option value="">Select Type</option>
@@ -146,17 +148,17 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                 </div>
 
                 {/* Location Section */}
-                <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className={`mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
                     <div className="flex items-center mb-4">
                         <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-3">
                             <MapPin className="w-5 h-5 text-white" />
                         </div>
-                        <h4 className="text-lg font-semibold text-gray-800">Location</h4>
+                        <h4 className={`text-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Location</h4>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 City {formData.remoteAvailable ? '' : '*'}
                             </label>
                             <input
@@ -165,13 +167,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 onChange={(e) => handleInputChange('city', e.target.value)}
                                 placeholder="e.g., Cairo"
                                 disabled={!!formData.remoteAvailable}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white disabled:bg-slate-700 disabled:text-gray-400' : 'border-gray-300 disabled:bg-gray-100 disabled:text-gray-500'}`}
                                 required={!formData.remoteAvailable}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 Country {formData.remoteAvailable ? '' : '*'}
                             </label>
                             <input
@@ -180,7 +182,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 onChange={(e) => handleInputChange('country', e.target.value)}
                                 placeholder="e.g., Egypt"
                                 disabled={!!formData.remoteAvailable}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white disabled:bg-slate-700 disabled:text-gray-400' : 'border-gray-300 disabled:bg-gray-100 disabled:text-gray-500'}`}
                                 required={!formData.remoteAvailable}
                             />
                         </div>
@@ -194,7 +196,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleRemoteToggle(e.target.checked)}
                             className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                         />
-                        <label htmlFor="remotePosition" className="ml-2 text-sm text-gray-700">
+                        <label htmlFor="remotePosition" className={`ml-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Remote Position Available
                         </label>
                     </div>
@@ -202,17 +204,17 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             </div>
 
             {/* Skills & Requirements Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Target className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Skills & Requirements</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Skills & Requirements</h3>
                 </div>
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Required Skills *
                         </label>
                         <textarea
@@ -220,14 +222,14 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleArrayInput('requiredSkills', e.target.value)}
                             placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma or line separated)"
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
-                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas or press Enter for new line</p>
+                        <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Separate skills with commas or press Enter for new line</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Preferred Skills
                         </label>
                         <textarea
@@ -235,25 +237,25 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleArrayInput('preferredSkills', e.target.value)}
                             placeholder="e.g., GraphQL, Docker, AWS (comma or line separated)"
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
-                        <p className="mt-1 text-sm text-gray-500">Separate skills with commas or press Enter for new line</p>
+                        <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Separate skills with commas or press Enter for new line</p>
                     </div>
                 </div>
             </div>
 
             {/* Experience & Education Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <GraduationCap className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Experience & Education</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Experience & Education</h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Minimum Years of Experience *
                         </label>
                         <input
@@ -264,13 +266,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) =>
                                 handleInputChange('minExperience', parseInt(e.target.value))
                             }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Maximum Years of Experience *
                         </label>
                         <input
@@ -281,19 +283,19 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) =>
                                 handleInputChange('maxExperience', parseInt(e.target.value))
                             }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Minimum Education Level *
                         </label>
                         <select
                             value={formData.minEducation || ''}
                             onChange={(e) => handleInputChange('minEducation', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         >
                             <option value="">Select education level</option>
@@ -306,7 +308,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Field of Study (Preferred)
                         </label>
                         <input
@@ -314,24 +316,24 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             value={formData.fieldOfStudy || ''}
                             onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
                             placeholder="e.g., Computer Science"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
                 </div>
             </div>
 
             {/* Job Description Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Briefcase className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Job Description</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Job Description</h3>
                 </div>
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Key Responsibilities *
                         </label>
                         <textarea
@@ -342,14 +344,14 @@ export default function JobDetailsForm({ formData, updateFormData }) {
 - Collaborate with team members
 - Write clean, maintainable code`}
                             rows="4"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition font-mono text-sm"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
-                        <p className="mt-1 text-sm text-gray-500">Enter each responsibility on a new line</p>
+                        <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Enter each responsibility on a new line</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Full Job Description *
                         </label>
                         <textarea
@@ -357,7 +359,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleInputChange('fullDescription', e.target.value)}
                             placeholder="Detailed description of the role, team, company culture, etc."
                             rows="6"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             required
                         />
                     </div>
@@ -365,23 +367,23 @@ export default function JobDetailsForm({ formData, updateFormData }) {
             </div>
 
             {/* Compensation & Additional Info Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <DollarSign className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Compensation & Additional Info</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Compensation & Additional Info</h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Currency
                         </label>
                         <select
                             value={formData.currency || 'USD ($)'}
                             onChange={(e) => handleInputChange('currency', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         >
                             {currencies.map((currency) => (
                                 <option key={currency} value={currency}>
@@ -392,7 +394,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Minimum Salary (Monthly)
                         </label>
                         <input
@@ -400,12 +402,12 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             min="0"
                             value={formData.minSalary || 0}
                             onChange={(e) => handleInputChange('minSalary', parseInt(e.target.value))}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Maximum Salary (Monthly)
                         </label>
                         <input
@@ -413,12 +415,12 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             min="0"
                             value={formData.maxSalary || 5000}
                             onChange={(e) => handleInputChange('maxSalary', parseInt(e.target.value))}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Languages Required
                         </label>
                         <textarea
@@ -426,13 +428,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleArrayInput('languages', e.target.value)}
                             placeholder="e.g., English (Fluent), Arabic (comma or line separated)"
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
-                        <p className="mt-1 text-sm text-gray-500">Separate languages with commas or press Enter for new line</p>
+                        <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Separate languages with commas or press Enter for new line</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Application Deadline
                         </label>
                         <div className="flex items-center">
@@ -443,13 +445,13 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.deadline || ''}
                                 onChange={(e) => handleInputChange('deadline', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Contact Email *
                         </label>
                         <div className="flex items-center">
@@ -460,14 +462,14 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                                 type="email"
                                 value={formData.contactEmail || 'hr@company.com'}
                                 onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 required
                             />
                         </div>
                     </div>
 
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Additional Notes
                         </label>
                         <textarea
@@ -475,7 +477,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             onChange={(e) => handleInputChange('additionalNotes', e.target.value)}
                             placeholder="Any additional information about the position"
                             rows="3"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                         />
                     </div>
                 </div>

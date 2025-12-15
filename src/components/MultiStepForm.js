@@ -7,8 +7,10 @@ import TechnicalInterviewForm from './TechnicalInterviewForm';
 import HRInterviewForm from './HRInterviewForm';
 import ReviewSubmitForm from './ReviewSubmitForm';
 import { ArrowLeft, ArrowRight, Save } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function MultiStepForm({ onSubmitRequisition, onDone }) {
+    const { isDarkMode } = useDarkMode();
     const initialFormData = {
         // Job Details
         jobTitle: '',
@@ -258,35 +260,35 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-4 md:p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-4 md:p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-base-800 mb-2">Create New Job Requisition</h1>
-                    <p className="text-base-600">Follow the steps to capture the requisition requirements</p>
+                    <h1 className={`text-3xl md:text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-800'}`}>Create New Job Requisition</h1>
+                    <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Follow the steps to capture the requisition requirements</p>
                 </div>
 
                 {/* Step Progress */}
                 <StepProgress currentStep={currentStep} steps={steps} />
 
                 {stepError && (
-                    <div className={`mb-6 rounded-xl border px-4 py-3 text-sm ${stepError === 'Draft saved.' || stepError === 'Job requisition submitted.'
-                        ? 'border-green-200 bg-green-50 text-green-800'
-                        : 'border-red-200 bg-red-50 text-red-800'
+                    <div className={`mb-6 rounded-xl border px-4 py-3 text-sm transition-colors duration-300 ${stepError === 'Draft saved.' || stepError === 'Job requisition submitted.'
+                        ? isDarkMode ? 'border-green-700 bg-green-900 text-green-200' : 'border-green-200 bg-green-50 text-green-800'
+                        : isDarkMode ? 'border-red-700 bg-red-900 text-red-200' : 'border-red-200 bg-red-50 text-red-800'
                         }`}>
                         {stepError}
                     </div>
                 )}
 
                 {/* Form Content */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">{renderStep()}</div>
+                <div className={`rounded-2xl shadow-lg p-6 md:p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>{renderStep()}</div>
 
                 {/* Navigation Buttons (hidden on review step) */}
                 {currentStep !== 6 && (
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div>
                             {currentStep > 1 && (
-                                <button type="button" onClick={prevStep} className="flex items-center text-base-600 hover:text-base-800 font-medium">
+                                <button type="button" onClick={prevStep} className={`flex items-center font-medium transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}>
                                     <ArrowLeft className="w-5 h-5 mr-2" />
                                     Back
                                 </button>
@@ -297,7 +299,7 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
                             <button
                                 type="button"
                                 onClick={handleSaveDraft}
-                                className="flex items-center text-base-600 hover:text-base-800 font-medium"
+                                className={`flex items-center font-medium transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                             >
                                 <Save className="w-5 h-5 mr-2" />
                                 Save Draft
@@ -316,10 +318,10 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
 
                 {/* Progress Indicator */}
                 <div className="text-center mt-8">
-                    <p className="text-sm text-base-600">
+                    <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                         Step {currentStep} of {steps.length} • {Math.round((currentStep / steps.length) * 100)}% Complete
                     </p>
-                    <div className="w-full bg-base-200 rounded-full h-2 mt-2">
+                    <div className={`w-full rounded-full h-2 mt-2 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-base-200'}`}>
                         <div
                             className="bg-gradient-to-r from-base-500 to-accent-500 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(currentStep / steps.length) * 100}%` }}

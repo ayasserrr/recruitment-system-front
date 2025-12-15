@@ -1,7 +1,9 @@
 import React from 'react';
 import { Globe, Calendar, Check, Briefcase, Search, Building } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function PlatformsForm({ formData, updateFormData }) {
+    const { isDarkMode } = useDarkMode();
     const platforms = [
         {
             id: 'linkedin',
@@ -41,14 +43,14 @@ export default function PlatformsForm({ formData, updateFormData }) {
     return (
         <div className="space-y-8">
             {/* Platforms Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Globe className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-800">Posting Platforms</h3>
-                        <p className="text-sm text-gray-600 mt-1">Select where you want to post this job</p>
+                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Posting Platforms</h3>
+                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Select where you want to post this job</p>
                     </div>
                 </div>
 
@@ -61,8 +63,8 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 key={platform.id}
                                 onClick={() => handlePlatformToggle(platform.id)}
                                 className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 ${isSelected
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200 hover:border-accent-300'
+                                    ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-blue-500 bg-blue-50'
+                                    : isDarkMode ? 'border-slate-600 hover:border-accent-400 bg-slate-800' : 'border-gray-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="flex items-center justify-between mb-2">
@@ -79,8 +81,8 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                     </div>
                                     {isSelected && <Check className="w-5 h-5 text-blue-600" />}
                                 </div>
-                                <h4 className="font-semibold text-gray-800">{platform.name}</h4>
-                                <p className="text-sm text-gray-500 mt-1">{platform.description}</p>
+                                <h4 className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{platform.name}</h4>
+                                <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{platform.description}</p>
                             </div>
                         );
                     })}
@@ -88,20 +90,20 @@ export default function PlatformsForm({ formData, updateFormData }) {
             </div>
 
             {/* Scheduling Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <Calendar className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-800">Scheduling</h3>
-                        <p className="text-sm text-gray-600 mt-1">Set posting timeline only (CV collection window)</p>
+                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Scheduling</h3>
+                        <p className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Set posting timeline only (CV collection window)</p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             Posting Start Date *
                         </label>
                         <div className="flex items-center">
@@ -112,14 +114,14 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.postingStartDate || ''}
                                 onChange={(e) => updateFormData({ postingStartDate: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 required
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             CV Collection End Date *
                         </label>
                         <div className="flex items-center">
@@ -130,7 +132,7 @@ export default function PlatformsForm({ formData, updateFormData }) {
                                 type="date"
                                 value={formData.postingEndDate || ''}
                                 onChange={(e) => updateFormData({ postingEndDate: e.target.value })}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
                                 required
                             />
                         </div>

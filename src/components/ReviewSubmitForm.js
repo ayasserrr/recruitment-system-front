@@ -1,7 +1,9 @@
 import React from 'react';
 import { CheckCircle, FileText, Globe, ClipboardList, Video, Users, Send, Download, Edit } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSaveDraft, onExport }) {
+    const { isDarkMode } = useDarkMode();
     const formatArray = (arr) => (arr && arr.length ? arr.join(', ') : 'Not specified');
     const formatDate = (date) => (date ? new Date(date).toLocaleDateString() : 'Not set');
     const formatEducation = (value) => {
@@ -168,38 +170,38 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                     <div className="flex items-center mb-4">
                         <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                             <FileText className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-base-600">Job Title</p>
-                            <p className="font-bold text-base-900">{formData.jobTitle || 'Not set'}</p>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Job Title</p>
+                            <p className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{formData.jobTitle || 'Not set'}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                     <div className="flex items-center mb-4">
                         <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                             <Globe className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-base-600">Platforms</p>
-                            <p className="font-bold text-base-900">{formData.selectedPlatforms?.length || 0} platforms</p>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Platforms</p>
+                            <p className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{formData.selectedPlatforms?.length || 0} platforms</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                     <div className="flex items-center mb-4">
                         <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                             <ClipboardList className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-base-600">Assessment</p>
-                            <p className="font-bold text-base-900">
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Assessment</p>
+                            <p className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                                 {formData.assessmentType === 'ai-generated'
                                     ? 'AI-Generated'
                                     : formData.assessmentType === 'custom'
@@ -210,14 +212,14 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                     <div className="flex items-center mb-4">
                         <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-12 h-12 rounded-lg mr-4 flex-shrink-0">
                             <Video className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-base-600">Interview Type</p>
-                            <p className="font-bold text-base-900">{formData.technicalInterviewType === 'ai-conducted' ? 'AI' : 'Human'}</p>
+                            <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Interview Type</p>
+                            <p className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{formData.technicalInterviewType === 'ai-conducted' ? 'AI' : 'Human'}</p>
                         </div>
                     </div>
                 </div>
@@ -226,18 +228,18 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             {/* Detailed Review Sections */}
             <div className="space-y-6">
                 {sections.map((section) => (
-                    <div key={section.id} className="bg-white rounded-xl shadow-sm p-6">
+                    <div key={section.id} className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
                                 <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-4 flex-shrink-0">
                                     <section.icon className="w-4 h-4 text-white" />
                                 </div>
-                                <h3 className="text-xl font-bold text-base-900">{section.title}</h3>
+                                <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{section.title}</h3>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => onEditStep(section.id)}
-                                className="flex items-center text-base-600 hover:text-base-700 font-medium"
+                                className={`flex items-center font-medium transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-700'}`}
                             >
                                 <Edit className="w-4 h-4 mr-2" />
                                 Edit
@@ -246,9 +248,9 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {section.fields.map((field, index) => (
-                                <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                                    <p className="text-sm text-gray-600 mb-1">{field.label}</p>
-                                    <p className="font-medium text-gray-800">{field.value || 'Not set'}</p>
+                                <div key={index} className={`p-4 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-gray-50'}`}>
+                                    <p className={`text-sm mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{field.label}</p>
+                                    <p className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{field.value || 'Not set'}</p>
                                 </div>
                             ))}
                         </div>
@@ -257,16 +259,16 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
             </div>
 
             {/* Timeline Preview */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className={`rounded-xl shadow-sm p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                 <div className="flex items-center mb-6">
                     <div className="flex items-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg justify-center mr-4">
                         <ClipboardList className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800">Recruitment Timeline</h3>
+                    <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Recruitment Timeline</h3>
                 </div>
 
                 {timeline.length === 0 ? (
-                    <p className="text-sm text-gray-600">Set a Posting Start Date to preview timeline.</p>
+                    <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Set a Posting Start Date to preview timeline.</p>
                 ) : (
                     <div className="relative">
                         <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-base-500 to-accent-500"></div>
@@ -285,8 +287,8 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                                         )}
                                     </div>
                                     <div className="flex-1 pt-1">
-                                        <h4 className="font-semibold text-gray-800">{item.stage}</h4>
-                                        <p className="text-sm text-gray-600">{item.date}</p>
+                                        <h4 className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{item.stage}</h4>
+                                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{item.date}</p>
                                     </div>
                                 </div>
                             ))}
@@ -301,7 +303,7 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     <button
                         type="button"
                         onClick={onExport}
-                        className="flex-1 flex items-center justify-center bg-white border-2 border-gray-300 text-gray-700 font-semibold py-4 px-6 rounded-lg hover:bg-gray-50 transition-colors"
+                        className={`flex-1 flex items-center justify-center font-semibold py-4 px-6 rounded-lg transition-colors ${isDarkMode ? 'bg-slate-800 border-2 border-slate-600 text-gray-300 hover:bg-slate-700' : 'bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                     >
                         <Download className="w-5 h-5 mr-3" />
                         Export as PDF
@@ -310,7 +312,7 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     <button
                         type="button"
                         onClick={onSaveDraft}
-                        className="flex-1 flex items-center justify-center bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-gray-700 transition-colors"
+                        className={`flex-1 flex items-center justify-center font-semibold py-4 px-6 rounded-lg transition-colors ${isDarkMode ? 'bg-gray-600 text-white hover:bg-gray-700' : 'bg-gray-600 text-white hover:bg-gray-700'}`}
                     >
                         Save as Draft
                     </button>
@@ -325,7 +327,7 @@ export default function ReviewSubmitForm({ formData, onEditStep, onSubmit, onSav
                     </button>
                 </div>
 
-                <p className="text-center text-sm text-gray-600 mt-4">
+                <p className={`text-center text-sm mt-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     This screen captures requisition requirements only. Candidate results and rankings will be handled later.
                 </p>
             </div>

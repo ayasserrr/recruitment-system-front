@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, Upload, Send, Eye, Users, Briefcase, ChevronRight } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function JobPost({ applications, onUpdateApplication, onBackToDashboard, onViewCVs, onOpenSemanticAnalysis }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedId, setSelectedId] = useState(null);
 
     const platformLabel = (id) => {
@@ -155,17 +157,17 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-6 md:p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-6 md:p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between gap-4 mb-8">
                     <div>
-                        <h1 className="text-4xl font-bold text-base-900 mb-2">Job Posting</h1>
-                        <p className="text-base-600">Select an application to track posting progress and CV collection</p>
+                        <h1 className={`text-4xl font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Job Posting</h1>
+                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Select an application to track posting progress and CV collection</p>
                     </div>
                     <button
                         type="button"
                         onClick={onBackToDashboard}
-                        className="text-base-600 hover:text-base-800 font-semibold flex items-center"
+                        className={`font-semibold flex items-center transition-colors ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
                         Back to Dashboard
@@ -174,18 +176,18 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6">
+                        <div className={`rounded-2xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                             <div className="flex items-center mb-4">
                                 <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-10 h-10 rounded-lg mr-3">
                                     <Briefcase className="w-5 h-5 text-white" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-base-900">Applications</h2>
+                                <h2 className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Applications</h2>
                             </div>
 
                             {applications.length === 0 ? (
-                                <div className="border border-dashed border-base-200 rounded-xl p-6 text-center">
-                                    <p className="text-base-700 font-semibold">No applications yet</p>
-                                    <p className="text-base-500 mt-1">Submit a Job Requisition to create an application.</p>
+                                <div className={`border border-dashed rounded-xl p-6 text-center transition-colors ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                    <p className={`font-semibold transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>No applications yet</p>
+                                    <p className={`mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Submit a Job Requisition to create an application.</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
@@ -195,32 +197,32 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                                             key={app.id}
                                             onClick={() => setSelectedId(app.id)}
                                             className={`w-full text-left border-2 rounded-xl p-4 transition-colors ${selectedId === app.id
-                                                ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
-                                                : 'border-base-200 hover:border-accent-300'
+                                                ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                                : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-base-200 hover:border-accent-300'
                                                 }`}
                                         >
                                             <div className="flex items-start justify-between gap-3">
                                                 <div>
-                                                    <div className="font-bold text-base-900">{app.jobTitle}</div>
-                                                    <div className="text-sm text-base-600">Posted: {app.posted}</div>
+                                                    <div className={`font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</div>
+                                                    <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posted: {app.posted}</div>
                                                 </div>
-                                                <div className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-base-100 to-accent-100 text-base-700">
+                                                <div className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${isDarkMode ? 'bg-slate-600 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
                                                     {app.status || 'Submitted'}
                                                 </div>
                                             </div>
 
                                             <div className="mt-3 grid grid-cols-3 gap-2">
-                                                <div className="bg-base-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-base-600">CVs</div>
-                                                    <div className="text-lg font-bold text-base-900">{app.cvs || 0}</div>
+                                                <div className={`p-3 rounded-lg transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                                    <div className={`text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>CVs</div>
+                                                    <div className={`text-lg font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.cvs || 0}</div>
                                                 </div>
-                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-base-600">Semantic Ready</div>
+                                                <div className={`p-3 rounded-lg transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                                    <div className={`text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Semantic Ready</div>
                                                     <div className="text-lg font-bold text-accent-600">{app.semantic || 0}</div>
                                                 </div>
-                                                <div className="bg-gradient-to-br from-base-50 to-accent-50 p-3 rounded-lg">
-                                                    <div className="text-xs text-base-600">Platforms</div>
-                                                    <div className="text-lg font-bold text-base-700">{app.requisition?.selectedPlatforms?.length || 0}</div>
+                                                <div className={`p-3 rounded-lg transition-colors ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                                    <div className={`text-xs transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Platforms</div>
+                                                    <div className={`text-lg font-bold transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>{app.requisition?.selectedPlatforms?.length || 0}</div>
                                                 </div>
                                             </div>
                                         </button>
@@ -232,9 +234,9 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
 
                     <div className="lg:col-span-2">
                         {!selectedApplication ? (
-                            <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
-                                <h3 className="text-2xl font-bold text-base-900">Posting Progress</h3>
-                                <p className="text-base-600 mt-2">Choose an application from the left to view its posting progress.</p>
+                            <div className={`rounded-2xl shadow-lg p-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                                <h3 className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Posting Progress</h3>
+                                <p className={`mt-2 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Choose an application from the left to view its posting progress.</p>
                             </div>
                         ) : (
                             <PostingProgress
@@ -256,6 +258,7 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
 }
 
 function PostingProgress({ application, ensureProgress, onStepClick, getStatusIcon, statusPill, safePercent, onViewCVs, onOpenSemanticAnalysis }) {
+    const { isDarkMode } = useDarkMode();
     const progress = ensureProgress(application);
     const req = application.requisition || {};
 
@@ -281,24 +284,24 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
     const semanticReady = viewedCandidates > 0 ? viewedCandidates : totalCandidates;
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
+        <div className={`rounded-2xl shadow-lg p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-base-900">Posting Progress</h3>
-                <div className="text-sm text-base-600">Started: {started} • Job: {application.jobTitle}</div>
+                <h3 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Posting Progress</h3>
+                <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Started: {started} • Job: {application.jobTitle}</div>
             </div>
 
             <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
-                    <div className="text-xs font-semibold text-base-600">Posting Platforms</div>
-                    <div className="mt-1 font-bold text-base-900">{platformText}</div>
+                <div className={`border rounded-xl p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-base-200 bg-base-50'}`}>
+                    <div className={`text-xs font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posting Platforms</div>
+                    <div className={`mt-1 font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{platformText}</div>
                 </div>
-                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
-                    <div className="text-xs font-semibold text-base-600">CV Collection Window</div>
-                    <div className="mt-1 font-bold text-base-900">{windowText}</div>
+                <div className={`border rounded-xl p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-base-200 bg-base-50'}`}>
+                    <div className={`text-xs font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>CV Collection Window</div>
+                    <div className={`mt-1 font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{windowText}</div>
                 </div>
-                <div className="border border-base-200 rounded-xl p-4 bg-base-50">
-                    <div className="text-xs font-semibold text-base-600">Posting Status</div>
-                    <div className="mt-1 font-bold text-base-900">{application.status || 'Submitted'}</div>
+                <div className={`border rounded-xl p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-base-200 bg-base-50'}`}>
+                    <div className={`text-xs font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posting Status</div>
+                    <div className={`mt-1 font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{application.status || 'Submitted'}</div>
                 </div>
             </div>
 
@@ -318,27 +321,27 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                 {getStatusIcon(item.status)}
                             </div>
                             <div
-                                className={`flex-1 p-4 rounded-lg cursor-pointer transition-all hover:shadow-md hover:shadow-base-200 ${item.status === 'completed'
-                                    ? 'bg-gradient-to-br from-base-50 to-accent-50'
+                                className={`flex-1 p-4 rounded-lg cursor-pointer transition-all ${item.status === 'completed'
+                                    ? isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'
                                     : item.status === 'active'
-                                        ? 'bg-gradient-to-br from-base-50 to-accent-50'
-                                        : 'bg-base-50'
+                                        ? isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'
+                                        : isDarkMode ? 'bg-slate-700' : 'bg-base-50'
                                     }`}
                                 onClick={() => onStepClick(item.id)}
                             >
                                 <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-bold text-base-900 text-lg">{item.step}</h4>
-                                    <div className={`px-3 py-1 rounded-full text-xs font-semibold ${statusPill(item.status)}`}>
+                                    <h4 className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{item.step}</h4>
+                                    <div className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-300 ${isDarkMode ? (item.status === 'completed' ? 'bg-green-900 text-green-300' : item.status === 'active' ? 'bg-blue-900 text-blue-300' : 'bg-slate-600 text-slate-300') : statusPill(item.status)}`}>
                                         {item.status === 'completed' ? 'Completed' : item.status === 'active' ? 'Active' : 'Pending'}
                                     </div>
                                 </div>
 
-                                <div className="text-sm text-base-600 mb-2">
+                                <div className={`text-sm mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                     {item.date && item.time ? `${item.date} • ${item.time}` : 'Scheduled'}
                                 </div>
 
                                 {item.note && (
-                                    <div className="flex items-center text-sm text-base-600 mb-2">
+                                    <div className={`flex items-center text-sm mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                         <CheckCircle className="w-4 h-4 text-accent-500 mr-2" />
                                         {item.note}
                                     </div>
@@ -347,7 +350,7 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                 {item.platforms && (
                                     <div className="flex flex-wrap gap-2 mb-2">
                                         {item.platforms.map((platform, i) => (
-                                            <span key={i} className="px-2 py-1 bg-gradient-to-r from-base-200 to-accent-200 text-base-700 rounded text-xs font-medium">
+                                            <span key={i} className={`px-2 py-1 rounded text-xs font-medium transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gradient-to-r from-base-200 to-accent-200 text-base-700'}`}>
                                                 {platform}
                                             </span>
                                         ))}
@@ -356,17 +359,17 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
 
                                 {typeof item.count === 'number' && (
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center text-base-600 font-semibold">
+                                        <div className={`flex items-center font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>
                                             <Users className="w-4 h-4 mr-2" />
                                             {item.count} CVs received
                                             {item.newToday ? (
-                                                <span className="ml-3 px-2 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded text-xs">+{item.newToday} today</span>
+                                                <span className={`ml-3 px-2 py-1 rounded text-xs transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-accent-400' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700'}`}>+{item.newToday} today</span>
                                             ) : null}
                                         </div>
                                         <button
                                             type="button"
                                             onClick={() => onViewCVs?.(item)}
-                                            className="text-sm text-base-600 hover:text-base-800 font-medium flex items-center"
+                                            className={`text-sm font-medium flex items-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                                         >
                                             <Eye className="w-4 h-4 mr-1" />
                                             View
@@ -375,7 +378,7 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                                 )}
 
                                 {item.scheduledDate && (
-                                    <div className="text-sm text-base-600">
+                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                         Scheduled for: <span className="font-semibold">{item.scheduledDate}</span>
                                     </div>
                                 )}
@@ -385,15 +388,15 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                 </div>
             </div>
 
-            <div className="border-t border-base-200 pt-6">
-                <h4 className="text-lg font-bold text-base-900 mb-4">Posting Statistics</h4>
+            <div className={`border-t pt-6 transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                <h4 className={`text-lg font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Posting Statistics</h4>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {totalCandidates > 0 && (
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
+                        <div className={`p-4 rounded-lg shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 shadow-slate-800' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="text-2xl font-bold text-base-600">{totalCandidates}</div>
-                                    <div className="text-sm text-base-600">CVs Received</div>
+                                    <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{totalCandidates}</div>
+                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>CVs Received</div>
                                 </div>
                                 <Users className="w-8 h-8 text-accent-400" />
                             </div>
@@ -401,11 +404,11 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                     )}
 
                     {newToday > 0 && (
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
+                        <div className={`p-4 rounded-lg shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 shadow-slate-800' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-2xl font-bold text-accent-600">{newToday}</div>
-                                    <div className="text-sm text-base-600">New Today</div>
+                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>New Today</div>
                                 </div>
                                 <Upload className="w-8 h-8 text-accent-400" />
                             </div>
@@ -413,22 +416,22 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                     )}
 
                     {viewedCandidates > 0 && (
-                        <div className="bg-gradient-to-br from-base-50 to-accent-50 p-4 rounded-lg shadow-sm shadow-base-200">
+                        <div className={`p-4 rounded-lg shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 shadow-slate-800' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-2xl font-bold text-accent-600">{viewedCandidates}</div>
-                                    <div className="text-sm text-base-600">Ready for Semantic</div>
+                                    <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Ready for Semantic</div>
                                 </div>
                                 <Eye className="w-8 h-8 text-accent-400" />
                             </div>
                         </div>
                     )}
 
-                    <div className="bg-gradient-to-br from-base-100 to-accent-100 p-4 rounded-lg shadow-sm shadow-base-200">
+                    <div className={`p-4 rounded-lg shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 shadow-slate-800' : 'bg-gradient-to-br from-base-100 to-accent-100 shadow-base-200'}`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-2xl font-bold text-base-600">{completion}%</div>
-                                <div className="text-sm text-base-600">Completion</div>
+                                <div className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{completion}%</div>
+                                <div className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Completion</div>
                             </div>
                             <Clock className="w-8 h-8 text-accent-400" />
                         </div>
@@ -436,11 +439,11 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                 </div>
             </div>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-base-50 to-accent-50 rounded-lg border border-base-200 shadow-sm shadow-base-200">
+            <div className={`mt-6 p-4 rounded-lg shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border border-slate-600 shadow-slate-800' : 'bg-gradient-to-r from-base-50 to-accent-50 border border-base-200 shadow-base-200'}`}>
                 <div className="flex items-center justify-between gap-4">
                     <div>
-                        <h5 className="font-bold text-base-900">Next Step: {nextPhaseTitle}</h5>
-                        <p className="text-sm text-base-600">{semanticReady} candidates ready for semantic analysis & ranking</p>
+                        <h5 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Next Step: {nextPhaseTitle}</h5>
+                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{semanticReady} candidates ready for semantic analysis & ranking</p>
                     </div>
                     <button
                         type="button"

@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Brain, ChevronRight, CheckCircle, Eye, Users, Clock, FileText, Download, ArrowLeft, Star } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { ArrowLeft, Brain, Download, Eye, EyeOff, Filter, TrendingUp, Users, CheckCircle, FileText, Star, ChevronRight } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function SemanticAnalysis({ applications, onBack }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedAppId, setSelectedAppId] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
@@ -182,43 +184,43 @@ export default function SemanticAnalysis({ applications, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {onBack && (
-                                <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-base-600" />
+                                <button onClick={onBack} className={`mr-4 p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-white'}`}>
+                                    <ArrowLeft className={`w-6 h-6 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                 </button>
                             )}
                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-14 h-14 rounded-lg mr-4">
                                 <Brain className="w-8 h-8 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-4xl font-bold text-base-900">Semantic Analysis</h1>
-                                <p className="text-base-600">AI-powered candidate matching based on job requirements</p>
+                                <h1 className={`text-4xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Semantic Analysis</h1>
+                                <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>AI-powered candidate matching based on job requirements</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Application Selector */}
-                <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
-                    <h2 className="text-xl font-bold text-base-900 mb-4">Select Application</h2>
+                <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                    <h2 className={`text-xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Select Application</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {applications.map(app => (
                             <button
                                 key={app.id}
                                 onClick={() => setSelectedAppId(app.id)}
                                 className={`p-4 rounded-xl border-2 transition-all ${selectedAppId === app.id
-                                    ? 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
-                                    : 'border-base-200 hover:border-accent-300'
+                                    ? isDarkMode ? 'border-accent-500 bg-slate-700' : 'border-accent-500 bg-gradient-to-br from-base-50 to-accent-50'
+                                    : isDarkMode ? 'border-slate-600 hover:border-accent-400' : 'border-base-200 hover:border-accent-300'
                                     }`}
                             >
                                 <div className="text-left">
-                                    <h3 className="font-bold text-base-900">{app.jobTitle}</h3>
-                                    <div className="text-sm text-base-600 mt-1">
+                                    <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</h3>
+                                    <div className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                         <div>CVs Received: {app.cvs || 0}</div>
                                         <div>Posted: {app.posted}</div>
                                         <div>Status: {app.status}</div>
@@ -233,60 +235,60 @@ export default function SemanticAnalysis({ applications, onBack }) {
                     <>
                         {/* Analysis Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
-                                <div className="text-3xl font-bold text-base-600 mb-2">{stats.totalCandidates}</div>
-                                <div className="text-sm text-base-600">Total Candidates</div>
-                                <div className="text-xs text-base-400 mt-1">Processed: {stats.processed}</div>
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
+                                <div className={`text-3xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{stats.totalCandidates}</div>
+                                <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Total Candidates</div>
+                                <div className={`text-xs mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`}>Processed: {stats.processed}</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="text-3xl font-bold text-accent-600 mb-2">{stats.highMatch}</div>
-                                <div className="text-sm text-base-600">High Match</div>
-                                <div className="text-xs text-base-400 mt-1">Score ≥ 80</div>
+                                <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>High Match</div>
+                                <div className={`text-xs mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`}>Score ≥ 80</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl shadow-lg shadow-base-200 p-6">
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-50 to-accent-50 shadow-base-200'}`}>
                                 <div className="text-3xl font-bold text-accent-600 mb-2">{stats.mediumMatch}</div>
-                                <div className="text-sm text-base-600">Medium Match</div>
-                                <div className="text-xs text-base-400 mt-1">Score 60-79</div>
+                                <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Medium Match</div>
+                                <div className={`text-xs mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`}>Score 60-79</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-base-100 to-accent-100 rounded-xl shadow-lg shadow-base-200 p-6">
-                                <div className="text-3xl font-bold text-base-600 mb-2">{stats.avgScore.toFixed(1)}</div>
-                                <div className="text-sm text-base-600">Average Score</div>
-                                <div className="text-xs text-base-400 mt-1">Overall match quality</div>
+                            <div className={`rounded-xl shadow-lg p-6 transition-colors ${isDarkMode ? 'bg-slate-700 shadow-slate-900' : 'bg-gradient-to-br from-base-100 to-accent-100 shadow-base-200'}`}>
+                                <div className={`text-3xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-600'}`}>{stats.avgScore.toFixed(1)}</div>
+                                <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>Average Score</div>
+                                <div className={`text-xs mt-1 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`}>Overall match quality</div>
                             </div>
                         </div>
 
                         {/* Job Details Card */}
-                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-6 mb-8">
+                        <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                             <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-base-900">{selectedApp.jobTitle}</h2>
-                                    <p className="text-base-600">Analysis completed on {new Date().toISOString().split('T')[0]}</p>
+                                    <h2 className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{selectedApp.jobTitle}</h2>
+                                    <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Analysis completed on {new Date().toISOString().split('T')[0]}</p>
                                 </div>
-                                <div className="bg-gradient-to-r from-base-100 to-accent-100 text-base-700 px-4 py-2 rounded-lg font-semibold">
+                                <div className={`px-4 py-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
                                     Processed in 2.5 seconds
                                 </div>
                             </div>
 
                             <div className="mb-6">
-                                <h3 className="text-lg font-semibold text-base-700 mb-3">Required Skills:</h3>
+                                <h3 className={`text-lg font-semibold mb-3 transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Required Skills:</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {['Python', 'Java', 'System Design', 'AWS', 'Docker', 'SQL', 'Algorithms'].map((skill, index) => (
-                                        <span key={index} className="px-4 py-2 bg-gradient-to-r from-base-100 to-accent-100 text-base-700 rounded-full font-medium">
+                                        <span key={index} className={`px-4 py-2 rounded-full font-medium transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
                                             {skill}
                                         </span>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-gradient-to-r from-base-50 to-accent-50 rounded-lg border border-base-200">
+                            <div className={`p-4 rounded-lg border transition-colors ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
                                 <div className="flex items-center">
                                     <CheckCircle className="w-6 h-6 text-accent-600 mr-3" />
                                     <div>
-                                        <h4 className="font-bold text-base-900">Analysis Complete</h4>
-                                        <p className="text-sm text-base-600">
+                                        <h4 className={`font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Analysis Complete</h4>
+                                        <p className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             Processed {stats.processed} candidates. {stats.highMatch} candidates have high match scores (≥80).
                                         </p>
                                     </div>
@@ -295,10 +297,10 @@ export default function SemanticAnalysis({ applications, onBack }) {
                         </div>
 
                         {/* Candidates List */}
-                        <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-8">
+                        <div className={`rounded-2xl shadow-lg p-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-base-900">Top Matching Candidates</h2>
-                                <div className="text-sm text-base-600">
+                                <h2 className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Top Matching Candidates</h2>
+                                <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                     Sorted by match score • Showing {candidates.length} of {stats.highMatch} high-match candidates
                                 </div>
                             </div>
@@ -473,62 +475,62 @@ export default function SemanticAnalysis({ applications, onBack }) {
                         </div>
                     </>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-lg shadow-base-200 p-12 text-center">
-                        <div className="flex items-center justify-center bg-gradient-to-r from-base-100 to-accent-100 w-20 h-20 rounded-lg mx-auto mb-4">
-                            <Brain className="w-10 h-10 text-base-400" />
+                    <div className={`rounded-2xl shadow-lg p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                        <div className={`flex items-center justify-center w-20 h-20 rounded-lg mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-r from-base-100 to-accent-100'}`}>
+                            <Brain className={`w-10 h-10 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`} />
                         </div>
-                        <h3 className="text-xl font-semibold text-base-700 mb-2">Select an Application</h3>
-                        <p className="text-base-500">Choose an application from the list above to view semantic analysis results</p>
+                        <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-700'}`}>Select an Application</h3>
+                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Choose an application from the list above to view semantic analysis results</p>
                     </div>
                 )}
 
                 {/* CV Modal */}
                 {showCVModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-8 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className={`rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-base-900">Candidate CV</h2>
+                                    <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Candidate CV</h2>
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
+                                        className={`p-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-base-100'}`}
                                     >
-                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
+                                        <ChevronRight className={`w-5 h-5 rotate-180 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <div className="text-center pb-6 border-b border-base-200">
-                                        <h3 className="text-xl font-bold text-base-900">{mockCV.name}</h3>
-                                        <div className="text-base-600 mt-2">
+                                    <div className={`text-center pb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                        <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{mockCV.name}</h3>
+                                        <div className={`mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <div>{mockCV.email}</div>
                                             <div>{mockCV.phone}</div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-base-700 mb-2">Professional Summary</h4>
-                                        <p className="text-base-600">{mockCV.summary}</p>
+                                        <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Professional Summary</h4>
+                                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.summary}</p>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <h4 className="font-semibold text-base-700 mb-2">Experience</h4>
-                                            <p className="text-base-600">{mockCV.experience}</p>
+                                            <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Experience</h4>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.experience}</p>
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-base-700 mb-2">Education</h4>
-                                            <p className="text-base-600">{mockCV.education}</p>
+                                            <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Education</h4>
+                                            <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{mockCV.education}</p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-base-700 mb-2">Key Projects</h4>
+                                        <h4 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Key Projects</h4>
                                         <ul className="space-y-2">
                                             {mockCV.projects.map((project, index) => (
                                                 <li key={index} className="flex items-start">
                                                     <ChevronRight className="w-4 h-4 text-accent-600 mr-2 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-base-600">{project}</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>{project}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -538,7 +540,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowCVModal(null)}
-                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
+                                        className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
                                     >
                                         Close
                                     </button>
@@ -557,22 +559,22 @@ export default function SemanticAnalysis({ applications, onBack }) {
                 {/* Full Report Modal */}
                 {showReportModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-8 z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className={`rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-base-900">Full Candidate Report</h2>
+                                    <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Full Candidate Report</h2>
                                     <button
                                         onClick={() => setShowReportModal(null)}
-                                        className="p-2 hover:bg-base-100 rounded-lg transition-colors"
+                                        className={`p-2 rounded-lg transition-colors duration-300 ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-base-100'}`}
                                     >
-                                        <ChevronRight className="w-5 h-5 text-base-600 rotate-180" />
+                                        <ChevronRight className={`w-5 h-5 rotate-180 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                     </button>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Candidate Header */}
-                                    <div className="text-center pb-6 border-b border-base-200">
-                                        <h3 className="text-2xl font-bold text-base-900">{showReportModal.name}</h3>
+                                    <div className={`text-center pb-6 border-b transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                        <h3 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{showReportModal.name}</h3>
                                         <div className="flex items-center justify-center mt-3">
                                             <span className={`text-3xl font-bold ${getScoreColor(showReportModal.score)} mr-4`}>
                                                 {showReportModal.score}
@@ -585,13 +587,13 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
                                     {/* Match Breakdown */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Match Analysis</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Match Analysis</h4>
                                             <div className="space-y-3">
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-base-600">Skills Match</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Skills Match</span>
                                                     <div className="flex items-center">
-                                                        <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                        <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                             <div
                                                                 className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                                 style={{ width: `${showReportModal.score - 10}%` }}
@@ -601,9 +603,9 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-base-600">Experience Fit</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Experience Fit</span>
                                                     <div className="flex items-center">
-                                                        <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                        <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                             <div
                                                                 className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                                 style={{ width: `${showReportModal.score - 15}%` }}
@@ -613,9 +615,9 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-base-600">Education Match</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Education Match</span>
                                                     <div className="flex items-center">
-                                                        <div className="w-32 bg-base-200 rounded-full h-2 mr-3">
+                                                        <div className={`w-32 rounded-full h-2 mr-3 transition-colors duration-300 ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
                                                             <div
                                                                 className="bg-gradient-to-r from-base-600 to-accent-600 h-2 rounded-full"
                                                                 style={{ width: `${showReportModal.score >= 85 ? 90 : 75}%` }}
@@ -627,28 +629,28 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                             </div>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-base-50 to-accent-50 rounded-xl p-6">
-                                            <h4 className="font-bold text-base-900 mb-4">Candidate Profile</h4>
+                                        <div className={`rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-br from-base-50 to-accent-50'}`}>
+                                            <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Candidate Profile</h4>
                                             <div className="space-y-2">
                                                 <div className="flex justify-between">
-                                                    <span className="text-base-600">Experience Level</span>
-                                                    <span className="font-semibold text-base-700">
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Experience Level</span>
+                                                    <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                                         {showReportModal.score >= 90 ? 'Senior' : showReportModal.score >= 80 ? 'Mid-Senior' : 'Mid-Level'}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-base-600">Recommendation</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Recommendation</span>
                                                     <span className="font-semibold text-accent-600">
                                                         {showReportModal.score >= 85 ? 'Strong Hire' : showReportModal.score >= 75 ? 'Consider' : 'Review'}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-base-600">Availability</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Availability</span>
                                                     <span className="font-semibold text-accent-600">Immediate</span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-base-600">Location</span>
-                                                    <span className="font-semibold text-base-700">Remote/On-site</span>
+                                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Location</span>
+                                                    <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>Remote/On-site</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -656,23 +658,23 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
                                     {/* Skills Analysis */}
                                     <div>
-                                        <h4 className="font-bold text-base-900 mb-4">Skills Analysis</h4>
+                                        <h4 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Skills Analysis</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <h5 className="font-semibold text-base-700 mb-2">Matched Skills</h5>
+                                                <h5 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Matched Skills</h5>
                                                 <div className="flex flex-wrap gap-2">
                                                     {showReportModal.skills.map((skill, i) => (
-                                                        <span key={i} className="px-3 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-base-700 rounded-lg text-sm font-medium">
+                                                        <span key={i} className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
                                                             {skill}
                                                         </span>
                                                     ))}
                                                 </div>
                                             </div>
                                             <div>
-                                                <h5 className="font-semibold text-base-700 mb-2">Additional Skills Detected</h5>
+                                                <h5 className={`font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Additional Skills Detected</h5>
                                                 <div className="flex flex-wrap gap-2">
                                                     {['Git', 'Agile', 'Testing', 'CI/CD', 'Documentation'].map((skill, i) => (
-                                                        <span key={i} className="px-3 py-1 bg-base-100 text-base-600 rounded-lg text-sm">
+                                                        <span key={i} className={`px-3 py-1 rounded-lg text-sm transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-gray-400' : 'bg-base-100 text-base-600'}`}>
                                                             {skill}
                                                         </span>
                                                     ))}
@@ -682,9 +684,9 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     </div>
 
                                     {/* AI Insights */}
-                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-base-200">
-                                        <h4 className="font-bold text-base-900 mb-3">AI Insights</h4>
-                                        <div className="space-y-2 text-base-700">
+                                    <div className={`rounded-xl p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
+                                        <h4 className={`font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>AI Insights</h4>
+                                        <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                             <p>• Strong alignment with core technical requirements</p>
                                             <p>• Experience level matches position expectations</p>
                                             <p>• Skill set covers {showReportModal.skills.length} out of 7 required skills</p>
@@ -694,23 +696,23 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     </div>
 
                                     {/* Recommendation Summary */}
-                                    <div className="bg-gradient-to-r from-base-50 to-accent-50 rounded-xl p-6 border border-base-200">
+                                    <div className={`rounded-xl p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
                                         <div className="flex items-start">
                                             <CheckCircle className="w-6 h-6 text-accent-600 mr-3 mt-1 flex-shrink-0" />
                                             <div>
-                                                <h4 className="font-bold text-base-900 mb-2">Recommendation Summary</h4>
-                                                <p className="text-base-700 mb-3">
+                                                <h4 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recommendation Summary</h4>
+                                                <p className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
                                                     {showReportModal.name} demonstrates strong qualifications for this position with an overall match score of {showReportModal.score}.
                                                     The candidate possesses {showReportModal.skills.length} key skills that align with your requirements and shows appropriate experience level.
                                                 </p>
                                                 <div className="flex gap-3">
-                                                    <span className="px-3 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded-lg text-sm font-semibold">
+                                                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-accent-400' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700'}`}>
                                                         ✓ Technical Skills Match
                                                     </span>
-                                                    <span className="px-3 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded-lg text-sm font-semibold">
+                                                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-accent-400' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700'}`}>
                                                         ✓ Experience Level Fit
                                                     </span>
-                                                    <span className="px-3 py-1 bg-gradient-to-r from-base-100 to-accent-100 text-accent-700 rounded-lg text-sm font-semibold">
+                                                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'bg-slate-600 text-accent-400' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700'}`}>
                                                         ✓ Education Alignment
                                                     </span>
                                                 </div>
@@ -722,7 +724,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                 <div className="mt-8 flex justify-end space-x-4">
                                     <button
                                         onClick={() => setShowReportModal(null)}
-                                        className="px-6 py-3 border-2 border-base-300 text-base-600 rounded-lg font-semibold hover:bg-base-50 transition-colors"
+                                        className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
                                     >
                                         Close
                                     </button>

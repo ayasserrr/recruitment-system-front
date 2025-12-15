@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { ArrowLeft, BarChart3, TrendingUp, Users, Clock, Target, Award, FileText, Brain, Calendar, Download, Filter, ChevronRight } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { ArrowLeft, BarChart3, TrendingUp, Users, Briefcase, Clock, Target, Award, FileText, Brain, Calendar, Download, Filter, ChevronRight } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
-const Analytics = ({ onBack }) => {
+export default function Analytics({ applications, onBack }) {
+    const { isDarkMode } = useDarkMode();
     const [selectedPeriod, setSelectedPeriod] = useState('30days');
     const [selectedMetric, setSelectedMetric] = useState('overview');
 
@@ -499,23 +501,23 @@ const Analytics = ({ onBack }) => {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+        <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {onBack && (
-                                <button onClick={onBack} className="mr-4 p-2 hover:bg-white rounded-lg transition-colors">
-                                    <ArrowLeft className="w-6 h-6 text-base-600" />
+                                <button onClick={onBack} className={`mr-4 p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-white'}`}>
+                                    <ArrowLeft className={`w-6 h-6 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
                                 </button>
                             )}
                             <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-16 h-16 rounded-lg">
                                 <BarChart3 className="w-8 h-8 text-white" />
                             </div>
                             <div className="ml-6">
-                                <h1 className="text-4xl font-bold text-base-900">Analytics Dashboard</h1>
-                                <p className="text-base-600">Performance insights and recruitment metrics</p>
+                                <h1 className={`text-4xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Analytics Dashboard</h1>
+                                <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Performance insights and recruitment metrics</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
@@ -634,6 +636,4 @@ const Analytics = ({ onBack }) => {
             </div>
         </div>
     );
-};
-
-export default Analytics;
+}
