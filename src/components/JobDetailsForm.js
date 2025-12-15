@@ -49,8 +49,9 @@ export default function JobDetailsForm({ formData, updateFormData }) {
     };
 
     const handleArrayInput = (field, value) => {
-        // Store the raw value for editing, parse on blur or submit
-        updateFormData({ [field]: value });
+        // Store the raw value for editing, but also parse and store as array for validation
+        const parsedArray = parseArrayField(value);
+        updateFormData({ [field]: parsedArray, [field + 'Raw']: value });
     };
 
     const parseArrayField = (value) => {
@@ -66,7 +67,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
 
     const handleResponsibilitiesChange = (value) => {
         const responsibilities = value.split('\n').filter((line) => line.trim());
-        updateFormData({ responsibilities });
+        updateFormData({ responsibilities, responsibilitiesRaw: value });
     };
 
     return (
@@ -218,7 +219,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Required Skills *
                         </label>
                         <textarea
-                            value={typeof formData.requiredSkills === 'string' ? formData.requiredSkills : (Array.isArray(formData.requiredSkills) ? formData.requiredSkills.join(', ') : '')}
+                            value={formData.requiredSkillsRaw || (Array.isArray(formData.requiredSkills) ? formData.requiredSkills.join(', ') : '')}
                             onChange={(e) => handleArrayInput('requiredSkills', e.target.value)}
                             placeholder="e.g., React, TypeScript, JavaScript, Node.js (comma or line separated)"
                             rows="3"
@@ -233,7 +234,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Preferred Skills
                         </label>
                         <textarea
-                            value={typeof formData.preferredSkills === 'string' ? formData.preferredSkills : (Array.isArray(formData.preferredSkills) ? formData.preferredSkills.join(', ') : '')}
+                            value={formData.preferredSkillsRaw || (Array.isArray(formData.preferredSkills) ? formData.preferredSkills.join(', ') : '')}
                             onChange={(e) => handleArrayInput('preferredSkills', e.target.value)}
                             placeholder="e.g., GraphQL, Docker, AWS (comma or line separated)"
                             rows="3"
@@ -337,7 +338,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Key Responsibilities *
                         </label>
                         <textarea
-                            value={formData.responsibilities?.join('\n') || ''}
+                            value={formData.responsibilitiesRaw || (Array.isArray(formData.responsibilities) ? formData.responsibilities.join('\n') : '')}
                             onChange={(e) => handleResponsibilitiesChange(e.target.value)}
                             placeholder={`Enter key responsibilities (one per line)
 - Design and implement features
@@ -424,7 +425,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
                             Languages Required
                         </label>
                         <textarea
-                            value={typeof formData.languages === 'string' ? formData.languages : (Array.isArray(formData.languages) ? formData.languages.join(', ') : '')}
+                            value={formData.languagesRaw || (Array.isArray(formData.languages) ? formData.languages.join(', ') : '')}
                             onChange={(e) => handleArrayInput('languages', e.target.value)}
                             placeholder="e.g., English (Fluent), Arabic (comma or line separated)"
                             rows="3"
