@@ -10,7 +10,7 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
     };
 
     return (
-        <nav className={`transition-colors duration-300 shadow-lg border-b ${isDarkMode ? 'bg-slate-800 shadow-slate-900 border-slate-700' : 'bg-white shadow-base-200 border-base-200'}`}>
+        <nav className={`transition-colors duration-300 border-b ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
             <div className="max-w-7xl mx-auto px-6">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
