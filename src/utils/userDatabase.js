@@ -7,12 +7,12 @@ class UserDatabase {
     }
 
     loadUsers() {
-        const storedUsers = localStorage.getItem('hireflow_users');
+        const storedUsers = localStorage.getItem('hiretech_users');
         return storedUsers ? JSON.parse(storedUsers) : [];
     }
 
     saveUsers() {
-        localStorage.setItem('hireflow_users', JSON.stringify(this.users));
+        localStorage.setItem('hiretech_users', JSON.stringify(this.users));
     }
 
     addUser(userData) {

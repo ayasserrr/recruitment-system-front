@@ -205,7 +205,7 @@ const phaseDetails = {
     }
 };
 
-export default function PhaseExplanationModal({ phase, isOpen, onClose }) {
+export default function PhaseExplanationModal({ phase, isOpen, onClose, onNavigateToPhase }) {
     const { isDarkMode } = useDarkMode();
     const modalRef = useRef(null);
 
@@ -334,12 +334,24 @@ export default function PhaseExplanationModal({ phase, isOpen, onClose }) {
 
                 {/* Footer */}
                 <div className={`sticky bottom-0 p-6 border-t transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/95 border-slate-700' : 'bg-white/95 border-base-200'}`}>
-                    <button
-                        onClick={onClose}
-                        className="w-full px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 text-white rounded-lg hover:from-base-700 hover:to-accent-700 transition-colors font-medium"
-                    >
-                        Got it, thanks!
-                    </button>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => {
+                                if (onNavigateToPhase) {
+                                    onNavigateToPhase(phase);
+                                }
+                            }}
+                            className="flex-1 px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 text-white rounded-lg hover:from-base-700 hover:to-accent-700 transition-colors font-medium"
+                        >
+                            Open Phase
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className={`px-6 py-3 rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 hover:bg-slate-600' : 'bg-base-100 text-base-700 hover:bg-base-200'}`}
+                        >
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

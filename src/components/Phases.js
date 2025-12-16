@@ -59,6 +59,7 @@ export default function Phases({ onNavigateToPhase }) {
                     phase={selectedPhase}
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
+                    onNavigateToPhase={onNavigateToPhase}
                 />
             </div>
         </div>
@@ -125,7 +126,6 @@ function PhaseCard({ item, onNavigateToPhase, onShowPhaseExplanation, isDarkMode
     return (
         <button
             ref={cardRef}
-            onClick={() => onNavigateToPhase(item.id)}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className={`group relative rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left transform hover:-translate-y-1 overflow-hidden border ${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-accent-400' : 'bg-white border-base-100 hover:border-accent-100'}`}

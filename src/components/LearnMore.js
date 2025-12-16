@@ -208,7 +208,7 @@ export default function LearnMore({ onBack }) {
 
                     <div className="text-center">
                         <h1 className={`text-5xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                            HireFlow AI Platform
+                            HireTech AI Platform
                         </h1>
                         <p className={`text-xl max-w-3xl mx-auto transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                             Complete recruitment automation with AI-powered insights and comprehensive phase-by-phase reporting

@@ -5,7 +5,7 @@ import { useTour } from '../contexts/TourContext';
 
 const tourSteps = [
     {
-        title: 'Welcome to HireFlow AI!',
+        title: 'Welcome to HireTech AI!',
         description: "Your intelligent recruitment platform powered by AI. Let's take a quick tour to show you how everything works.",
     },
     {

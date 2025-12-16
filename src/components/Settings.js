@@ -18,8 +18,8 @@ export default function Settings({ currentUser, onBack, onDarkModeToggle, isDark
     });
     const [personalInfo, setPersonalInfo] = useState({
         fullName: currentUser?.name || 'Ahmed ayman',
-        email: currentUser?.email || 'ahmed@hireflow.com',
-        companyName: 'HireFlow AI',
+        email: currentUser?.email || 'ahmed@hiretech.com',
+        companyName: 'HireTech AI',
         phoneNumber: '+201234567890'
     });
 

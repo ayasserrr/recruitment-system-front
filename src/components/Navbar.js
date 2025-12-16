@@ -36,11 +36,11 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
                             <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
                                 <img
                                     src={isDarkMode ? "/light.png" : "/dark.png"}
-                                    alt="HireFlowAI Logo"
+                                    alt="HireTechAI Logo"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
+                            <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireTechAI</span>
                         </button>
                     </div>
 

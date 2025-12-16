@@ -17,7 +17,7 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                     <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg">
                         <Zap className="w-5 h-5 text-white" />
                     </div>
-                    <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
+                    <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireTechAI</span>
                 </div>
                 <div className="flex items-center space-x-4">
                     <button
@@ -69,11 +69,11 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
             <div id="features" className={`py-20 px-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                 <div className="max-w-7xl mx-auto">
                     <h2 className={`text-3xl font-bold text-center mb-12 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                        Why Choose HireFlow AI?
+                        Why Choose HireTech AI?
                     </h2>
                     <div className={`text-center max-w-4xl mx-auto mb-16 ${isDarkMode ? 'text-gray-300' : 'text-base-600'}`}>
                         <p className="text-lg leading-relaxed">
-                            HireFlow AI revolutionizes recruitment with <span className="font-semibold text-accent-600">deep semantic analysis</span> that goes beyond simple keyword matching.
+                            HireTech AI revolutionizes recruitment with <span className="font-semibold text-accent-600">deep semantic analysis</span> that goes beyond simple keyword matching.
                             Our platform generates <span className="font-semibold text-accent-600">comprehensive reports for every phase</span> and produces <span className="font-semibold text-accent-600">detailed final candidate evaluations</span>,
                             ensuring you make data-driven hiring decisions across the complete recruitment lifecycle.
                         </p>
