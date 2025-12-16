@@ -101,8 +101,8 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 )}
                 {/* Logo and Header */}
                 <div className="text-center mb-8">
-                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl mx-auto mb-4">
-                        <Zap className="w-8 h-8 text-white" />
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden mb-6 mx-auto">
+                        <img src="/favicon.png" alt="HireTechAI Logo" className="w-full h-full object-cover" />
                     </div>
                     <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                         {activeTab === 'signin' ? 'Welcome Back' : 'Welcome'}
