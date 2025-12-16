@@ -14,8 +14,8 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
             {/* Navigation */}
             <nav className={`flex items-center justify-between p-6 max-w-7xl mx-auto transition-colors duration-300`}>
                 <div className="flex items-center space-x-2">
-                    <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg">
-                        <Zap className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 rounded-lg overflow-hidden">
+                        <img src="/favicon.png" alt="HireTechAI Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireTechAI</span>
                 </div>
@@ -39,8 +39,8 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
             {/* Hero Section */}
             <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
                 <div className="mb-8">
-                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-base-500 to-accent-500 rounded-2xl mx-auto mb-6">
-                        <Zap className="w-8 h-8 text-white" />
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden mx-auto mb-6">
+                        <img src="/favicon.png" alt="HireTechAI Logo" className="w-full h-full object-cover" />
                     </div>
                     <h1 className={`text-5xl md:text-6xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
                         Intelligent Recruitment
