@@ -123,12 +123,19 @@ function PhaseCard({ item, onNavigateToPhase, onShowPhaseExplanation, isDarkMode
         }
     };
 
+    const handleClick = (e) => {
+        // Always navigate to the phase when clicked
+        onNavigateToPhase(item.id);
+    };
+
     return (
         <button
             ref={cardRef}
+            onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={`group relative rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left transform hover:-translate-y-1 overflow-hidden border ${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-accent-400' : 'bg-white border-base-100 hover:border-accent-100'}`}
+            className={`group relative rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 text-left transform hover:-translate-y-1 overflow-hidden border cursor-pointer ${isDarkMode ? 'bg-slate-700 border-slate-600 hover:border-accent-400' : 'bg-white border-base-100 hover:border-accent-100'}`}
+            title="Click to open phase"
         >
             {/* Ripple container */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
