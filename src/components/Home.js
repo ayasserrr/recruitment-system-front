@@ -43,7 +43,7 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
                         <Zap className="w-8 h-8 text-white" />
                     </div>
                     <h1 className={`text-5xl md:text-6xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                        Intelligent Recruitment Made Simple
+                        Intelligent Recruitment
                     </h1>
                     <p className={`text-xl max-w-3xl mx-auto mb-10 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                         Streamline your hiring process with AI-powered candidate screening, smart ranking, and automated interviews
