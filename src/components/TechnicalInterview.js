@@ -401,7 +401,10 @@ export default function TechnicalInterview({ applications, onBack }) {
                                             <Video className="w-4 h-4 mr-2" />
                                             Schedule Interview
                                         </button>
-                                        <button className={`flex-1 border py-2 rounded-lg font-semibold transition-colors text-sm ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-600 text-base-600 hover:bg-base-50'}`}>
+                                        <button
+                                            onClick={() => alert('View candidates functionality coming soon!')}
+                                            className={`flex-1 border py-2 rounded-lg font-semibold transition-colors text-sm ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-600 text-base-600 hover:bg-base-50'}`}
+                                        >
                                             View Candidates
                                         </button>
                                     </div>

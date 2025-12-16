@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Navbar({ currentUser, onLogout, onNavigateHome, onNavigateToPhase }) {
-    const { isDarkMode } = useDarkMode();
+    const { isDarkMode, toggleDarkMode } = useDarkMode();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -15,30 +15,32 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
-                        <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg">
-                            <Zap className="w-5 h-5 text-white" />
-                        </div>
-                        <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
+                        <button
+                            onClick={onNavigateHome}
+                            className="flex items-center space-x-2 transition-colors hover:opacity-80"
+                        >
+                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg">
+                                <Zap className="w-5 h-5 text-white" />
+                            </div>
+                            <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
+                        </button>
                     </div>
 
                     {/* Navigation Items */}
                     <div className="flex items-center space-x-6">
-                        <button
-                            onClick={onNavigateHome}
-                            className={`flex items-center space-x-2 transition-colors ${isDarkMode ? 'text-gray-400 hover:text-accent-400' : 'text-base-600 hover:text-accent-600'}`}
-                        >
-                            <Home className="w-5 h-5" />
-                            <span className="font-medium">Dashboard</span>
-                        </button>
-
-                        <button className={`flex items-center space-x-2 transition-colors ${isDarkMode ? 'text-gray-400 hover:text-accent-400' : 'text-base-600 hover:text-accent-600'}`}>
-                            <Briefcase className="w-5 h-5" />
-                            <span className="font-medium">Jobs</span>
-                        </button>
                     </div>
 
                     {/* User Menu */}
                     <div className="flex items-center space-x-4">
+                        {/* Dark Mode Toggle */}
+                        <button
+                            onClick={toggleDarkMode}
+                            className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'text-gray-400 hover:text-accent-400 hover:bg-slate-700' : 'text-base-600 hover:text-accent-600 hover:bg-base-100'}`}
+                            title="Toggle dark mode"
+                        >
+                            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                        </button>
+
                         <div className="relative">
                             <button
                                 onClick={toggleDropdown}

@@ -224,16 +224,6 @@ export default function FinalRanking({ applications, onBack }) {
         });
     }, [finalRanking, selectedFilter, sortBy]);
 
-    const mockCV = {
-        name: 'John Doe',
-        email: 'john.doe@email.com',
-        phone: '+1 234 567 8900',
-        summary: 'Experienced software engineer with 5+ years in full-stack development.',
-        experience: '5 years',
-        education: 'Bachelor of Computer Science',
-        projects: ['E-commerce Platform', 'Mobile Banking App', 'AI Chatbot']
-    };
-
     // Generate full report data
     const generateFullReport = (candidate) => {
         const candidateIndex = finalRanking.findIndex(c => c.id === candidate.id);
@@ -900,7 +890,7 @@ export default function FinalRanking({ applications, onBack }) {
                         </div>
 
                         {/* Final Actions */}
-                        <div className="flex justify-end space-x-4">
+                        <div className="flex justify-end space-x-4 mt-8">
                             <button
                                 onClick={() => alert('Ranking saved for later!')}
                                 className={`px-8 py-4 border-2 rounded-xl font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
@@ -917,13 +907,312 @@ export default function FinalRanking({ applications, onBack }) {
                         </div>
                     </div>
                 ) : (
-                    <div className={`rounded-2xl shadow-xl p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
-                        <Award className={`w-16 h-16 mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-slate-300'}`} />
-                        <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Select an Application</h3>
-                        <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-slate-500'}`}>Choose an application from the list above to view final candidate rankings</p>
+                    <div className={`text-center py-16 rounded-2xl shadow-lg transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
+                        <Trophy className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                        <h3 className={`text-2xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>No Application Selected</h3>
+                        <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Please select an application to view the final ranking</p>
                     </div>
                 )}
             </div>
+
+            {/* CV Modal */}
+            {showCVModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+                        <div className="p-8">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        {showCVModal.name}
+                                    </h2>
+                                    <p className={`${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Candidate Profile
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setShowCVModal(null)}
+                                    className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700 text-gray-400' : 'hover:bg-base-100 text-base-600'}`}
+                                >
+                                    <span className="text-2xl">×</span>
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Candidate Information</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall Score</div>
+                                            <div className="text-3xl font-bold text-accent-600">{showCVModal.overallScore}</div>
+                                        </div>
+                                        <div>
+                                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Experience</div>
+                                            <div className="text-lg font-semibold">{showCVModal.experience}</div>
+                                        </div>
+                                        <div>
+                                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Education</div>
+                                            <div className="text-lg font-semibold">{showCVModal.education}</div>
+                                        </div>
+                                        <div>
+                                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Status</div>
+                                            <div className={`px-3 py-1 rounded-full text-sm font-bold ${getStatusColor(showCVModal.status)}`}>
+                                                {showCVModal.status}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Assessment Scores</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <div className="text-center">
+                                            <div className="text-2xl font-bold text-accent-600">{showCVModal.semantic}</div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Semantic Analysis</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl font-bold text-accent-600">{showCVModal.technical}</div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Technical Assessment</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl font-bold text-accent-600">{showCVModal.techInterview}</div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Technical Interview</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl font-bold text-accent-600">{showCVModal.hrInterview}</div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>HR Interview</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Skills</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {showCVModal.skills.map((skill, index) => (
+                                            <span
+                                                key={index}
+                                                className={`px-4 py-2 rounded-lg font-medium transition-all ${isDarkMode ? 'bg-slate-600 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-accent-700'}`}
+                                            >
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Evaluation Notes</h3>
+                                    <p className={`${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>{showCVModal.notes}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end space-x-4 mt-8">
+                                <button
+                                    onClick={() => downloadCV(showCVModal)}
+                                    className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center"
+                                >
+                                    <Download className="w-5 h-5 mr-2" />
+                                    Download CV
+                                </button>
+                                <button
+                                    onClick={() => setShowCVModal(null)}
+                                    className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Full Report Modal */}
+            {showFullReportModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className={`max-w-6xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+                        <div className="p-8">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        {showFullReportModal.name} - Full Report
+                                    </h2>
+                                    <p className={`${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Comprehensive Candidate Analysis Report
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setShowFullReportModal(null)}
+                                    className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700 text-gray-400' : 'hover:bg-base-100 text-base-600'}`}
+                                >
+                                    <span className="text-2xl">×</span>
+                                </button>
+                            </div>
+
+                            <div className="space-y-8">
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Overall Performance</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="text-center">
+                                            <div className="text-3xl font-bold text-accent-600">{showFullReportModal.overallScore}</div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Overall Score</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className={`px-4 py-2 rounded-lg font-bold ${getRecommendationColor(showFullReportModal.recommendation)}`}>
+                                                {showFullReportModal.recommendation}
+                                            </div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Recommendation</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className={`px-4 py-2 rounded-lg font-bold ${getHireProbabilityColor(showFullReportModal.hireProbability)}`}>
+                                                {showFullReportModal.hireProbability}%
+                                            </div>
+                                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Hire Probability</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Stage Breakdown</h3>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <Sparkles className="w-5 h-5 mr-3 text-accent-600" />
+                                                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Semantic Analysis</span>
+                                            </div>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="text-right">
+                                                    <div className="font-bold text-accent-600">{showFullReportModal.semantic}/100</div>
+                                                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Excellent keyword matching and experience alignment</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <Code className="w-5 h-5 mr-3 text-accent-600" />
+                                                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Technical Assessment</span>
+                                            </div>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="text-right">
+                                                    <div className="font-bold text-accent-600">{showFullReportModal.technical}/100</div>
+                                                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Strong problem-solving and coding abilities</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <Users className="w-5 h-5 mr-3 text-accent-600" />
+                                                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Technical Interview</span>
+                                            </div>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="text-right">
+                                                    <div className="font-bold text-accent-600">{showFullReportModal.techInterview}/10</div>
+                                                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Clear communication and technical depth</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <Heart className="w-5 h-5 mr-3 text-accent-600" />
+                                                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HR Interview</span>
+                                            </div>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="text-right">
+                                                    <div className="font-bold text-accent-600">{showFullReportModal.hrInterview}/10</div>
+                                                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Great cultural fit and team alignment</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Skills Assessment</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Technical Skills</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                {showFullReportModal.skills.map((skill, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className={`px-3 py-1 rounded-lg text-sm font-medium ${isDarkMode ? 'bg-accent-500/20 text-accent-400' : 'bg-accent-100 text-accent-700'}`}
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Soft Skills</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                {['Communication', 'Teamwork', 'Problem Solving', 'Leadership', 'Adaptability'].map((skill, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className={`px-3 py-1 rounded-lg text-sm font-medium ${isDarkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700'}`}
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Detailed Feedback</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 text-green-600`}>Strengths</h4>
+                                            <ul className="space-y-2">
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Strong technical foundation across multiple technologies</li>
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Excellent problem-solving and analytical skills</li>
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Great communication and presentation abilities</li>
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Proven track record of delivering high-quality work</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 text-orange-600`}>Areas for Improvement</h4>
+                                            <ul className="space-y-2">
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Could benefit from more leadership experience</li>
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• Advanced architecture knowledge could be strengthened</li>
+                                                <li className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>• More exposure to large-scale systems would be beneficial</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
+                                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recommendations</h3>
+                                    <div className="space-y-3">
+                                        <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-green-500/20 border-green-500/30' : 'bg-green-50 border-green-200'} border`}>
+                                            <p className={`font-medium ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Consider for senior technical role</p>
+                                        </div>
+                                        <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-blue-500/20 border-blue-500/30' : 'bg-blue-50 border-blue-200'} border`}>
+                                            <p className={`font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>Strong candidate for team lead position</p>
+                                        </div>
+                                        <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-purple-500/20 border-purple-500/30' : 'bg-purple-50 border-purple-200'} border`}>
+                                            <p className={`font-medium ${isDarkMode ? 'text-purple-400' : 'text-purple-700'}`}>Excellent fit for company culture and values</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end space-x-4 mt-8">
+                                <button
+                                    onClick={() => downloadPDF(showFullReportModal)}
+                                    className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center"
+                                >
+                                    <Download className="w-5 h-5 mr-2" />
+                                    Download Full Report
+                                </button>
+                                <button
+                                    onClick={() => setShowFullReportModal(null)}
+                                    className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
