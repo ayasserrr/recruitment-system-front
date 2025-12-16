@@ -33,8 +33,12 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
                             onClick={onNavigateHome}
                             className="flex items-center space-x-2 transition-colors hover:opacity-80"
                         >
-                            <div className="flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg">
-                                <Zap className="w-5 h-5 text-white" />
+                            <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                                <img
+                                    src={isDarkMode ? "/light.png" : "/dark.png"}
+                                    alt="HireFlowAI Logo"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <span className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>HireFlowAI</span>
                         </button>

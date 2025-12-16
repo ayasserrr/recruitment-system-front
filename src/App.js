@@ -229,42 +229,50 @@ function RecruitmentSystemContent() {
         return () => window.removeEventListener('popstate', handlePopState);
     }, []);
 
-    const renderHome = () => (
-        <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-12">
-                    <div className="flex items-center justify-center mb-4">
-                        <Briefcase className="w-16 h-16 text-base-600" />
+    const renderHome = () => {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                        <div className="flex items-center justify-center mb-4">
+                            <div className={`w-16 h-16 rounded-lg overflow-hidden ${isDarkMode ? '' : 'bg-gradient-to-r from-base-500 to-accent-500'}`}>
+                                <img
+                                    src="/darklightlogo.png"
+                                    alt="Recruitment Management System Logo"
+                                    className={`w-full h-full object-cover ${isDarkMode ? 'object-left' : 'object-right'}`}
+                                />
+                            </div>
+                        </div>
+                        <h1 className={`text-5xl font-bold mb-4 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recruitment Management System</h1>
+                        <p className={`text-xl transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Streamline your hiring process with AI-powered tools</p>
                     </div>
-                    <h1 className="text-5xl font-bold text-base-900 mb-4">Recruitment Management System</h1>
-                    <p className="text-xl text-base-600">Streamline your hiring process with AI-powered tools</p>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {menuItems.map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => {
-                                setCurrentPage(item.id);
-                                window.history.pushState({ page: item.id }, '', `#${item.id}`);
-                            }}
-                            className="group bg-white rounded-2xl shadow-soft hover:shadow-card-hover transition-all duration-300 p-8 text-left border border-base-200 hover:border-accent-300 transform hover:-translate-y-4"
-                        >
-                            <div className={`${item.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                                <item.icon className="w-8 h-8 text-white" />
-                            </div>
-                            <h3 className="text-xl font-bold text-base-900 mb-2">{item.label}</h3>
-                            <p className="text-sm text-base-600 mb-3">{item.description}</p>
-                            <div className="flex items-center text-accent-600 font-semibold">
-                                <span className="mr-2">Open</span>
-                                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                            </div>
-                        </button>
-                    ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {menuItems.map((item) => (
+                            <button
+                                key={item.id}
+                                onClick={() => {
+                                    setCurrentPage(item.id);
+                                    window.history.pushState({ page: item.id }, '', `#${item.id}`);
+                                }}
+                                className="group bg-white rounded-2xl shadow-soft hover:shadow-card-hover transition-all duration-300 p-8 text-left border border-base-200 hover:border-accent-300 transform hover:-translate-y-4"
+                            >
+                                <div className={`${item.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                                    <item.icon className="w-8 h-8 text-white" />
+                                </div>
+                                <h3 className="text-xl font-bold text-base-900 mb-2">{item.label}</h3>
+                                <p className="text-sm text-base-600 mb-3">{item.description}</p>
+                                <div className="flex items-center text-accent-600 font-semibold">
+                                    <span className="mr-2">Open</span>
+                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                                </div>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     const handleRequisitionSubmitted = (requisition) => {
         const today = new Date();

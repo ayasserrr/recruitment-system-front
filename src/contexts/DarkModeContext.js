@@ -23,6 +23,12 @@ export function DarkModeProvider({ children }) {
         } else {
             document.documentElement.classList.remove('dark');
         }
+
+        // Update favicon based on theme
+        const favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) {
+            favicon.href = isDarkMode ? '/light.png' : '/dark.png';
+        }
     }, [isDarkMode]);
 
     const toggleDarkMode = () => {

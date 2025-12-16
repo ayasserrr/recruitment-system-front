@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <mask id="round-mask">
+      <rect width="32" height="32" rx="8" ry="8" fill="white"/>
+    </mask>
+  </defs>
+  <foreignObject width="32" height="32" mask="url(#round-mask)">
+    <img xmlns="http://www.w3.org/1999/xhtml" width="32" height="32" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" style="object-fit: cover;"/>
+  </foreignObject>
+</svg>
