@@ -269,13 +269,27 @@ export default function Login({ onLoginSuccess, onBackClick }) {
                 {/* Footer */}
                 <div className="mt-6 text-center">
                     <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                        Don't have an account?{' '}
-                        <button
-                            onClick={() => setActiveTab('signup')}
-                            className={`font-medium transition-colors ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-700'}`}
-                        >
-                            Sign up
-                        </button>
+                        {activeTab === 'signin' ? (
+                            <>
+                                Don't have an account?{' '}
+                                <button
+                                    onClick={() => setActiveTab('signup')}
+                                    className={`font-medium transition-colors ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-700'}`}
+                                >
+                                    Sign up
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                Have an account?{' '}
+                                <button
+                                    onClick={() => setActiveTab('signin')}
+                                    className={`font-medium transition-colors ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-700'}`}
+                                >
+                                    Login
+                                </button>
+                            </>
+                        )}
                     </p>
                 </div>
             </div>
