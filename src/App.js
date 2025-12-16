@@ -149,6 +149,7 @@ function RecruitmentSystemContent() {
         localStorage.setItem('currentUser', JSON.stringify(user));
         console.log('Login: Saved to localStorage:', { user, isLoggedIn: 'true' });
         setCurrentPage('phases');
+        window.history.pushState({ page: 'phases' }, '', '#phases');
 
         // Show tour after successful login if enabled
         if (shouldShowTourOnLogin()) {
@@ -158,13 +159,16 @@ function RecruitmentSystemContent() {
 
     const handleGetStarted = () => {
         setCurrentPage('login');
+        window.history.pushState({ page: 'login' }, '', '#login');
     };
 
     const handleLearnMore = (featureType) => {
         if (featureType) {
             setCurrentPage(`feature-${featureType}`);
+            window.history.pushState({ page: `feature-${featureType}` }, '', `#feature-${featureType}`);
         } else {
             setCurrentPage('learn-more');
+            window.history.pushState({ page: 'learn-more' }, '', '#learn-more');
         }
     };
 
@@ -174,21 +178,56 @@ function RecruitmentSystemContent() {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('currentUser');
         setCurrentPage('landing');
+        window.history.pushState({ page: 'landing' }, '', '#landing');
     };
 
     const handleNavigateToPhase = (phaseId) => {
         if (phaseId === 'job-requisition') {
             setCurrentPage('job-requisition');
+            window.history.pushState({ page: 'job-requisition' }, '', '#job-requisition');
         } else if (phaseId === 'settings') {
             setCurrentPage('settings');
+            window.history.pushState({ page: 'settings' }, '', '#settings');
         } else {
             setCurrentPage(phaseId);
+            window.history.pushState({ page: phaseId }, '', `#${phaseId}`);
         }
     };
 
     const handleNavigateHome = () => {
         setCurrentPage('phases');
+        window.history.pushState({ page: 'phases' }, '', '#phases');
     };
+
+    // Handle browser back/forward buttons
+    useEffect(() => {
+        const handlePopState = (event) => {
+            if (event.state && event.state.page) {
+                setCurrentPage(event.state.page);
+            } else {
+                // Handle initial page load or direct URL access
+                const hash = window.location.hash.slice(1);
+                if (hash && menuItems.find(item => item.id === hash)) {
+                    setCurrentPage(hash);
+                } else {
+                    setCurrentPage('phases');
+                }
+            }
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        // Set initial state
+        const hash = window.location.hash.slice(1);
+        if (hash && menuItems.find(item => item.id === hash)) {
+            setCurrentPage(hash);
+            window.history.replaceState({ page: hash }, '', `#${hash}`);
+        } else {
+            window.history.replaceState({ page: 'phases' }, '', '#phases');
+        }
+
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
 
     const renderHome = () => (
         <div className="min-h-screen bg-gradient-to-br from-base-50 via-base-100 to-accent-50 p-8">
@@ -205,7 +244,10 @@ function RecruitmentSystemContent() {
                     {menuItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => setCurrentPage(item.id)}
+                            onClick={() => {
+                                setCurrentPage(item.id);
+                                window.history.pushState({ page: item.id }, '', `#${item.id}`);
+                            }}
                             className="group bg-white rounded-2xl shadow-soft hover:shadow-card-hover transition-all duration-300 p-8 text-left border border-base-200 hover:border-accent-300 transform hover:-translate-y-4"
                         >
                             <div className={`${item.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -264,7 +306,10 @@ function RecruitmentSystemContent() {
             {/* Landing Page */}
             {currentPage === 'landing' && (
                 <Home
-                    onLoginClick={() => setCurrentPage('login')}
+                    onLoginClick={() => {
+                        setCurrentPage('login');
+                        window.history.pushState({ page: 'login' }, '', '#login');
+                    }}
                     onGetStartedClick={handleGetStarted}
                     onLearnMoreClick={handleLearnMore}
                 />
@@ -272,43 +317,70 @@ function RecruitmentSystemContent() {
 
             {/* Learn More Page */}
             {currentPage === 'learn-more' && (
-                <LearnMore onBack={() => setCurrentPage('landing')} />
+                <LearnMore onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {/* Feature Detail Pages */}
             {currentPage === 'feature-semantic-analysis' && (
-                <SemanticAnalysisDetail onBack={() => setCurrentPage('landing')} />
+                <SemanticAnalysisDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-technical-assessment' && (
-                <TechnicalAssessmentDetail onBack={() => setCurrentPage('landing')} />
+                <TechnicalAssessmentDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-interviews' && (
-                <InterviewManagementDetail onBack={() => setCurrentPage('landing')} />
+                <InterviewManagementDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-reporting' && (
-                <PhaseReportingDetail onBack={() => setCurrentPage('landing')} />
+                <PhaseReportingDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-final-reports' && (
-                <FinalCandidateReportsDetail onBack={() => setCurrentPage('landing')} />
+                <FinalCandidateReportsDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-analytics' && (
-                <PipelineAnalyticsDetail onBack={() => setCurrentPage('landing')} />
+                <PipelineAnalyticsDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {currentPage === 'feature-job-posting' && (
-                <SmartJobPostingDetail onBack={() => setCurrentPage('landing')} />
+                <SmartJobPostingDetail onBack={() => {
+                    setCurrentPage('landing');
+                    window.history.pushState({ page: 'landing' }, '', '#landing');
+                }} />
             )}
 
             {/* Login Page */}
             {currentPage === 'login' && (
                 <Login
                     onLoginSuccess={handleLogin}
-                    onBackClick={() => setCurrentPage('landing')}
+                    onBackClick={() => {
+                        setCurrentPage('landing');
+                        window.history.pushState({ page: 'landing' }, '', '#landing');
+                    }}
                 />
             )}
 
@@ -326,7 +398,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'settings' && (
                 <Settings
                     currentUser={currentUser}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                     onDarkModeToggle={toggleDarkMode}
                     isDarkMode={isDarkMode}
                 />
@@ -341,7 +416,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'job-requisition' && (
                 <div>
                     <button
-                        onClick={() => setCurrentPage('phases')}
+                        onClick={() => {
+                            setCurrentPage('phases');
+                            window.history.pushState({ page: 'phases' }, '', '#phases');
+                        }}
                         className="m-6 text-white hover:text-white font-semibold flex items-center"
                     >
                         <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
@@ -349,7 +427,10 @@ function RecruitmentSystemContent() {
                     </button>
                     <MultiStepForm
                         onSubmitRequisition={handleRequisitionSubmitted}
-                        onDone={() => setCurrentPage('phases')}
+                        onDone={() => {
+                            setCurrentPage('phases');
+                            window.history.pushState({ page: 'phases' }, '', '#phases');
+                        }}
                     />
                 </div>
             )}
@@ -362,9 +443,18 @@ function RecruitmentSystemContent() {
                 <JobPost
                     applications={applications}
                     onUpdateApplication={handleUpdateApplication}
-                    onBackToDashboard={() => setCurrentPage('phases')}
-                    onViewCVs={() => setCurrentPage('applications')}
-                    onOpenSemanticAnalysis={() => setCurrentPage('semantic-analysis')}
+                    onBackToDashboard={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
+                    onViewCVs={() => {
+                        setCurrentPage('applications');
+                        window.history.pushState({ page: 'applications' }, '', '#applications');
+                    }}
+                    onOpenSemanticAnalysis={() => {
+                        setCurrentPage('semantic-analysis');
+                        window.history.pushState({ page: 'semantic-analysis' }, '', '#semantic-analysis');
+                    }}
                 />
             )}
 
@@ -372,7 +462,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'semantic-analysis' && (
                 <SemanticAnalysis
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
@@ -380,7 +473,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'technical-assessment' && (
                 <TechnicalAssessment
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
@@ -388,7 +484,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'interview-management' && (
                 <InterviewManagement
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
@@ -396,7 +495,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'technical-interview' && (
                 <TechnicalInterview
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
@@ -404,7 +506,10 @@ function RecruitmentSystemContent() {
             {currentPage === 'hr-interview' && (
                 <HRInterview
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
@@ -412,25 +517,37 @@ function RecruitmentSystemContent() {
             {currentPage === 'final-ranking' && (
                 <FinalRanking
                     applications={applications}
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
             {/* Shortlist Page */}
             {currentPage === 'shortlist' && (
                 <Shortlist
-                    onBack={() => setCurrentPage('phases')}
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
                 />
             )}
 
             {/* Applications Page */}
             {currentPage === 'applications' && (
-                <Applications applications={applications} onBackToDashboard={() => setCurrentPage('phases')} />
+                <Applications applications={applications} onBackToDashboard={() => {
+                    setCurrentPage('phases');
+                    window.history.pushState({ page: 'phases' }, '', '#phases');
+                }} />
             )}
 
             {/* Analytics Page */}
             {currentPage === 'analytics' && (
-                <Analytics onBack={() => setCurrentPage('phases')} />
+                <Analytics onBack={() => {
+                    setCurrentPage('phases');
+                    window.history.pushState({ page: 'phases' }, '', '#phases');
+                }} />
             )}
         </div>
     );

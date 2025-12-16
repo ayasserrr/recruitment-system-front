@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Clock, Users, Target, Brain, FileText, Award, BarChart3, Video, List, Star, Share2, ClipboardCheck, Plus } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -207,6 +207,24 @@ const phaseDetails = {
 
 export default function PhaseExplanationModal({ phase, isOpen, onClose }) {
     const { isDarkMode } = useDarkMode();
+    const modalRef = useRef(null);
+
+    // Close modal when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, onClose]);
 
     if (!isOpen || !phase) return null;
 
@@ -217,7 +235,7 @@ export default function PhaseExplanationModal({ phase, isOpen, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className={`relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'} border`}>
+            <div ref={modalRef} className={`relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'} border`}>
                 {/* Header */}
                 <div className={`sticky top-0 z-10 p-6 border-b transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/95 border-slate-700' : 'bg-white/95 border-base-200'}`}>
                     <div className="flex items-start justify-between">

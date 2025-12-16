@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ArrowLeft, X } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useTour } from '../contexts/TourContext';
@@ -34,6 +34,7 @@ export default function TourModal({ isOpen, onClose, onComplete }) {
     const { isDarkMode } = useDarkMode();
     const { showTourOnLogin, toggleTourPreference } = useTour();
     const [currentStep, setCurrentStep] = useState(0);
+    const modalRef = useRef(null);
 
     useEffect(() => {
         // Reset to first step when modal opens
@@ -51,6 +52,13 @@ export default function TourModal({ isOpen, onClose, onComplete }) {
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
+
+    const handleBackdropClick = (e) => {
+        // Close modal if backdrop is clicked (but not if clicking on modal content)
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
 
     const handleNext = () => {
         if (currentStep < tourSteps.length - 1) {
@@ -86,7 +94,7 @@ export default function TourModal({ isOpen, onClose, onComplete }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-100 p-4 overflow-hidden">
-            <div className="relative max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div ref={modalRef} className="relative max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
                 {/* Close Button */}
                 <button
                     onClick={handleSkip}

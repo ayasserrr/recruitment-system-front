@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Navbar({ currentUser, onLogout, onNavigateHome, onNavigateToPhase }) {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <nav className={`transition-colors duration-300 border-b ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
@@ -41,7 +55,7 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
                             {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                         </button>
 
-                        <div className="relative">
+                        <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={toggleDropdown}
                                 className={`flex items-center space-x-2 transition-colors ${isDarkMode ? 'text-gray-300 hover:text-accent-400' : 'text-base-700 hover:text-accent-600'}`}
