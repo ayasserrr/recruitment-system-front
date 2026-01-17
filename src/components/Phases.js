@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
+import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star, X, Lightbulb, Info } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import PhaseExplanationModal from './PhaseExplanationModal';
 
@@ -7,6 +7,12 @@ export default function Phases({ onNavigateToPhase }) {
     const { isDarkMode } = useDarkMode();
     const [selectedPhase, setSelectedPhase] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showHoverTip, setShowHoverTip] = useState(false);
+
+    useEffect(() => {
+        const dismissed = localStorage.getItem('phasesHoverTipDismissed');
+        setShowHoverTip(dismissed !== 'true');
+    }, []);
 
     const menuItems = [
         { id: 'job-requisition', icon: Plus, label: 'Create Job Requisition', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Capture requisition requirements' },
@@ -31,6 +37,16 @@ export default function Phases({ onNavigateToPhase }) {
         setSelectedPhase(null);
     };
 
+    const dismissHoverTip = () => {
+        localStorage.setItem('phasesHoverTipDismissed', 'true');
+        setShowHoverTip(false);
+    };
+
+    const showTipAgain = () => {
+        localStorage.setItem('phasesHoverTipDismissed', 'false');
+        setShowHoverTip(true);
+    };
+
     return (
         <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
@@ -41,6 +57,52 @@ export default function Phases({ onNavigateToPhase }) {
                     <h1 className={`text-5xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Recruitment Dashboard</h1>
                     <p className={`text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Manage your hiring process with AI-powered tools</p>
                 </div>
+
+                {showHoverTip && (
+                    <div className="fixed inset-x-0 bottom-6 z-50 px-4">
+                        <div
+                            className={`relative mx-auto w-full max-w-xl rounded-3xl border shadow-2xl backdrop-blur-xl transition-colors duration-300 ${isDarkMode ? 'bg-slate-800/70 border-slate-600 shadow-slate-950/60' : 'bg-white/70 border-base-200 shadow-base-900/15'}`}
+                            role="note"
+                        >
+                            <div className="absolute inset-0 rounded-3xl pointer-events-none" />
+
+                            <button
+                                type="button"
+                                onClick={dismissHoverTip}
+                                className={`absolute right-4 top-4 rounded-full p-2 transition-colors ${isDarkMode ? 'bg-slate-700/60 text-gray-200 hover:bg-slate-700 hover:text-white' : 'bg-base-100/80 text-base-600 hover:bg-base-100 hover:text-base-900'}`}
+                                aria-label="Dismiss pro tip"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            <div className="flex items-center gap-5 px-7 py-7">
+                                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${isDarkMode ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20' : 'bg-gradient-to-br from-cyan-100 to-blue-100'}`}>
+                                    <Lightbulb className={`h-7 w-7 ${isDarkMode ? 'text-cyan-300' : 'text-base-700'}`} />
+                                </div>
+
+                                <div className="min-w-0">
+                                    <div className={`text-3xl font-extrabold leading-tight tracking-tight ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Pro-Tip</div>
+                                    <div className={`mt-1 text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                        Hover on any phase for <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-base-900'}`}>2 seconds</span> to open its details.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {!showHoverTip && (
+                    <div className="fixed bottom-6 right-6 z-40">
+                        <button
+                            type="button"
+                            onClick={showTipAgain}
+                            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-lg backdrop-blur-md transition-colors ${isDarkMode ? 'bg-slate-800/70 border-slate-600 text-gray-200 hover:bg-slate-800' : 'bg-white/70 border-base-200 text-base-800 hover:bg-white'}`}
+                        >
+                            <Info className="h-4 w-4" />
+                            Show Pro-Tip
+                        </button>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {menuItems.map((item) => (
@@ -104,10 +166,10 @@ function PhaseCard({ item, onNavigateToPhase, onShowPhaseExplanation, isDarkMode
 
         setRipples(newRipples);
 
-        // Set 3-second timer to show phase explanation
+        // Set 2-second timer to show phase explanation
         const timer = setTimeout(() => {
             onShowPhaseExplanation(item.id);
-        }, 3000); // 3 seconds
+        }, 2000); // 2 seconds
 
         setHoverTimer(timer);
     };
