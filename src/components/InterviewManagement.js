@@ -535,8 +535,8 @@ export default function InterviewManagement({ applications, onBack }) {
                                                     </td>
                                                     <td className="py-4 px-4">
                                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${candidate.status === 'passed'
-                                                                ? isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'
-                                                                : isDarkMode ? 'bg-orange-900 text-orange-300' : 'bg-orange-100 text-orange-700'
+                                                            ? isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'
+                                                            : isDarkMode ? 'bg-orange-900 text-orange-300' : 'bg-orange-100 text-orange-700'
                                                             }`}>
                                                             {candidate.status.replace('-', ' ')}
                                                         </span>

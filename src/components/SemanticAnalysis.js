@@ -737,9 +737,6 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     >
                                         Close
                                     </button>
-                                    <button className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-lg font-semibold transition-colors">
-                                        Schedule Interview
-                                    </button>
                                 </div>
                             </div>
                         </div>
