@@ -178,12 +178,7 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                                     onChange={(e) => toggleCriteria(criteria.id, e.target.checked)}
                                     className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                 />
-                                <div className="ml-3 flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
-                                    {React.createElement(iconComponents[criteria.icon], {
-                                        className: 'w-4 h-4 text-white',
-                                    })}
-                                </div>
-                                <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
+                                <span className={`ml-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
                             </label>
                         ))}
                     </div>

@@ -199,14 +199,14 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {[
-                                { id: 'communication', label: 'Communication Skills', icon: MessageCircle },
-                                { id: 'teamwork', label: 'Teamwork & Collaboration', icon: Users },
-                                { id: 'adaptability', label: 'Adaptability', icon: Zap },
-                                { id: 'problem-solving', label: 'Problem-Solving Approach', icon: Star },
-                                { id: 'leadership', label: 'Leadership Potential', icon: Star },
-                                { id: 'cultural-fit', label: 'Cultural Fit', icon: Building2 },
-                                { id: 'motivation', label: 'Motivation & Drive', icon: Zap },
-                                { id: 'emotional-intelligence', label: 'Emotional Intelligence', icon: Heart },
+                                { id: 'communication', label: 'Communication Skills' },
+                                { id: 'teamwork', label: 'Teamwork & Collaboration' },
+                                { id: 'adaptability', label: 'Adaptability' },
+                                { id: 'problem-solving', label: 'Problem-Solving Approach' },
+                                { id: 'leadership', label: 'Leadership Potential' },
+                                { id: 'cultural-fit', label: 'Cultural Fit' },
+                                { id: 'motivation', label: 'Motivation & Drive' },
+                                { id: 'emotional-intelligence', label: 'Emotional Intelligence' },
                             ].map((criteria) => (
                                 <label key={criteria.id} className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors duration-300 ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}>
                                     <input
@@ -221,12 +221,7 @@ export default function HRInterviewForm({ formData, updateFormData }) {
                                         }}
                                         className="w-4 h-4 text-accent-600 rounded focus:ring-accent-500"
                                     />
-                                    <div className="ml-3 flex items-center justify-center bg-gradient-to-r from-base-500 to-accent-500 w-6 h-6 rounded mr-2">
-                                        {React.createElement(criteria.icon, {
-                                            className: 'w-4 h-4 text-white',
-                                        })}
-                                    </div>
-                                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
+                                    <span className={`ml-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{criteria.label}</span>
                                 </label>
                             ))}
                         </div>

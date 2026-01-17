@@ -35,7 +35,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
         'No Formal Education Required'
     ];
 
-    const currencies = ['USD ($)', 'EUR (€)', 'GBP (£)', 'CAD (C$)', 'AUD (A$)', 'EGP (E£)'];
+    const currencies = ['USD ($)', 'EGP (E£)'];
 
     const handleInputChange = (field, value) => {
         updateFormData({ [field]: value });
