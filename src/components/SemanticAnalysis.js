@@ -10,6 +10,44 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
+    const downloadFullReport = () => {
+        if (!showReportModal) return;
+
+        const reportData = {
+            reportType: 'Semantic Analysis - Full Candidate Report',
+            application: {
+                id: selectedApp?.id ?? null,
+                jobTitle: selectedApp?.jobTitle || null,
+            },
+            candidate: {
+                name: showReportModal.name,
+                score: showReportModal.score,
+                match: showReportModal.match,
+                skills: showReportModal.skills,
+            },
+            generatedAt: new Date().toISOString(),
+        };
+
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const safeName = String(showReportModal.name || 'candidate')
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-zA-Z0-9-_]/g, '');
+        const safeJob = String(selectedApp?.jobTitle || 'job')
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-zA-Z0-9-_]/g, '');
+        const dateStr = new Date().toISOString().split('T')[0];
+        const exportFileDefaultName = `semantic-report-${safeJob}-${safeName}-${dateStr}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    };
+
     // Mock candidate generator per application
     const generateCandidates = (app) => {
         const totalCandidates = app.cvs || 0;
@@ -736,6 +774,13 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                         className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors duration-300 ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
                                     >
                                         Close
+                                    </button>
+                                    <button
+                                        onClick={downloadFullReport}
+                                        className="px-6 py-3 bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white rounded-lg font-semibold transition-colors flex items-center"
+                                    >
+                                        <Download className="w-5 h-5 mr-2" />
+                                        Download Report
                                     </button>
                                 </div>
                             </div>
