@@ -3,7 +3,7 @@ import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Us
 import { useDarkMode } from '../contexts/DarkModeContext';
 import PhaseExplanationModal from './PhaseExplanationModal';
 
-export default function Phases({ onNavigateToPhase }) {
+export default function Phases({ onNavigateToPhase, onNavigateToFeatureFromPhases }) {
     const { isDarkMode } = useDarkMode();
     const [selectedPhase, setSelectedPhase] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -122,6 +122,7 @@ export default function Phases({ onNavigateToPhase }) {
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
                     onNavigateToPhase={onNavigateToPhase}
+                    onNavigateToFeatureFromPhases={onNavigateToFeatureFromPhases}
                 />
             </div>
         </div>

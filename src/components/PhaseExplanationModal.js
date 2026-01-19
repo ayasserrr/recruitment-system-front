@@ -205,7 +205,7 @@ const phaseDetails = {
     }
 };
 
-export default function PhaseExplanationModal({ phase, isOpen, onClose, onNavigateToPhase }) {
+export default function PhaseExplanationModal({ phase, isOpen, onClose, onNavigateToPhase, onNavigateToFeatureFromPhases }) {
     const { isDarkMode } = useDarkMode();
     const modalRef = useRef(null);
 
@@ -345,6 +345,31 @@ export default function PhaseExplanationModal({ phase, isOpen, onClose, onNaviga
                         >
                             Open Phase
                         </button>
+                        {onNavigateToFeatureFromPhases && (
+                            <button
+                                onClick={() => {
+                                    if (onNavigateToFeatureFromPhases) {
+                                        // Map phase IDs to feature types
+                                        const featureMap = {
+                                            'job-post': 'job-posting',
+                                            'semantic-analysis': 'semantic-analysis',
+                                            'technical-assessment': 'technical-assessment',
+                                            'technical-interview': 'interviews',
+                                            'hr-interview': 'interviews',
+                                            'final-ranking': 'final-reports',
+                                            'analytics': 'analytics'
+                                        };
+                                        const featureType = featureMap[phase];
+                                        if (featureType) {
+                                            onNavigateToFeatureFromPhases(featureType);
+                                        }
+                                    }
+                                }}
+                                className={`px-6 py-3 rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 hover:bg-slate-600' : 'bg-base-100 text-base-700 hover:bg-base-200'}`}
+                            >
+                                Learn More
+                            </button>
+                        )}
                         <button
                             onClick={onClose}
                             className={`px-6 py-3 rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 hover:bg-slate-600' : 'bg-base-100 text-base-700 hover:bg-base-200'}`}

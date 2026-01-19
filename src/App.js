@@ -35,6 +35,7 @@ function RecruitmentSystemContent() {
     const [currentPage, setCurrentPage] = useState('landing');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [navigationSource, setNavigationSource] = useState('landing'); // Track where feature pages were accessed from
 
     // Initialize auth state from localStorage on component mount
     useEffect(() => {
@@ -163,6 +164,7 @@ function RecruitmentSystemContent() {
     };
 
     const handleLearnMore = (featureType) => {
+        setNavigationSource('landing'); // Set source as landing page
         if (featureType) {
             setCurrentPage(`feature-${featureType}`);
             window.history.pushState({ page: `feature-${featureType}` }, '', `#feature-${featureType}`);
@@ -194,9 +196,25 @@ function RecruitmentSystemContent() {
         }
     };
 
+    const handleNavigateToFeatureFromPhases = (featureType) => {
+        setNavigationSource('phases'); // Set source as phases page
+        setCurrentPage(`feature-${featureType}`);
+        window.history.pushState({ page: `feature-${featureType}` }, '', `#feature-${featureType}`);
+    };
+
     const handleNavigateHome = () => {
         setCurrentPage('phases');
         window.history.pushState({ page: 'phases' }, '', '#phases');
+    };
+
+    const getBackNavigationTarget = () => {
+        return navigationSource === 'phases' ? 'phases' : 'landing';
+    };
+
+    const handleBackFromFeature = () => {
+        const targetPage = getBackNavigationTarget();
+        setCurrentPage(targetPage);
+        window.history.pushState({ page: targetPage }, '', `#${targetPage}`);
     };
 
     // Handle browser back/forward buttons
@@ -204,11 +222,21 @@ function RecruitmentSystemContent() {
         const handlePopState = (event) => {
             if (event.state && event.state.page) {
                 setCurrentPage(event.state.page);
+                // Preserve navigation source for feature pages
+                if (event.state.page.startsWith('feature-')) {
+                    setNavigationSource('landing'); // Default to landing for direct URL access
+                }
             } else {
                 // Handle initial page load or direct URL access
                 const hash = window.location.hash.slice(1);
-                if (hash && menuItems.find(item => item.id === hash)) {
+                if (hash) {
                     setCurrentPage(hash);
+                    // Set navigation source based on page type
+                    if (hash.startsWith('feature-')) {
+                        setNavigationSource('landing');
+                    } else if (hash === 'phases') {
+                        setNavigationSource('phases');
+                    }
                 } else {
                     setCurrentPage('phases');
                 }
@@ -219,10 +247,17 @@ function RecruitmentSystemContent() {
 
         // Set initial state
         const hash = window.location.hash.slice(1);
-        if (hash && menuItems.find(item => item.id === hash)) {
+        if (hash) {
             setCurrentPage(hash);
+            // Set navigation source based on page type
+            if (hash.startsWith('feature-')) {
+                setNavigationSource('landing');
+            } else if (hash === 'phases') {
+                setNavigationSource('phases');
+            }
             window.history.replaceState({ page: hash }, '', `#${hash}`);
         } else {
+            setCurrentPage('phases');
             window.history.replaceState({ page: 'phases' }, '', '#phases');
         }
 
@@ -333,52 +368,31 @@ function RecruitmentSystemContent() {
 
             {/* Feature Detail Pages */}
             {currentPage === 'feature-semantic-analysis' && (
-                <SemanticAnalysisDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <SemanticAnalysisDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-technical-assessment' && (
-                <TechnicalAssessmentDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <TechnicalAssessmentDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-interviews' && (
-                <InterviewManagementDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <InterviewManagementDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-reporting' && (
-                <PhaseReportingDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <PhaseReportingDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-final-reports' && (
-                <FinalCandidateReportsDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <FinalCandidateReportsDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-analytics' && (
-                <PipelineAnalyticsDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <PipelineAnalyticsDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-job-posting' && (
-                <SmartJobPostingDetail onBack={() => {
-                    setCurrentPage('landing');
-                    window.history.pushState({ page: 'landing' }, '', '#landing');
-                }} />
+                <SmartJobPostingDetail onBack={handleBackFromFeature} />
             )}
 
             {/* Login Page */}
@@ -417,7 +431,10 @@ function RecruitmentSystemContent() {
 
             {/* Phases Dashboard */}
             {currentPage === 'phases' && (
-                <Phases onNavigateToPhase={handleNavigateToPhase} />
+                <Phases
+                    onNavigateToPhase={handleNavigateToPhase}
+                    onNavigateToFeatureFromPhases={handleNavigateToFeatureFromPhases}
+                />
             )}
 
             {/* Job Requisition Page */}
