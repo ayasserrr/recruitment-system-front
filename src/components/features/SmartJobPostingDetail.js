@@ -207,7 +207,7 @@ export default function SmartJobPostingDetail({ onBack }) {
                             How We're Different From Others
                         </h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
                         <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
                             <div className="flex items-start space-x-4">
                                 <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
@@ -220,9 +220,6 @@ export default function SmartJobPostingDetail({ onBack }) {
                                     <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                         Unlike basic spell checkers, we actively identify and suggest alternatives for subtle biases that could discourage qualified candidates from applying.
                                     </p>
-                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700'}`}>
-                                        Inclusive by Design
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -236,14 +233,13 @@ export default function SmartJobPostingDetail({ onBack }) {
                                         Data-Driven Timing
                                     </h3>
                                     <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                        Other platforms use generic scheduling. We analyze platform-specific engagement patterns and industry data to optimize posting times for maximum reach.
+                                        We schedule the post for optimal timing to reach the right candidates.
                                     </p>
-                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>
-                                        Intelligent Optimization
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
                         <div className={`p-6 rounded-xl border transition-colors duration-300 ${isDarkMode ? 'bg-slate-700/30 border-slate-600' : 'bg-base-50/30 border-base-200'}`}>
                             <div className="flex items-start space-x-4">
                                 <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1`}>
@@ -256,9 +252,6 @@ export default function SmartJobPostingDetail({ onBack }) {
                                     <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                         Standard posting tools use one-size-fits-all content. We automatically adapt formatting, length, and style for each platform's unique requirements and audience.
                                     </p>
-                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
-                                        Multi-Platform Intelligence
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -272,18 +265,15 @@ export default function SmartJobPostingDetail({ onBack }) {
                                         Automated Workflow
                                     </h3>
                                     <p className={`text-sm mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                        Unlike manual posting processes, we handle everything from creation to scheduling to renewal, letting you focus on candidate evaluation rather than administrative tasks.
+                                        We handle everything from creation to scheduling to renewal, to remove the load on you.
                                     </p>
-                                    <div className={`text-xs font-medium px-3 py-1 rounded-full inline-block ${isDarkMode ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-700'}`}>
-                                        End-to-End Automation
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     );
 }
