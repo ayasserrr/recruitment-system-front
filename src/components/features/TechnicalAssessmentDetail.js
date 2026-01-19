@@ -8,63 +8,57 @@ export default function TechnicalAssessmentDetail({ onBack }) {
 
     const assessmentOptions = [
         {
-            id: 'i-got-it',
-            title: 'I Got It',
-            icon: CheckCircle,
-            description: 'Use existing pre-built assessments and templates ready for immediate deployment',
+            id: 'ai-generated',
+            title: 'AI Full Generated Assessment',
+            icon: Zap,
+            description: 'AI automatically generates comprehensive technical assessments based on your job description requirements',
             features: [
-                'Ready-to-use assessment library',
-                'Industry-standard templates',
-                'Instant deployment capability',
-                'Proven question banks',
-                'Immediate candidate testing'
+                'JD-based question generation',
+                'Automatic difficulty calibration',
+                'Skill-specific test creation',
+                'Instant assessment deployment'
             ],
             benefits: [
-                'Zero setup time required',
-                'Tested and validated questions',
+                'Zero manual setup required',
+                'Perfectly tailored questions',
                 'Consistent evaluation standards',
-                'Quick implementation',
-                'Reliable results'
+                'Ready in seconds'
             ]
         },
         {
-            id: 'give-me-template',
-            title: 'Give Me Template',
+            id: 'manual-assessment',
+            title: 'Enter Full Assessment',
             icon: FileText,
-            description: 'Customizable assessment templates that can be tailored to your specific requirements',
+            description: 'Manually enter your complete assessment questions and I will handle sending it and correction',
             features: [
-                'Modular template system',
-                'Custom question insertion',
-                'Adjustable difficulty levels',
-                'Role-specific customization',
-                'Flexible scoring criteria'
+                'Complete assessment control',
+                'Custom question formatting',
+                'Flexible scoring criteria',
+                'Manual oversight capability'
             ],
             benefits: [
-                'Semi-customized assessments',
-                'Faster than building from scratch',
-                'Professional structure maintained',
-                'Partial customization options',
-                'Balanced effort and personalization'
+                'Full creative control',
+                'Personalized content',
+                'Custom evaluation logic',
+                'Direct question management'
             ]
         },
         {
-            id: 'i-fully-create',
-            title: 'I Fully Create',
+            id: 'template-update',
+            title: 'Update Template',
             icon: Settings,
-            description: 'Build completely custom assessments from scratch with full control over every aspect',
+            description: 'Update existing templates that I will use to generate assessments based on your modifications',
             features: [
-                'From-ground-up creation',
-                'Complete creative control',
-                'Advanced question types',
-                'Custom evaluation logic',
-                'Personalized branding'
+                'Template modification system',
+                'Reusable assessment patterns',
+                'Version control tracking',
+                'Quick template updates'
             ],
             benefits: [
-                'Fully tailored experience',
-                'Unique assessment design',
-                'Complete brand alignment',
-                'Specialized requirements',
-                'Maximum flexibility'
+                'Consistent assessment standards',
+                'Faster than manual creation',
+                'Template library access',
+                'Easy maintenance'
             ]
         }
     ];
@@ -90,8 +84,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
             icon: Users,
             details: [
                 "Secure test environment",
-                "Real-time progress tracking",
-                "Anti-cheating measures",
                 "Performance monitoring",
                 "Automated proctoring"
             ]
@@ -178,10 +170,10 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                     <div className="space-y-8">
                         <div className="text-center mb-8">
                             <h2 className={`text-3xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                Choose Your Assessment Approach
+                                Assessment Options
                             </h2>
                             <p className={`text-lg max-w-2xl mx-auto transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                Select the assessment creation method that best fits your timeline and customization needs
+                                Choose how you want to create your technical assessments
                             </p>
                         </div>
 
@@ -236,9 +228,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                                             </div>
                                         </div>
 
-                                        <button className={`w-full mt-6 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${isDarkMode ? 'bg-accent-500/20 text-accent-400 hover:bg-accent-500/30' : 'bg-accent-100 text-accent-700 hover:bg-accent-200'}`}>
-                                            Choose This Option
-                                        </button>
                                     </div>
                                 );
                             })}
@@ -293,8 +282,6 @@ export default function TechnicalAssessmentDetail({ onBack }) {
                                     {[
                                         'Automated test generation',
                                         'Multi-language support',
-                                        'Real-time monitoring',
-                                        'Advanced anti-cheating',
                                         'Detailed analytics',
                                         'Custom scoring criteria'
                                     ].map((feature, index) => (
