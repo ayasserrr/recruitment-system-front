@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Brain, Download, Eye, EyeOff, Filter, TrendingUp, Users, CheckCircle, FileText, Star, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -8,6 +8,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
     const [showCVModal, setShowCVModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
+    const candidatesCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
@@ -127,8 +128,17 @@ export default function SemanticAnalysis({ applications, onBack }) {
     };
 
     const { candidates, stats } = useMemo(() => {
-        return selectedApp ? generateCandidates(selectedApp) : { candidates: [], stats: { totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 } };
-    }, [selectedApp]);
+        if (!selectedAppId || !selectedApp) {
+            return { candidates: [], stats: { totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 } };
+        }
+
+        const cached = candidatesCacheRef.current.get(selectedAppId);
+        if (cached) return cached;
+
+        const generated = generateCandidates(selectedApp);
+        candidatesCacheRef.current.set(selectedAppId, generated);
+        return generated;
+    }, [selectedAppId, selectedApp]);
 
     const getScoreColor = (score) => {
         if (score >= 90) return 'text-green-600';

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Video, Download, TrendingUp, Users, Calendar, CheckCircle, Clock, MessageSquare, FileText, ChevronRight, Star } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -8,6 +8,7 @@ export default function TechnicalInterview({ applications, onBack }) {
     const [showFeedbackModal, setShowFeedbackModal] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
+    const candidateResultsCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
@@ -129,13 +130,26 @@ export default function TechnicalInterview({ applications, onBack }) {
     const [candidateResults, setCandidateResults] = useState([]);
 
     // Update candidate results when app changes
-    React.useEffect(() => {
+    useEffect(() => {
+        if (!selectedAppId) {
+            setCandidateResults([]);
+            return;
+        }
+
+        const cached = candidateResultsCacheRef.current.get(selectedAppId);
+        if (cached) {
+            setCandidateResults(cached);
+            return;
+        }
+
         if (selectedApp) {
-            setCandidateResults(generateCandidateResults(selectedApp));
+            const generated = generateCandidateResults(selectedApp);
+            candidateResultsCacheRef.current.set(selectedAppId, generated);
+            setCandidateResults(generated);
         } else {
             setCandidateResults([]);
         }
-    }, [selectedApp]);
+    }, [selectedAppId, selectedApp]);
 
     const interviewStats = useMemo(() => {
         const total = interviewData.length;

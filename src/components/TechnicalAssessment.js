@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ClipboardCheck, Download, TrendingUp, Users, Target, Send, FileText, Eye, ChevronRight, Star, CheckCircle } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -8,6 +8,7 @@ export default function TechnicalAssessment({ applications, onBack }) {
     const [showCVModal, setShowCVModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
+    const candidateRankingCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
@@ -120,13 +121,26 @@ export default function TechnicalAssessment({ applications, onBack }) {
     const [candidateRanking, setCandidateRanking] = useState([]);
 
     // Update candidate ranking when app changes
-    React.useEffect(() => {
+    useEffect(() => {
+        if (!selectedAppId) {
+            setCandidateRanking([]);
+            return;
+        }
+
+        const cached = candidateRankingCacheRef.current.get(selectedAppId);
+        if (cached) {
+            setCandidateRanking(cached);
+            return;
+        }
+
         if (selectedApp) {
-            setCandidateRanking(generateCandidateRanking(selectedApp));
+            const generated = generateCandidateRanking(selectedApp);
+            candidateRankingCacheRef.current.set(selectedAppId, generated);
+            setCandidateRanking(generated);
         } else {
             setCandidateRanking([]);
         }
-    }, [selectedApp]);
+    }, [selectedAppId, selectedApp]);
 
     const assessmentStats = useMemo(() => {
         const total = assessmentData.length;

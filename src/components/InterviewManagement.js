@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Video, Users, Calendar, Clock, CheckCircle, Star, MessageSquare, FileText, Settings, BarChart3, Award, Target, Brain, UserCheck, TrendingUp, Download, Send, Eye, ChevronRight, PlayCircle, PauseCircle } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -11,6 +11,8 @@ export default function InterviewManagement({ applications, onBack }) {
     const [candidateRankings, setCandidateRankings] = useState([]);
     const [showSessionModal, setShowSessionModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
+    const interviewSessionsCacheRef = useRef(new Map());
+    const candidateRankingsCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
@@ -91,32 +93,44 @@ export default function InterviewManagement({ applications, onBack }) {
 
     // Update interview sessions when app or phase changes
     useEffect(() => {
-        if (selectedApp) {
-            const sessions = generateInterviewSessions(selectedApp, currentPhase);
-            setInterviewSessions(sessions);
-
-            // Generate rankings based on correctness + optimization
-            const rankings = sessions
-                .filter(s => s.status === 'evaluated')
-                .map(session => ({
-                    id: session.id,
-                    candidateName: session.candidateName,
-                    overallScore: session.overallScore,
-                    technicalScore: session.technicalScore,
-                    optimizationScore: session.optimizationScore,
-                    rank: 0,
-                    status: session.overallScore >= 80 ? 'passed' : 'needs-improvement',
-                    phase: session.phase
-                }))
-                .sort((a, b) => b.overallScore - a.overallScore)
-                .map((candidate, index) => ({ ...candidate, rank: index + 1 }));
-
-            setCandidateRankings(rankings);
-        } else {
+        if (!selectedAppId || !selectedApp) {
             setInterviewSessions([]);
             setCandidateRankings([]);
+            return;
         }
-    }, [selectedApp, currentPhase]);
+
+        const cacheKey = `${selectedAppId}::${currentPhase}`;
+
+        const cachedSessions = interviewSessionsCacheRef.current.get(cacheKey);
+        const cachedRankings = candidateRankingsCacheRef.current.get(cacheKey);
+        if (cachedSessions && cachedRankings) {
+            setInterviewSessions(cachedSessions);
+            setCandidateRankings(cachedRankings);
+            return;
+        }
+
+        const sessions = generateInterviewSessions(selectedApp, currentPhase);
+        const rankings = sessions
+            .filter(s => s.status === 'evaluated')
+            .map(session => ({
+                id: session.id,
+                candidateName: session.candidateName,
+                overallScore: session.overallScore,
+                technicalScore: session.technicalScore,
+                optimizationScore: session.optimizationScore,
+                rank: 0,
+                status: session.overallScore >= 80 ? 'passed' : 'needs-improvement',
+                phase: session.phase
+            }))
+            .sort((a, b) => b.overallScore - a.overallScore)
+            .map((candidate, index) => ({ ...candidate, rank: index + 1 }));
+
+        interviewSessionsCacheRef.current.set(cacheKey, sessions);
+        candidateRankingsCacheRef.current.set(cacheKey, rankings);
+
+        setInterviewSessions(sessions);
+        setCandidateRankings(rankings);
+    }, [selectedAppId, selectedApp, currentPhase]);
 
     const interviewModes = {
         technical: [

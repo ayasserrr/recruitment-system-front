@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Trophy, Download, TrendingUp, Star, Heart, BarChart, Sparkles, Target, Award, Users, Filter, Briefcase, FileText, CheckCircle, Code, MessageSquare } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function FinalRanking({ applications, onBack }) {
     const { isDarkMode } = useDarkMode();
+
     const [selectedAppId, setSelectedAppId] = useState(null);
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [sortBy, setSortBy] = useState('overallScore');
@@ -11,8 +12,24 @@ export default function FinalRanking({ applications, onBack }) {
     const [showFullReportModal, setShowFullReportModal] = useState(null);
     const [finalRanking, setFinalRanking] = useState([]);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
+    const finalRankingCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
+
+    const getStableTopScoreForApp = (app) => {
+        const finalCandidates = app?.hrInterview || 0;
+        if (finalCandidates <= 0) return 'N/A';
+
+        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+        let hash = 0;
+        for (let i = 0; i < raw.length; i++) {
+            hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+            hash |= 0;
+        }
+
+        const offset = Math.abs(hash) % 11; // 0..10
+        return 85 + offset;
+    };
 
     const getCandidateEmailForShortlist = (candidate) => {
         if (candidate?.email) return candidate.email;
@@ -197,12 +214,25 @@ export default function FinalRanking({ applications, onBack }) {
     };
 
     useEffect(() => {
+        if (!selectedAppId) {
+            setFinalRanking([]);
+            return;
+        }
+
+        const cached = finalRankingCacheRef.current.get(selectedAppId);
+        if (cached) {
+            setFinalRanking(cached);
+            return;
+        }
+
         if (selectedApp) {
-            setFinalRanking(generateFinalRanking(selectedApp));
+            const generated = generateFinalRanking(selectedApp);
+            finalRankingCacheRef.current.set(selectedAppId, generated);
+            setFinalRanking(generated);
         } else {
             setFinalRanking([]);
         }
-    }, [selectedApp]);
+    }, [selectedAppId, selectedApp]);
 
     const hiringStats = useMemo(() => {
         if (finalRanking.length === 0) {
@@ -460,7 +490,7 @@ export default function FinalRanking({ applications, onBack }) {
                                         <h3 className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</h3>
                                         <div className={`text-sm mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                             <div>Final Candidates: {finalCandidates}</div>
-                                            <div>Top Score: {finalCandidates > 0 ? Math.round(85 + Math.random() * 10) : 'N/A'}</div>
+                                            <div>Top Score: {getStableTopScoreForApp(app)}</div>
                                             <div>Status: {finalCandidates > 0 ? 'Ready' : 'Pending'}</div>
                                         </div>
                                     </div>
