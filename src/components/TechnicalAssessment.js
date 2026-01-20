@@ -67,14 +67,42 @@ export default function TechnicalAssessment({ applications, onBack }) {
     // Generate candidate ranking per selected application
     const generateCandidateRanking = (app) => {
         const candidates = [];
-        const names = ['Sarah Johnson', 'Michael Chen', 'Emma Williams', 'James Brown', 'Alex Rodriguez', 'Priya Sharma', 'David Kim', 'Lisa Wang', 'Robert Garcia', 'Maria Silva'];
+        const getNamePoolForApp = () => {
+            const jobTitle = String(app?.jobTitle || '').toLowerCase();
+
+            const softwarePool = [
+                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
+                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
+                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
+                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
+            ];
+
+            const dataSciencePool = [
+                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
+                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
+                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
+                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
+            ];
+
+            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
+            return softwarePool;
+        };
+
+        const names = getNamePoolForApp();
+        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+        let offset = 0;
+        for (let i = 0; i < raw.length; i++) {
+            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
+            offset |= 0;
+        }
+        offset = Math.abs(offset);
         const count = Math.min(app.semantic || 0, 8);
 
         for (let i = 0; i < count; i++) {
             const score = 95 - Math.floor(Math.random() * 25);
             candidates.push({
                 id: i + 1,
-                name: names[i % names.length],
+                name: names[(i + offset) % names.length],
                 score,
                 technical: score >= 90 ? 'Excellent' : score >= 80 ? 'Very Good' : score >= 70 ? 'Good' : 'Average',
                 problemSolving: score >= 85 ? 'Outstanding' : score >= 75 ? 'Very Good' : score >= 65 ? 'Good' : 'Fair',

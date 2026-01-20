@@ -66,7 +66,35 @@ export default function TechnicalInterview({ applications, onBack }) {
     // Generate candidate results per selected application
     const generateCandidateResults = (app) => {
         const candidates = [];
-        const names = ['Sarah Johnson', 'Michael Chen', 'Emma Williams', 'James Brown', 'Alex Rodriguez', 'Priya Sharma', 'David Kim', 'Lisa Wang'];
+        const getNamePoolForApp = () => {
+            const jobTitle = String(app?.jobTitle || '').toLowerCase();
+
+            const softwarePool = [
+                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
+                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
+                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
+                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
+            ];
+
+            const dataSciencePool = [
+                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
+                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
+                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
+                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
+            ];
+
+            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
+            return softwarePool;
+        };
+
+        const names = getNamePoolForApp();
+        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+        let offset = 0;
+        for (let i = 0; i < raw.length; i++) {
+            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
+            offset |= 0;
+        }
+        offset = Math.abs(offset);
         const count = Math.min(app.assessment || 0, 8);
 
         for (let i = 0; i < count; i++) {
@@ -79,7 +107,7 @@ export default function TechnicalInterview({ applications, onBack }) {
 
             candidates.push({
                 id: i + 1,
-                name: names[i % names.length],
+                name: names[(i + offset) % names.length],
                 technicalScore: parseFloat(technicalScore.toFixed(1)),
                 problemSolving: parseFloat(problemSolving.toFixed(1)),
                 systemDesign: parseFloat(systemDesign.toFixed(1)),

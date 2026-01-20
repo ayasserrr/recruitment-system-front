@@ -102,7 +102,48 @@ export default function FinalRanking({ applications, onBack }) {
 
     const generateFinalRanking = (app) => {
         const candidates = [];
-        const names = ['Sarah Johnson', 'Michael Chen', 'Emma Williams', 'James Brown', 'Alex Rodriguez', 'Priya Sharma', 'David Kim', 'Lisa Wang'];
+        const getNamePoolForApp = () => {
+            const jobTitle = String(app?.jobTitle || '').toLowerCase();
+
+            const softwarePool = [
+                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
+                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
+                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
+                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
+            ];
+
+            const dataSciencePool = [
+                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
+                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
+                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
+                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
+            ];
+
+            const aiPool = [
+                'Aya Hassan', 'Jomana Ibrahim', 'Tarneed Saeed', 'Salma Ali',
+                'Eman Mahmoud', 'Ahmed Abdelrahman', 'Yasser Mostafa', 'Khaled Gamal',
+                'Nour Nabil', 'Mariam Farag', 'Omar Kamel', 'Hany Shahin',
+                'Mostafa Hegazy', 'Heba Samir', 'Menna Younes', 'Hossam Fathy'
+            ];
+
+            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
+            if (jobTitle.includes('ai') || jobTitle.includes('ml') || jobTitle.includes('machine')) return aiPool;
+            return softwarePool;
+        };
+
+        const names = getNamePoolForApp();
+
+        const getAppOffset = () => {
+            const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        };
+
+        const offset = getAppOffset();
         const count = Math.min(app.hrInterview || 0, 8);
 
         for (let i = 0; i < count; i++) {
@@ -118,7 +159,7 @@ export default function FinalRanking({ applications, onBack }) {
 
             candidates.push({
                 id: i + 1,
-                name: names[i % names.length],
+                name: names[(i + offset) % names.length],
                 overallScore: Math.round(overallScore),
                 semantic: Math.round(semantic),
                 technical: Math.round(technical),

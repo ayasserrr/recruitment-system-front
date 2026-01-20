@@ -81,8 +81,23 @@ export default function SemanticAnalysis({ applications, onBack }) {
         const mediumMatch = Math.floor(processed * 0.4);
         const lowMatch = processed - highMatch - mediumMatch;
 
-        const firstNames = ['Sarah', 'Michael', 'Emma', 'James', 'Alex', 'Priya', 'David', 'Lisa', 'Robert', 'Maria', 'John', 'Anna', 'William', 'Sophie', 'Thomas'];
-        const lastNames = ['Johnson', 'Chen', 'Williams', 'Brown', 'Rodriguez', 'Sharma', 'Smith', 'Garcia', 'Miller', 'Davis', 'Martinez', 'Anderson', 'Taylor', 'Thomas', 'Moore'];
+        const jobTitle = String(app?.jobTitle || '').toLowerCase();
+        const isData = jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics');
+
+        const firstNames = isData
+            ? ['Aya', 'Jomana', 'Tarneed', 'Salma', 'Eman', 'Ahmed', 'Yasser', 'Khaled', 'Nour', 'Mariam', 'Omar', 'Hany', 'Mostafa', 'Heba', 'Menna', 'Hossam']
+            : ['Aya', 'Jomana', 'Tarneed', 'Salma', 'Eman', 'Ahmed', 'Yasser', 'Khaled', 'Nour', 'Mariam', 'Omar', 'Hany', 'Mostafa', 'Heba', 'Menna', 'Hossam'];
+        const lastNames = isData
+            ? ['Abdelrahman', 'Mostafa', 'Younes', 'Kamel', 'Hassan', 'Saeed', 'Ali', 'Mahmoud', 'Ibrahim', 'Gamal', 'Nabil', 'Farag', 'Hegazy', 'Shahin', 'Fathy', 'Samir']
+            : ['Yasser', 'Ahmed', 'Khaled', 'Omar', 'Hassan', 'Ali', 'Mahmoud', 'Ibrahim', 'Fathy', 'Saeed', 'Gamal', 'Nabil', 'Farag', 'Samir', 'Hegazy', 'Shahin'];
+
+        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+        let offset = 0;
+        for (let i = 0; i < raw.length; i++) {
+            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
+            offset |= 0;
+        }
+        offset = Math.abs(offset);
 
         const skillPools = [
             ['Python', 'ML', 'Data Analysis', 'TensorFlow', 'SQL'],
@@ -99,7 +114,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
         const candidates = [];
         for (let i = 0; i < Math.min(highMatch + mediumMatch, 12); i++) {
-            const name = `${firstNames[i % firstNames.length]} ${lastNames[i % lastNames.length]}`;
+            const name = `${firstNames[(i + offset) % firstNames.length]} ${lastNames[(i + offset) % lastNames.length]}`;
             const isHigh = i < highMatch;
             const score = isHigh ? 92 - Math.floor(Math.random() * 8) : 78 - Math.floor(Math.random() * 8);
             const skills = skillPools[i % skillPools.length];

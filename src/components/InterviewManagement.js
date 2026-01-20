@@ -16,7 +16,35 @@ export default function InterviewManagement({ applications, onBack }) {
 
     // Generate interview sessions for selected application
     const generateInterviewSessions = (app, phase) => {
-        const names = ['Sarah Johnson', 'Michael Chen', 'Emma Williams', 'James Brown', 'Alex Rodriguez', 'Priya Sharma', 'David Kim', 'Lisa Wang'];
+        const getNamePoolForApp = () => {
+            const jobTitle = String(app?.jobTitle || '').toLowerCase();
+
+            const softwarePool = [
+                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
+                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
+                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
+                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
+            ];
+
+            const dataSciencePool = [
+                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
+                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
+                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
+                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
+            ];
+
+            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
+            return softwarePool;
+        };
+
+        const names = getNamePoolForApp();
+        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
+        let offset = 0;
+        for (let i = 0; i < raw.length; i++) {
+            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
+            offset |= 0;
+        }
+        offset = Math.abs(offset);
         const sessions = [];
         const count = Math.min(app.assessment || 0, 6);
 
@@ -26,7 +54,7 @@ export default function InterviewManagement({ applications, onBack }) {
 
             sessions.push({
                 id: `session-${i + 1}`,
-                candidateName: names[i % names.length],
+                candidateName: names[(i + offset) % names.length],
                 phase: phase,
                 mode: phase === 'technical' ? (i % 2 === 0 ? 'ai-fully' : 'technical-with-ai') : (i % 2 === 0 ? 'ai-fully' : 'hr-with-ai'),
                 status: ['scheduled', 'in-progress', 'completed', 'evaluated'][Math.floor(Math.random() * 4)],
