@@ -20,8 +20,7 @@ import LearnMore from './components/LearnMore';
 import SemanticAnalysisDetail from './components/features/SemanticAnalysisDetail';
 import TechnicalAssessmentDetail from './components/features/TechnicalAssessmentDetail';
 import InterviewManagementDetail from './components/features/InterviewManagementDetail';
-import PhaseReportingDetail from './components/features/PhaseReportingDetail';
-import FinalCandidateReportsDetail from './components/features/FinalCandidateReportsDetail';
+import CandidateReportingDetail from './components/features/CandidateReportingDetail';
 import PipelineAnalyticsDetail from './components/features/PipelineAnalyticsDetail';
 import SmartJobPostingDetail from './components/features/SmartJobPostingDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
@@ -380,11 +379,11 @@ function RecruitmentSystemContent() {
             )}
 
             {currentPage === 'feature-reporting' && (
-                <PhaseReportingDetail onBack={handleBackFromFeature} />
+                <CandidateReportingDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-final-reports' && (
-                <FinalCandidateReportsDetail onBack={handleBackFromFeature} />
+                <CandidateReportingDetail onBack={handleBackFromFeature} />
             )}
 
             {currentPage === 'feature-analytics' && (

@@ -113,18 +113,10 @@ export default function Home({ onLoginClick, onGetStartedClick, onLearnMoreClick
 
                         <FeatureCard
                             icon={FileText}
-                            title="Phase-by-Phase Reporting"
-                            description="Detailed analytics and insights for each recruitment phase, tracking candidate progression and pipeline efficiency"
+                            title="Candidate Reporting System"
+                            description="Generate comprehensive reports after each recruitment phase and detailed final candidate evaluations with actionable insights"
                             isDarkMode={isDarkMode}
                             onClick={() => handleFeatureCardClick('reporting')}
-                        />
-
-                        <FeatureCard
-                            icon={Award}
-                            title="Final Candidate Reports"
-                            description="Comprehensive evaluation summaries combining all phase data, assessments, and interviews into unified candidate profiles"
-                            isDarkMode={isDarkMode}
-                            onClick={() => handleFeatureCardClick('final-reports')}
                         />
 
                         <FeatureCard
