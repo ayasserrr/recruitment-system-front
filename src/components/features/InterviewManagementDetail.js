@@ -4,15 +4,15 @@ import { useDarkMode } from '../../contexts/DarkModeContext';
 
 export default function InterviewManagementDetail({ onBack }) {
     const { isDarkMode } = useDarkMode();
-    const [activeTab, setActiveTab] = useState('technical-phase');
+    const [activeTab, setActiveTab] = useState('technical-interview');
 
-    const interviewPhases = [
+    const interviewTypes = [
         {
-            id: 'technical-phase',
-            title: 'Technical Interview Phase',
+            id: 'technical-interview',
+            title: 'Technical Interview',
             icon: Target,
-            description: 'First phase: Evaluate technical skills with AI-enhanced assessment',
-            subtitle: 'Candidates are ranked based on correctness + answer optimization',
+            description: 'Evaluate technical skills and problem-solving abilities',
+            subtitle: 'Choose your preferred technical interview approach',
             modes: [
                 {
                     name: 'AI Fully Conducted',
@@ -33,8 +33,8 @@ export default function InterviewManagementDetail({ onBack }) {
                     ]
                 },
                 {
-                    name: 'Technical Person with AI Feedback',
-                    description: 'Human technical interviewer enhanced with AI-powered insights',
+                    name: 'Technical Person with AI Notes',
+                    description: 'Human technical interviewer enhanced with AI-powered note-taking and insights',
                     features: [
                         'Human-led technical discussion and problem-solving',
                         'AI-powered real-time feedback and suggestions',
@@ -53,11 +53,11 @@ export default function InterviewManagementDetail({ onBack }) {
             ]
         },
         {
-            id: 'hr-phase',
-            title: 'HR Interview Phase',
+            id: 'hr-interview',
+            title: 'HR Interview',
             icon: Users,
-            description: 'Second phase: Top candidates from technical phase advance to HR assessment',
-            subtitle: 'Only candidates with 80+ score (including optimization bonus) qualify',
+            description: 'Assess cultural fit and communication skills',
+            subtitle: 'Choose your preferred HR interview approach',
             modes: [
                 {
                     name: 'AI Fully Conducted',
@@ -78,7 +78,7 @@ export default function InterviewManagementDetail({ onBack }) {
                     ]
                 },
                 {
-                    name: 'HR Person with AI Feedback',
+                    name: 'HR Person with AI Notes',
                     description: 'Human HR interviewer supported by AI insights and behavioral analytics',
                     features: [
                         'Human-led HR discussion and cultural assessment',
@@ -99,62 +99,7 @@ export default function InterviewManagementDetail({ onBack }) {
         }
     ];
 
-    const workflowSteps = [
-        {
-            id: 1,
-            title: "Technical Interview Phase",
-            description: "First phase with AI-enhanced technical evaluation",
-            icon: Target,
-            details: [
-                "Select interview mode (AI or AI+Technical)",
-                "Schedule technical interviews",
-                "Conduct technical assessments",
-                "Score based on correctness + optimization",
-                "Rank candidates by overall performance"
-            ]
-        },
-        {
-            id: 2,
-            title: "Candidate Ranking",
-            description: "Advanced ranking system with optimization bonus",
-            icon: Award,
-            details: [
-                "Technical score calculation",
-                "Answer optimization evaluation",
-                "Overall score compilation",
-                "Top performer identification",
-                "HR phase qualification (80+ score)"
-            ]
-        },
-        {
-            id: 3,
-            title: "HR Interview Phase",
-            description: "Second phase for top technical performers",
-            icon: Users,
-            details: [
-                "Select HR interview mode (AI or AI+HR)",
-                "Schedule HR interviews",
-                "Cultural fit assessment",
-                "Communication evaluation",
-                "Soft skills analysis"
-            ]
-        },
-        {
-            id: 4,
-            title: "Final Evaluation",
-            description: "Comprehensive candidate assessment and selection",
-            icon: TrendingUp,
-            details: [
-                "Combined technical + HR scoring",
-                "Final candidate ranking",
-                "Hiring recommendation generation",
-                "Detailed interview reports",
-                "Decision support analytics"
-            ]
-        }
-    ];
-
-    const currentPhaseData = interviewPhases.find(phase => phase.id === activeTab);
+    const currentInterviewType = interviewTypes.find(type => type.id === activeTab);
 
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
@@ -186,11 +131,11 @@ export default function InterviewManagementDetail({ onBack }) {
 
                 {/* Navigation Tabs */}
                 <div className="flex space-x-1 mb-8 border-b">
-                    {interviewPhases.map((phase) => (
+                    {interviewTypes.map((type) => (
                         <button
-                            key={phase.id}
-                            onClick={() => setActiveTab(phase.id)}
-                            className={`px-6 py-3 font-medium transition-colors duration-200 border-b-2 ${activeTab === phase.id
+                            key={type.id}
+                            onClick={() => setActiveTab(type.id)}
+                            className={`px-6 py-3 font-medium transition-colors duration-200 border-b-2 ${activeTab === type.id
                                 ? isDarkMode
                                     ? 'text-indigo-400 border-indigo-400'
                                     : 'text-indigo-600 border-indigo-600'
@@ -199,152 +144,75 @@ export default function InterviewManagementDetail({ onBack }) {
                                     : 'text-base-600 border-transparent hover:text-base-800'
                                 }`}
                         >
-                            {phase.title}
+                            {type.title}
                         </button>
                     ))}
                 </div>
 
                 {/* Content based on active tab */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                    {/* Main Content */}
-                    <div className="lg:col-span-2">
-                        <div className={`border rounded-xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                            <h2 className={`text-2xl font-bold mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                {currentPhaseData.title}
-                            </h2>
-                            <p className={`text-lg mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                {currentPhaseData.description}
-                            </p>
-                            <p className={`text-sm mb-8 font-semibold transition-colors duration-300 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
-                                {currentPhaseData.subtitle}
-                            </p>
+                <div className="max-w-6xl mx-auto">
+                    <div className={`border rounded-xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
+                        <h2 className={`text-2xl font-bold mb-6 text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                            {currentInterviewType.title}
+                        </h2>
+                        <p className={`text-lg mb-4 text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                            {currentInterviewType.description}
+                        </p>
+                        <p className={`text-sm mb-8 font-semibold text-center transition-colors duration-300 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                            {currentInterviewType.subtitle}
+                        </p>
 
-                            <div className="space-y-6">
-                                {currentPhaseData.modes.map((mode, index) => (
-                                    <div key={index} className={`border rounded-lg p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-base-50 border-base-200'}`}>
-                                        <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                            {mode.name}
-                                        </h3>
-                                        <p className={`text-sm mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                            {mode.description}
-                                        </p>
+                        <div className="space-y-6">
+                            {currentInterviewType.modes.map((mode, index) => (
+                                <div key={index} className={`border rounded-lg p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-base-50 border-base-200'}`}>
+                                    <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        {mode.name}
+                                    </h3>
+                                    <p className={`text-sm mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        {mode.description}
+                                    </p>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <h4 className={`font-semibold mb-3 text-sm transition-colors duration-300 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
-                                                    Key Features
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    {mode.features.map((feature, featureIndex) => (
-                                                        <li key={featureIndex} className="flex items-start space-x-2">
-                                                            <CheckCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
-                                                            <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                                                {feature}
-                                                            </span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 text-sm transition-colors duration-300 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                                                Key Features
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {mode.features.map((feature, featureIndex) => (
+                                                    <li key={featureIndex} className="flex items-start space-x-2">
+                                                        <CheckCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
+                                                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                            {feature}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
 
-                                            <div>
-                                                <h4 className={`font-semibold mb-3 text-sm transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
-                                                    Benefits
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    {mode.benefits.map((benefit, benefitIndex) => (
-                                                        <li key={benefitIndex} className="flex items-start space-x-2">
-                                                            <Award className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                                                            <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                                                {benefit}
-                                                            </span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
+                                        <div>
+                                            <h4 className={`font-semibold mb-3 text-sm transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+                                                Benefits
+                                            </h4>
+                                            <ul className="space-y-2">
+                                                {mode.benefits.map((benefit, benefitIndex) => (
+                                                    <li key={benefitIndex} className="flex items-start space-x-2">
+                                                        <Award className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                                                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                            {benefit}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        {/* Two-Phase Process Overview */}
-                        <div className={`border rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                            <h3 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                Two-Phase Process
-                            </h3>
-                            <div className="space-y-4">
-                                <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
-                                    <h4 className={`font-semibold text-sm mb-2 transition-colors duration-300 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
-                                        Phase 1: Technical
-                                    </h4>
-                                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                        Evaluate technical skills with AI-enhanced assessment
-                                    </p>
                                 </div>
-                                <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-base-50'}`}>
-                                    <h4 className={`font-semibold text-sm mb-2 transition-colors duration-300 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
-                                        Phase 2: HR
-                                    </h4>
-                                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                        Top performers advance to cultural fit assessment
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Ranking System */}
-                        <div className={`border rounded-xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                            <h3 className={`font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                Advanced Ranking
-                            </h3>
-                            <ul className="space-y-3">
-                                {[
-                                    'Technical correctness scoring',
-                                    'Answer optimization bonus',
-                                    'Performance-based ranking',
-                                    '80+ score for HR qualification',
-                                    'Data-driven selection'
-                                ].map((feature, index) => (
-                                    <li key={index} className="flex items-center space-x-2">
-                                        <Star className={`w-4 h-4 flex-shrink-0 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
-                                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
-                                            {feature}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
+                            ))}
                         </div>
                     </div>
                 </div>
 
                 {/* Workflow Steps */}
-                <div className={`border rounded-xl p-8 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-base-200'}`}>
-                    <h2 className={`text-2xl font-bold mb-8 text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                        Two-Phase Interview Workflow
-                    </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        {workflowSteps.map((step, index) => {
-                            const Icon = step.icon;
-                            return (
-                                <div key={step.id} className="text-center">
-                                    <div className={`bg-gradient-to-r from-base-500 to-accent-500 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4`}>
-                                        <Icon className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h3 className={`font-bold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                        {step.title}
-                                    </h3>
-                                    <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
-                                        {step.description}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
             </div>
         </div>
     );
