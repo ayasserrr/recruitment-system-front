@@ -10,34 +10,63 @@ export default function FinalRanking({ applications, onBack }) {
     const [showCVModal, setShowCVModal] = useState(null);
     const [showFullReportModal, setShowFullReportModal] = useState(null);
     const [finalRanking, setFinalRanking] = useState([]);
+    const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
-    // Custom GraduationCap icon component
-    const GraduationCap = ({ className }) => (
-        <svg
-            className={className}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 14l9-5-9-5-9 5 9 5z"
-            />
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-            />
-        </svg>
-    );
+    const getCandidateEmailForShortlist = (candidate) => {
+        if (candidate?.email) return candidate.email;
+        if (!candidate?.name) return '';
+        return `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`;
+    };
 
-    // Helper functions
+    const getCandidateShortlistKey = (cv) => {
+        const name = cv?.name || '';
+        const email = cv?.email || '';
+        return `${name}::${email}`;
+    };
+
+    const loadShortlistedKeys = () => {
+        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+        setShortlistedKeys(new Set(existingShortlist.map(getCandidateShortlistKey)));
+    };
+
+    useEffect(() => {
+        loadShortlistedKeys();
+
+        const handleStorageChange = () => {
+            loadShortlistedKeys();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
+    const toggleCandidateShortlist = (candidate) => {
+        const email = getCandidateEmailForShortlist(candidate);
+        const shortlistData = {
+            ...candidate,
+            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
+            email,
+            shortlistedFrom: 'Final Ranking',
+            shortlistedDate: new Date().toISOString().slice(0, 10)
+        };
+
+        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+        const candidateKey = getCandidateShortlistKey({ name: candidate?.name, email });
+        const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
+
+        if (updatedShortlist.length === existingShortlist.length) {
+            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+        } else {
+            localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
+        }
+
+        loadShortlistedKeys();
+    };
+
     const getScoreColor = (score) => {
         if (score >= 90) return 'text-green-600';
         if (score >= 85) return 'text-blue-600';
@@ -70,7 +99,6 @@ export default function FinalRanking({ applications, onBack }) {
         return 'bg-gradient-to-r from-yellow-500 to-yellow-600';
     };
 
-    // Generate final ranking data per application
     const generateFinalRanking = (app) => {
         const candidates = [];
         const names = ['Sarah Johnson', 'Michael Chen', 'Emma Williams', 'James Brown', 'Alex Rodriguez', 'Priya Sharma', 'David Kim', 'Lisa Wang'];
@@ -126,7 +154,6 @@ export default function FinalRanking({ applications, onBack }) {
         return candidates.sort((a, b) => b.overallScore - a.overallScore);
     };
 
-    // Update final ranking when app changes
     useEffect(() => {
         if (selectedApp) {
             setFinalRanking(generateFinalRanking(selectedApp));
@@ -224,7 +251,6 @@ export default function FinalRanking({ applications, onBack }) {
         });
     }, [finalRanking, selectedFilter, sortBy]);
 
-    // Generate full report data
     const generateFullReport = (candidate) => {
         const candidateIndex = finalRanking.findIndex(c => c.id === candidate.id);
         return {
@@ -246,96 +272,15 @@ export default function FinalRanking({ applications, onBack }) {
                 hireProbability: candidate.hireProbability
             },
             stageBreakdown: {
-                semantic: {
-                    score: candidate.semantic,
-                    strengths: ['Strong technical vocabulary', 'Clear communication', 'Relevant experience keywords'],
-                    areas: ['Could improve industry-specific terminology'],
-                    details: 'Candidate demonstrates excellent semantic matching with job requirements, showing strong alignment in technical skills and experience.'
-                },
-                technical: {
-                    score: candidate.technical,
-                    strengths: ['Problem solving', 'Code quality', 'Algorithm knowledge'],
-                    areas: ['Advanced data structures'],
-                    details: 'Solid technical foundation with good problem-solving abilities. Shows promise in complex coding challenges.'
-                },
-                techInterview: {
-                    score: candidate.techInterview,
-                    strengths: ['System design', 'Communication', 'Technical depth'],
-                    areas: ['Architecture patterns'],
-                    details: 'Excellent technical interview performance. Demonstrates strong understanding of system design principles and communicates technical concepts clearly.'
-                },
-                hrInterview: {
-                    score: candidate.hrInterview,
-                    strengths: ['Cultural fit', 'Team collaboration', 'Leadership potential'],
-                    areas: ['Conflict resolution'],
-                    details: 'Strong cultural alignment with company values. Shows excellent teamwork skills and leadership potential.'
-                }
+                semantic: { score: candidate.semantic },
+                technical: { score: candidate.technical },
+                techInterview: { score: candidate.techInterview },
+                hrInterview: { score: candidate.hrInterview }
             },
-            skillsAssessment: {
-                technical: candidate.skills.filter(skill => ['React', 'Node.js', 'Python', 'JavaScript', 'TypeScript', 'AWS', 'Docker', 'MongoDB'].includes(skill)),
-                soft: ['Communication', 'Teamwork', 'Problem Solving', 'Leadership', 'Adaptability'],
-                domain: candidate.skills.filter(skill => ['FinTech', 'Healthcare', 'E-commerce', 'SaaS'].includes(skill))
-            },
-            detailedFeedback: {
-                strengths: [
-                    'Strong technical foundation across multiple technologies',
-                    'Excellent problem-solving and analytical skills',
-                    'Great communication and presentation abilities',
-                    'Proven track record of delivering high-quality work'
-                ],
-                improvements: [
-                    'Could benefit from more leadership experience',
-                    'Advanced architecture knowledge could be strengthened',
-                    'More exposure to large-scale systems would be beneficial'
-                ],
-                recommendations: [
-                    'Consider for senior technical role',
-                    'Strong candidate for team lead position',
-                    'Excellent fit for company culture and values'
-                ]
-            },
-            interviewDetails: {
-                technicalInterview: {
-                    date: '2025-12-10',
-                    duration: '60 minutes',
-                    interviewers: ['John Smith (Tech Lead)', 'Sarah Johnson (Senior Engineer)'],
-                    questions: [
-                        'Design a scalable microservices architecture',
-                        'Solve a complex algorithm problem',
-                        'Discuss your approach to system optimization'
-                    ],
-                    feedback: 'Excellent technical depth and problem-solving approach. Clear communication of complex concepts.'
-                },
-                hrInterview: {
-                    date: '2025-12-11',
-                    duration: '45 minutes',
-                    interviewers: ['Emily Davis (HR Manager)', 'Michael Brown (Team Lead)'],
-                    questions: [
-                        'Describe your ideal work environment',
-                        'How do you handle team conflicts?',
-                        'Where do you see yourself in 5 years?'
-                    ],
-                    feedback: 'Strong cultural fit. Demonstrates excellent teamwork and leadership potential.'
-                }
-            },
-            comparison: {
-                vsAverage: {
-                    semantic: candidate.semantic - (stageScores.semantic.avg || 0),
-                    technical: candidate.technical - (stageScores.technical.avg || 0),
-                    techInterview: candidate.techInterview - (stageScores.techInterview.avg || 0),
-                    hrInterview: candidate.hrInterview - (stageScores.hrInterview.avg || 0)
-                },
-                vsTop: {
-                    semantic: candidate.semantic - (stageScores.semantic.max || 0),
-                    technical: candidate.technical - (stageScores.technical.max || 0),
-                    techInterview: candidate.techInterview - (stageScores.techInterview.max || 0),
-                    hrInterview: candidate.hrInterview - (stageScores.hrInterview.max || 0)
-                }
-            }
+            generatedDate: new Date().toISOString()
         };
     };
 
-    // Download report functionality
     const downloadReport = () => {
         const reportData = {
             candidates: filteredCandidates.map((c, index) => ({
@@ -361,16 +306,13 @@ export default function FinalRanking({ applications, onBack }) {
 
         const dataStr = JSON.stringify(reportData, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
         const exportFileDefaultName = `final-ranking-report-${new Date().toISOString().split('T')[0]}.json`;
-
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
         linkElement.click();
     };
 
-    // Download CV functionality
     const downloadCV = (candidate) => {
         const report = generateFullReport(candidate);
         const cvData = {
@@ -382,16 +324,13 @@ export default function FinalRanking({ applications, onBack }) {
 
         const dataStr = JSON.stringify(cvData, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
         const exportFileDefaultName = `cv-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
-
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
         linkElement.click();
     };
 
-    // Download PDF functionality
     const downloadPDF = (candidate) => {
         const report = generateFullReport(candidate);
         const pdfData = {
@@ -402,21 +341,17 @@ export default function FinalRanking({ applications, onBack }) {
 
         const dataStr = JSON.stringify(pdfData, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
         const exportFileDefaultName = `candidate-report-${candidate.name.replace(' ', '-')}-${new Date().toISOString().split('T')[0]}.json`;
-
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
         linkElement.click();
     };
 
-    // Extend offer functionality
     const extendOffer = (candidate) => {
         alert(`Offer extended to ${candidate.name}! They will be contacted via email.`);
     };
 
-    // Schedule follow-up functionality
     const scheduleFollowUp = (candidate) => {
         const date = prompt(`Schedule follow-up for ${candidate.name}. Enter date (YYYY-MM-DD):`, new Date().toISOString().split('T')[0]);
         if (date) {
@@ -424,7 +359,6 @@ export default function FinalRanking({ applications, onBack }) {
         }
     };
 
-    // Make final selection functionality
     const makeFinalSelection = () => {
         const topCandidates = filteredCandidates.slice(0, 3).map(c => ({
             name: c.name,
@@ -436,9 +370,7 @@ export default function FinalRanking({ applications, onBack }) {
 
         const dataStr = JSON.stringify(topCandidates, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
         const exportFileDefaultName = `final-selection-${new Date().toISOString().split('T')[0]}.json`;
-
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
@@ -448,7 +380,6 @@ export default function FinalRanking({ applications, onBack }) {
     return (
         <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
-                {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -548,10 +479,7 @@ export default function FinalRanking({ applications, onBack }) {
 
                         {/* Stage Performance */}
                         <div className={`rounded-2xl shadow-lg p-6 mb-8 transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
-                            <h2 className={`text-2xl font-bold mb-6 flex items-center transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                                <BarChart className="w-6 h-6 mr-3 text-accent-600" />
-                                Stage Performance Analysis
-                            </h2>
+                            <h2 className={`text-2xl font-bold mb-6 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Stage Performance Analysis</h2>
 
                             <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
                                 Range: {stageScores.semantic.min} - {stageScores.semantic.max}
@@ -764,26 +692,14 @@ export default function FinalRanking({ applications, onBack }) {
                                     <div className={`flex flex-wrap justify-between items-center pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
                                         <div className="flex items-center space-x-4">
                                             <button
-                                                onClick={() => {
-                                                    const shortlistData = {
-                                                        ...candidate,
-                                                        jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-                                                        shortlistedFrom: 'Final Ranking',
-                                                        shortlistedDate: new Date().toISOString().slice(0, 10)
-                                                    };
-                                                    const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-                                                    const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === candidate.email);
-                                                    if (!existingCV) {
-                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
-                                                        alert(`${candidate.name} has been added to your shortlist!`);
-                                                    } else {
-                                                        alert(`${candidate.name} is already in your shortlist.`);
-                                                    }
-                                                }}
+                                                onClick={() => toggleCandidateShortlist(candidate)}
                                                 className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-accent-400 hover:text-accent-300' : 'text-accent-600 hover:text-accent-800'}`}
                                             >
-                                                <Star className="w-5 h-5 mr-2" />
-                                                Add to Shortlist
+                                                <Star
+                                                    className="w-5 h-5 mr-2"
+                                                    fill={shortlistedKeys.has(getCandidateShortlistKey({ name: candidate?.name, email: getCandidateEmailForShortlist(candidate) })) ? 'currentColor' : 'none'}
+                                                />
+                                                {shortlistedKeys.has(getCandidateShortlistKey({ name: candidate?.name, email: getCandidateEmailForShortlist(candidate) })) ? 'Remove from Shortlist' : 'Add to Shortlist'}
                                             </button>
                                             <button
                                                 onClick={() => setShowCVModal(candidate)}

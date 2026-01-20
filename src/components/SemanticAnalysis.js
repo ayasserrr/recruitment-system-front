@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { ArrowLeft, Brain, Download, Eye, EyeOff, Filter, TrendingUp, Users, CheckCircle, FileText, Star, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -7,8 +7,33 @@ export default function SemanticAnalysis({ applications, onBack }) {
     const [selectedAppId, setSelectedAppId] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
+    const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
+
+    const getCandidateShortlistKey = (cv) => {
+        const name = cv?.name || '';
+        const email = cv?.email || '';
+        return `${name}::${email}`;
+    };
+
+    const loadShortlistedKeys = () => {
+        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+        setShortlistedKeys(new Set(existingShortlist.map(getCandidateShortlistKey)));
+    };
+
+    useEffect(() => {
+        loadShortlistedKeys();
+
+        const handleStorageChange = () => {
+            loadShortlistedKeys();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     const downloadFullReport = () => {
         if (!showReportModal) return;
@@ -402,11 +427,21 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        // Add to shortlist functionality
+                                                        const shortlistEmail = `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`;
+                                                        const candidateKey = getCandidateShortlistKey({ name: candidate.name, email: shortlistEmail });
+                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
+                                                        const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
+
+                                                        if (updatedShortlist.length !== existingShortlist.length) {
+                                                            localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
+                                                            loadShortlistedKeys();
+                                                            return;
+                                                        }
+
                                                         const shortlistData = {
                                                             ...candidate,
                                                             jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-                                                            email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`,
+                                                            email: shortlistEmail,
                                                             phone: '+1 (555) 123-4567',
                                                             experience: '5+ years',
                                                             education: "Bachelor's in Computer Science",
@@ -419,20 +454,16 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                             shortlistedFrom: 'Semantic Analysis',
                                                             shortlistedDate: new Date().toISOString().slice(0, 10)
                                                         };
-                                                        // Store in localStorage for persistence across pages
-                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-                                                        const existingCV = existingShortlist.find(cv => cv.name === candidate.name && cv.email === shortlistData.email);
-                                                        if (!existingCV) {
-                                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
-                                                            alert(`${candidate.name} has been added to your shortlist!`);
-                                                        } else {
-                                                            alert(`${candidate.name} is already in your shortlist.`);
-                                                        }
+                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                        loadShortlistedKeys();
                                                     }}
                                                     className="bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white px-5 py-3 rounded-lg font-semibold flex items-center transition-colors"
                                                 >
-                                                    <Star className="w-5 h-5 mr-2" />
-                                                    Add to Shortlist
+                                                    <Star
+                                                        className="w-5 h-5 mr-2"
+                                                        fill={shortlistedKeys.has(getCandidateShortlistKey({ name: candidate.name, email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com` })) ? 'currentColor' : 'none'}
+                                                    />
+                                                    {shortlistedKeys.has(getCandidateShortlistKey({ name: candidate.name, email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com` })) ? 'Remove from Shortlist' : 'Add to Shortlist'}
                                                 </button>
                                             </div>
                                         </div>
