@@ -59,7 +59,8 @@ export default function FinalRanking({ applications, onBack }) {
         const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
 
         if (updatedShortlist.length === existingShortlist.length) {
-            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+            const shortlistNote = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
+            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
         } else {
             localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
         }

@@ -248,6 +248,11 @@ export default function Shortlist({ applications, onBack }) {
                                             <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>
                                                 Shortlisted on: {cv.shortlistedDate}
                                             </p>
+                                            {cv.shortlistNote && (
+                                                <p className={`text-xs mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                                    <span className="font-semibold">Note:</span> {cv.shortlistNote}
+                                                </p>
+                                            )}
                                         </div>
 
                                         <div className={`flex justify-between items-center pt-4 border-t transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>

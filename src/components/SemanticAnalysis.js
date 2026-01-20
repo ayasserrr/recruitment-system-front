@@ -454,7 +454,8 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                             shortlistedFrom: 'Semantic Analysis',
                                                             shortlistedDate: new Date().toISOString().slice(0, 10)
                                                         };
-                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                                        const shortlistNote = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
+                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
                                                         loadShortlistedKeys();
                                                     }}
                                                     className="bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white px-5 py-3 rounded-lg font-semibold flex items-center transition-colors"

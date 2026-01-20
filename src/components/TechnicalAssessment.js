@@ -696,7 +696,8 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                                 return;
                                             }
 
-                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, shortlistData]));
+                                            const shortlistNote = prompt(`Add a note for ${showCVModal?.name || 'this candidate'} (optional):`, '') || '';
+                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
                                             loadShortlistedKeys();
                                         }}
                                         className="px-6 py-3 bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white rounded-lg font-semibold transition-colors"
