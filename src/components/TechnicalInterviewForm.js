@@ -214,20 +214,6 @@ export default function TechnicalInterviewForm({ formData, updateFormData }) {
                     </div>
 
                     <div>
-                        <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Number of Interviewers</label>
-                        <select
-                            value={formData.numberOfInterviewers || '1'}
-                            onChange={(e) => updateFormData({ numberOfInterviewers: e.target.value })}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition ${isDarkMode ? 'bg-slate-800 border-slate-600 text-white' : 'border-gray-300'}`}
-                        >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="panel">Panel</option>
-                        </select>
-                    </div>
-
-                    <div>
                         <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Scoring System</label>
                         <select
                             value={formData.scoringSystem || '1-5'}

@@ -298,23 +298,6 @@ export default function PhaseExplanationModal({ phase, isOpen, onClose, onNaviga
                         </div>
                     </section>
 
-                    {/* Key Features */}
-                    <section>
-                        <h3 className={`text-xl font-semibold mb-4 flex items-center ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
-                            <Star className="w-5 h-5 mr-2 text-accent-500" />
-                            Key Features
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                            {phaseInfo.keyFeatures.map((feature, index) => (
-                                <span
-                                    key={index}
-                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'bg-accent-500/20 text-accent-400 border border-accent-500/30' : 'bg-accent-100 text-accent-700 border border-accent-200'}`}
-                                >
-                                    {feature}
-                                </span>
-                            ))}
-                        </div>
-                    </section>
 
                     {/* Average Time - Only show for job-requisition */}
                     {phase === 'job-requisition' && (
@@ -345,31 +328,6 @@ export default function PhaseExplanationModal({ phase, isOpen, onClose, onNaviga
                         >
                             Open Phase
                         </button>
-                        {onNavigateToFeatureFromPhases && (
-                            <button
-                                onClick={() => {
-                                    if (onNavigateToFeatureFromPhases) {
-                                        // Map phase IDs to feature types
-                                        const featureMap = {
-                                            'job-post': 'job-posting',
-                                            'semantic-analysis': 'semantic-analysis',
-                                            'technical-assessment': 'technical-assessment',
-                                            'technical-interview': 'interviews',
-                                            'hr-interview': 'interviews',
-                                            'final-ranking': 'final-reports',
-                                            'analytics': 'analytics'
-                                        };
-                                        const featureType = featureMap[phase];
-                                        if (featureType) {
-                                            onNavigateToFeatureFromPhases(featureType);
-                                        }
-                                    }
-                                }}
-                                className={`px-6 py-3 rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 hover:bg-slate-600' : 'bg-base-100 text-base-700 hover:bg-base-200'}`}
-                            >
-                                Learn More
-                            </button>
-                        )}
                         <button
                             onClick={onClose}
                             className={`px-6 py-3 rounded-lg transition-colors font-medium ${isDarkMode ? 'bg-slate-700 text-gray-200 hover:bg-slate-600' : 'bg-base-100 text-base-700 hover:bg-base-200'}`}

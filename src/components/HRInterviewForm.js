@@ -7,7 +7,6 @@ import {
     MessageSquare,
     Bot,
     UserCircle,
-    Video,
     MessageCircle,
     Building2,
     Zap,
@@ -27,7 +26,6 @@ export default function HRInterviewForm({ formData, updateFormData }) {
     const iconComponents = {
         'ai': Bot,
         'hr': UserCircle,
-        'video': Video
     };
 
     const interviewOptions = [
@@ -44,13 +42,6 @@ export default function HRInterviewForm({ formData, updateFormData }) {
             description: 'HR conducts; AI recommends questions and generates evaluation report',
             icon: 'hr',
             features: ['Human touch', 'AI insights', 'Structured evaluation'],
-        },
-        {
-            id: 'video-interview',
-            title: 'Video Interview',
-            description: 'Candidate records responses to pre-set questions',
-            icon: 'video',
-            features: ['Flexible timing', 'Review anytime', 'Share with team'],
         },
     ];
 
