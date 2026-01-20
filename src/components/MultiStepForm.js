@@ -194,6 +194,11 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
         try {
             localStorage.setItem('jobRequisitionDraft', JSON.stringify(formData));
             setStepError('Draft saved.');
+
+            // Navigate back to phases page after saving draft
+            if (typeof onDone === 'function') {
+                onDone();
+            }
         } catch {
             setStepError('Could not save draft.');
         }
