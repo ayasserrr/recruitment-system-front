@@ -10,6 +10,18 @@ export default function FinalRanking({ applications, onBack }) {
     const [sortBy, setSortBy] = useState('overallScore');
     const [showCVModal, setShowCVModal] = useState(null);
     const [showFullReportModal, setShowFullReportModal] = useState(null);
+    const [showOfferModal, setShowOfferModal] = useState(null);
+    const [offerFormData, setOfferFormData] = useState({
+        position: '',
+        salary: '',
+        startDate: '',
+        department: '',
+        reportingTo: '',
+        benefits: '',
+        contractType: 'full-time',
+        location: '',
+        notes: ''
+    });
     const [finalRanking, setFinalRanking] = useState([]);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
     const finalRankingCacheRef = useRef(new Map());
@@ -421,7 +433,18 @@ export default function FinalRanking({ applications, onBack }) {
     };
 
     const extendOffer = (candidate) => {
-        alert(`Offer extended to ${candidate.name}! They will be contacted via email.`);
+        setShowOfferModal(candidate);
+        setOfferFormData({
+            position: selectedApp?.jobTitle || 'Software Engineer',
+            salary: '',
+            startDate: '',
+            department: 'Engineering',
+            reportingTo: '',
+            benefits: 'Health insurance, 401(k), unlimited PTO, gym membership',
+            contractType: 'full-time',
+            location: 'San Francisco, CA (Remote/Hybrid)',
+            notes: `Offer extended to ${candidate.name} based on strong performance across all evaluation stages.`
+        });
     };
 
     const scheduleFollowUp = (candidate) => {
@@ -1197,6 +1220,190 @@ export default function FinalRanking({ applications, onBack }) {
                                     Close
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Offer Form Modal */}
+            {showOfferModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className={`max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+                        <div className="p-8">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                                        Extend Offer to {showOfferModal.name}
+                                    </h2>
+                                    <p className={`${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>
+                                        Fill in the offer details to send to the candidate
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setShowOfferModal(null)}
+                                    className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-slate-700 text-gray-400' : 'hover:bg-base-100 text-base-600'}`}
+                                >
+                                    <span className="text-2xl">×</span>
+                                </button>
+                            </div>
+
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                // Handle form submission
+                                const offerDetails = {
+                                    candidate: showOfferModal.name,
+                                    ...offerFormData,
+                                    sentDate: new Date().toISOString()
+                                };
+
+                                // Store offer in localStorage
+                                const existingOffers = JSON.parse(localStorage.getItem('offers') || '[]');
+                                localStorage.setItem('offers', JSON.stringify([...existingOffers, offerDetails]));
+
+                                alert(`Offer successfully sent to ${showOfferModal.name}!`);
+                                setShowOfferModal(null);
+                                setOfferFormData({
+                                    position: '',
+                                    salary: '',
+                                    startDate: '',
+                                    department: '',
+                                    reportingTo: '',
+                                    benefits: '',
+                                    contractType: 'full-time',
+                                    location: '',
+                                    notes: ''
+                                });
+                            }} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Position Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={offerFormData.position}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, position: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="e.g. Senior Software Engineer"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Salary/Compensation
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={offerFormData.salary}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, salary: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="e.g. $120,000 - $150,000"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Start Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            required
+                                            value={offerFormData.startDate}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, startDate: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Department
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={offerFormData.department}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, department: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="e.g. Engineering"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Contract Type
+                                        </label>
+                                        <select
+                                            value={offerFormData.contractType}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, contractType: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                        >
+                                            <option value="full-time">Full-time</option>
+                                            <option value="part-time">Part-time</option>
+                                            <option value="contract">Contract</option>
+                                            <option value="internship">Internship</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Location
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={offerFormData.location}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, location: e.target.value })}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="e.g. San Francisco, CA (Remote/Hybrid)"
+                                        />
+                                    </div>
+
+                                    <div className="md:col-span-2">
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Benefits & Perks
+                                        </label>
+                                        <textarea
+                                            value={offerFormData.benefits}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, benefits: e.target.value })}
+                                            rows={3}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="e.g. Health insurance, 401(k), unlimited PTO, gym membership, etc."
+                                        />
+                                    </div>
+
+                                    <div className="md:col-span-2">
+                                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                            Additional Notes
+                                        </label>
+                                        <textarea
+                                            value={offerFormData.notes}
+                                            onChange={(e) => setOfferFormData({ ...offerFormData, notes: e.target.value })}
+                                            rows={3}
+                                            className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors ${isDarkMode ? 'border-slate-600 bg-slate-700 text-white' : 'border-base-300 bg-white text-base-900'}`}
+                                            placeholder="Any additional information or special conditions for this offer..."
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-slate-600">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowOfferModal(null)}
+                                        className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-base-300 text-base-600 hover:bg-base-50'}`}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-gradient-to-r from-base-600 to-accent-600 hover:from-base-700 hover:to-accent-700 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center"
+                                    >
+                                        <CheckCircle className="w-5 h-5 mr-2" />
+                                        Send Offer
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
