@@ -77,6 +77,16 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
     const [stepError, setStepError] = useState('');
     const [formData, setFormData] = useState(initialFormData);
 
+    // Auto-dismiss error/success messages after 3 seconds
+    useEffect(() => {
+        if (stepError) {
+            const timer = setTimeout(() => {
+                setStepError('');
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [stepError]);
+
     useEffect(() => {
         try {
             const raw = localStorage.getItem('jobRequisitionDraft');
@@ -276,15 +286,6 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
                 {/* Step Progress */}
                 <StepProgress currentStep={currentStep} steps={steps} />
 
-                {stepError && (
-                    <div className={`mb-6 rounded-xl border px-4 py-3 text-sm transition-colors duration-300 ${stepError === 'Draft saved.' || stepError === 'Job requisition submitted.'
-                        ? isDarkMode ? 'border-green-700 bg-green-900 text-green-200' : 'border-green-200 bg-green-50 text-green-800'
-                        : isDarkMode ? 'border-red-700 bg-red-900 text-red-200' : 'border-red-200 bg-red-50 text-red-800'
-                        }`}>
-                        {stepError}
-                    </div>
-                )}
-
                 {/* Form Content */}
                 <div className={`rounded-2xl shadow-lg p-6 md:p-8 mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>{renderStep()}</div>
 
@@ -334,6 +335,18 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
                     </div>
                 </div>
             </div>
+
+            {/* Fixed Toast Notification */}
+            {stepError && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 rounded-xl border px-6 py-4 text-sm shadow-lg transition-all duration-300 animate-in slide-in-from-top-2 fade-in-0 max-w-md">
+                    <div className={`rounded-xl border px-4 py-3 text-sm transition-colors duration-300 ${stepError === 'Draft saved.' || stepError === 'Job requisition submitted.'
+                        ? isDarkMode ? 'border-green-700 bg-green-900 text-green-200' : 'border-green-200 bg-green-50 text-green-800'
+                        : isDarkMode ? 'border-red-700 bg-red-900 text-red-200' : 'border-red-200 bg-red-50 text-red-800'
+                        }`}>
+                        {stepError}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
