@@ -231,11 +231,8 @@ export default function FinalRanking({ applications, onBack }) {
             return;
         }
 
-        const cached = finalRankingCacheRef.current.get(selectedAppId);
-        if (cached) {
-            setFinalRanking(cached);
-            return;
-        }
+        // Clear cache to ensure sorted data is used
+        finalRankingCacheRef.current.delete(selectedAppId);
 
         if (selectedApp) {
             const generated = generateFinalRanking(selectedApp);

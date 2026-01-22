@@ -124,7 +124,10 @@ export default function SemanticAnalysis({ applications, onBack }) {
             candidates.push({ name, score, skills, match });
         }
 
-        return { candidates, stats: { totalCandidates, processed, highMatch, mediumMatch, lowMatch, avgScore: processed > 0 ? 82.5 : 0 } };
+        return {
+            candidates: candidates.sort((a, b) => b.score - a.score),
+            stats: { totalCandidates, processed, highMatch, mediumMatch, lowMatch, avgScore: processed > 0 ? 82.5 : 0 }
+        };
     };
 
     const { candidates, stats } = useMemo(() => {
@@ -132,8 +135,8 @@ export default function SemanticAnalysis({ applications, onBack }) {
             return { candidates: [], stats: { totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 } };
         }
 
-        const cached = candidatesCacheRef.current.get(selectedAppId);
-        if (cached) return cached;
+        // Clear cache to ensure sorted data is used
+        candidatesCacheRef.current.delete(selectedAppId);
 
         const generated = generateCandidates(selectedApp);
         candidatesCacheRef.current.set(selectedAppId, generated);
