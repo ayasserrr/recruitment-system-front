@@ -17,8 +17,12 @@ export default function SignupPage() {
     last_name: '',
     phone: '',
     industry: '',
+    other_industry: '',
     website: '',
-    address: ''
+    address: '',
+    role: '',
+    other_role: '',
+    bio: ''
   });
 
   const showMessage = (msg, type) => {
@@ -208,6 +212,23 @@ export default function SignupPage() {
                     <option value="other">Other</option>
                   </select>
                 </div>
+
+                {/* Conditional "Other Industry" field */}
+                {formData.industry === 'other' && (
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                      Please specify your industry
+                    </label>
+                    <input
+                      type="text"
+                      name="other_industry"
+                      value={formData.other_industry}
+                      onChange={handleChange}
+                      placeholder="Enter your industry"
+                      className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -270,6 +291,65 @@ export default function SignupPage() {
                   value={formData.last_name}
                   onChange={handleChange}
                   placeholder="Doe"
+                  className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Profile Information Section */}
+          <div>
+            <h3 className={`text-lg font-semibold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+              Profile Information
+            </h3>
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                  Role
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'border-base-300'}`}
+                >
+                  <option value="">Select your role</option>
+                  <option value="recruiter">Recruiter</option>
+                  <option value="hiring_manager">Hiring Manager</option>
+                  <option value="hr_specialist">HR Specialist</option>
+                  <option value="talent_acquisition">Talent Acquisition</option>
+                  <option value="admin">Administrator</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              {/* Conditional "Other Role" field */}
+              {formData.role === 'other' && (
+                <div>
+                  <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                    Please specify your role
+                  </label>
+                  <input
+                    type="text"
+                    name="other_role"
+                    value={formData.other_role}
+                    onChange={handleChange}
+                    placeholder="Enter your role"
+                    className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                  Bio
+                </label>
+                <textarea
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  placeholder="Tell us about yourself and your role in the company..."
+                  rows={5}
                   className={`w-full px-4 py-3 border rounded-lg outline-none transition-colors focus:ring-2 focus:ring-accent-500 focus:border-accent-500 ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-500' : 'border-base-300'}`}
                 />
               </div>
