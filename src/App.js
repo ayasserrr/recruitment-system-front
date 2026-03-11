@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Briefcase, Plus, Share2, Brain, ClipboardCheck, Video, Users, Award, List, BarChart3, Star } from 'lucide-react';
+import { ChevronRight, Plus, Share2, Brain, ClipboardCheck, Video, Award, List, BarChart3, Star } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
 import JobPost from './components/JobPost';
@@ -12,7 +12,8 @@ import FinalRanking from './components/FinalRanking';
 import Analytics from './components/Analytics';
 import Shortlist from './components/Shortlist';
 import Home from './components/Home';
-import Login from './components/Login';
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
 import Phases from './components/Phases';
 import Navbar from './components/Navbar';
 import Settings from './components/Settings';
@@ -26,12 +27,13 @@ import SmartJobPostingDetail from './components/features/SmartJobPostingDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import { TourProvider, useTour } from './contexts/TourContext';
 import TourModal from './components/TourModal';
+import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
 import './App.css';
 
 function RecruitmentSystemContent() {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
     const { showTour, startTour, endTour, shouldShowTourOnLogin } = useTour();
-    const [currentPage, setCurrentPage] = useState('landing');
+    const [currentPage, setCurrentPage] = useState('login');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [navigationSource, setNavigationSource] = useState('landing'); // Track where feature pages were accessed from
@@ -39,19 +41,32 @@ function RecruitmentSystemContent() {
     // Initialize auth state from localStorage on component mount
     useEffect(() => {
         try {
-            const savedLoginState = localStorage.getItem('isLoggedIn');
-            const savedUser = localStorage.getItem('currentUser');
+            console.log('Checking authentication state...');
 
-            console.log('Checking localStorage:', { savedLoginState, savedUser });
+            // Use the new auth service to check authentication
+            const authenticated = isAuthenticated();
+            const companyInfo = getCompanyInfo();
 
-            if (savedLoginState === 'true' && savedUser) {
+            console.log('Auth check result:', { authenticated, companyInfo });
+
+            if (authenticated && companyInfo) {
                 setIsLoggedIn(true);
-                setCurrentUser(JSON.parse(savedUser));
+                setCurrentUser(companyInfo);
                 setCurrentPage('phases');
-                console.log('Restored login state from localStorage');
+                console.log('User is authenticated, redirecting to phases');
+            } else {
+                // Clear any old auth data and redirect to login
+                setIsLoggedIn(false);
+                setCurrentUser(null);
+                setCurrentPage('login');
+                window.history.replaceState({ page: 'login' }, '', '#login');
+                console.log('User not authenticated, redirecting to login');
             }
         } catch (error) {
-            console.error('Error reading from localStorage:', error);
+            console.error('Error checking authentication:', error);
+            // On error, redirect to login
+            setCurrentPage('login');
+            window.history.replaceState({ page: 'login' }, '', '#login');
         }
     }, []); // Empty dependency array means this runs only once on mount
 
@@ -142,21 +157,6 @@ function RecruitmentSystemContent() {
         { id: 'analytics', icon: BarChart3, label: 'Analytics', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Performance insights' },
     ];
 
-    const handleLogin = (user) => {
-        setIsLoggedIn(true);
-        setCurrentUser(user);
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        console.log('Login: Saved to localStorage:', { user, isLoggedIn: 'true' });
-        setCurrentPage('phases');
-        window.history.pushState({ page: 'phases' }, '', '#phases');
-
-        // Show tour after successful login if enabled
-        if (shouldShowTourOnLogin()) {
-            setTimeout(() => startTour(), 500);
-        }
-    };
-
     const handleGetStarted = () => {
         setCurrentPage('login');
         window.history.pushState({ page: 'login' }, '', '#login');
@@ -174,12 +174,11 @@ function RecruitmentSystemContent() {
     };
 
     const handleLogout = () => {
+        logout(); // Use the auth service logout function
         setIsLoggedIn(false);
         setCurrentUser(null);
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('currentUser');
-        setCurrentPage('landing');
-        window.history.pushState({ page: 'landing' }, '', '#landing');
+        setCurrentPage('login');
+        window.history.pushState({ page: 'login' }, '', '#login');
     };
 
     const handleNavigateToPhase = (phaseId) => {
@@ -396,13 +395,12 @@ function RecruitmentSystemContent() {
 
             {/* Login Page */}
             {currentPage === 'login' && (
-                <Login
-                    onLoginSuccess={handleLogin}
-                    onBackClick={() => {
-                        setCurrentPage('landing');
-                        window.history.pushState({ page: 'landing' }, '', '#landing');
-                    }}
-                />
+                <LoginPage />
+            )}
+
+            {/* Signup Page */}
+            {currentPage === 'signup' && (
+                <SignupPage />
             )}
 
             {/* Authenticated Pages with Navbar */}
