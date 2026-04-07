@@ -7,6 +7,7 @@ import TechnicalInterviewForm from './TechnicalInterviewForm';
 import HRInterviewForm from './HRInterviewForm';
 import ReviewSubmitForm from './ReviewSubmitForm';
 import { ArrowLeft, ArrowRight, Save } from 'lucide-react';
+import { submitJobRequisition } from '../api/authService';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function MultiStepForm({ onSubmitRequisition, onDone }) {
@@ -218,7 +219,7 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
         window.print();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         for (let step = 1; step <= 5; step += 1) {
             const errors = validateStep(step);
             if (errors.length > 0) {
@@ -228,22 +229,39 @@ export default function MultiStepForm({ onSubmitRequisition, onDone }) {
             }
         }
 
+        // Submit to API
+        try {
+            setStepError('Submitting job requisition...');
+            const result = await submitJobRequisition(formData);
+
+            if (result.success) {
+                setStepError('Job requisition submitted successfully!');
+
+                // Clear draft and reset form
+                try {
+                    localStorage.removeItem('jobRequisitionDraft');
+                } catch {
+                    // ignore
+                }
+
+                setFormData(initialFormData);
+                setCurrentStep(1);
+
+                setTimeout(() => {
+                    setStepError('');
+                    if (typeof onDone === 'function') {
+                        onDone();
+                    }
+                }, 2000);
+            } else {
+                setStepError(result.error || 'Failed to submit job requisition');
+            }
+        } catch (error) {
+            setStepError('Failed to submit job requisition. Please try again.');
+        }
+
         if (typeof onSubmitRequisition === 'function') {
             onSubmitRequisition(formData);
-        }
-
-        try {
-            localStorage.removeItem('jobRequisitionDraft');
-        } catch {
-            // ignore
-        }
-
-        setFormData(initialFormData);
-        setCurrentStep(1);
-        setStepError('');
-
-        if (typeof onDone === 'function') {
-            onDone();
         }
     };
 

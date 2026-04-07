@@ -26,6 +26,7 @@ import PipelineAnalyticsDetail from './components/features/PipelineAnalyticsDeta
 import SmartJobPostingDetail from './components/features/SmartJobPostingDetail';
 import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import { TourProvider, useTour } from './contexts/TourContext';
+import { SessionProvider } from './contexts/SessionContext';
 import TourModal from './components/TourModal';
 import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
 import './App.css';
@@ -577,10 +578,12 @@ function RecruitmentSystemContent() {
 
 export default function RecruitmentSystem() {
     return (
-        <DarkModeProvider>
-            <TourProvider>
-                <RecruitmentSystemContent />
-            </TourProvider>
-        </DarkModeProvider>
+        <SessionProvider>
+            <DarkModeProvider>
+                <TourProvider>
+                    <RecruitmentSystemContent />
+                </TourProvider>
+            </DarkModeProvider>
+        </SessionProvider>
     );
 }

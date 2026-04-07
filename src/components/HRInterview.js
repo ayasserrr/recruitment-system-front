@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Users, Download, TrendingUp, Calendar, CheckCircle, Clock, MessageSquare, FileText, ChevronRight, Star } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, CheckCircle, Clock, MessageSquare, FileText, ChevronRight, Star } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function HRInterview({ applications, onBack }) {
@@ -34,7 +34,7 @@ export default function HRInterview({ applications, onBack }) {
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, []);
+    }, [loadShortlistedKeys]);
 
     // Generate interview data per application
     const generateInterviewData = (app) => {
@@ -63,6 +63,11 @@ export default function HRInterview({ applications, onBack }) {
     const [interviewData, setInterviewData] = useState(() => {
         return applications.map(app => generateInterviewData(app));
     });
+
+    // Update interview data when applications change
+    useEffect(() => {
+        setInterviewData(applications.map(app => generateInterviewData(app)));
+    }, [applications]);
 
     // Generate candidate results per selected application
     const generateCandidateResults = (app) => {

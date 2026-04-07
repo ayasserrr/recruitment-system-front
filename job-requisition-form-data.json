@@ -1,0 +1,74 @@
+{
+  "jobTitle": "Senior Frontend Developer",
+  "department": "Engineering",
+  "seniorityLevel": "Senior",
+  "employmentType": "Full-time",
+  "city": "San Francisco",
+  "country": "United States",
+  "remoteAvailable": false,
+  "requiredSkills": ["React", "TypeScript", "JavaScript", "Node.js", "CSS"],
+  "preferredSkills": ["GraphQL", "Docker", "AWS", "Next.js"],
+  "minExperience": 5,
+  "maxExperience": 10,
+  "minEducation": "Bachelor's Degree",
+  "fieldOfStudy": "Computer Science",
+  "responsibilities": [
+    "Design and implement responsive web applications",
+    "Collaborate with cross-functional teams",
+    "Write clean, maintainable code",
+    "Optimize application performance",
+    "Participate in code reviews"
+  ],
+  "fullDescription": "We are seeking a talented Senior Frontend Developer to join our dynamic engineering team. You will be responsible for building cutting-edge web applications that deliver exceptional user experiences.",
+  "currency": "USD ($)",
+  "minSalary": 8000,
+  "maxSalary": 12000,
+  "languages": ["English (Fluent)", "Spanish (Basic)"],
+  "deadline": "2024-05-06",
+  "contactEmail": "hr@company.com",
+  "additionalNotes": "This position offers significant growth potential within the engineering team.",
+
+  "selectedPlatforms": ["LinkedIn", "Indeed", "Glassdoor"],
+  "postingStartDate": "2024-04-06",
+  "postingEndDate": "2024-05-06",
+
+  "assessmentType": "ai-generated",
+  "assessmentQuestions": [
+    "Implement a React component with TypeScript",
+    "Solve this algorithmic problem",
+    "Debug this JavaScript code"
+  ],
+  "assessmentTimeLimit": 60,
+  "assessmentCandidatesToAdvance": 10,
+  "maxAttempts": "1",
+  "assessmentLanguage": "English",
+  "templateTask": "Build a responsive dashboard component",
+
+  "technicalInterviewType": "ai-conducted",
+  "technicalInterviewQuestions": [
+    "Explain React hooks and their use cases",
+    "How do you optimize React application performance?",
+    "Describe your experience with state management"
+  ],
+  "aiEvaluationCriteria": ["Technical knowledge", "Problem-solving", "Communication"],
+  "aiFeedbackLevel": "detailed",
+  "numberOfInterviewers": "1",
+  "scoringSystem": "1-5",
+  "technicalInterviewDuration": "45",
+  "technicalInterviewCandidatesToAdvance": 5,
+  "interviewerNotes": "Focus on practical experience",
+
+  "hrInterviewType": "ai-conducted",
+  "hrInterviewQuestions": [
+    "Tell me about your experience working in teams",
+    "How do you handle tight deadlines?",
+    "What motivates you in your work?"
+  ],
+  "hrEvaluationCriteria": ["Cultural fit", "Communication skills", "Team collaboration"],
+  "cultureValues": "Innovation, collaboration, continuous learning",
+  "hrInterviewDuration": "45",
+  "hrInterviewFormat": "conversational",
+  "hrInterviewCandidatesToAdvance": 3,
+  "hrDecisionTimeline": "48",
+  "hrInterviewerNotes": "Assess leadership potential"
+}

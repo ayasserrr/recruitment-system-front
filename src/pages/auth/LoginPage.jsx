@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { login } from '../../api/authService';
+import { login, getSessionExpiredMessage, checkSessionTimeout } from '../../api/authService';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 
 export default function LoginPage() {
@@ -20,8 +20,20 @@ export default function LoginPage() {
     setTimeout(() => {
       setMessage('');
       setMessageType('');
-    }, 3000);
+    }, 5000); // Increased to 5 seconds for session expired message
   };
+
+  // Check for session expired message on component mount
+  useEffect(() => {
+    // Check if session has expired
+    const sessionExpired = checkSessionTimeout();
+
+    // Show session expired message if it exists
+    const sessionMessage = getSessionExpiredMessage();
+    if (sessionMessage) {
+      showMessage(sessionMessage, 'error');
+    }
+  }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
