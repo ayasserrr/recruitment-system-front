@@ -30,6 +30,7 @@ import { TourProvider, useTour } from './contexts/TourContext';
 import { SessionProvider } from './contexts/SessionContext';
 import TourModal from './components/TourModal';
 import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
+import ApplyPage from './components/ApplyPage';
 import './App.css';
 
 function RecruitmentSystemContent() {
@@ -581,6 +582,11 @@ function RecruitmentSystemContent() {
 }
 
 export default function RecruitmentSystem() {
+    // Standalone candidate application page — no auth, no dashboard chrome
+    if (window.location.pathname === '/apply') {
+        return <ApplyPage />;
+    }
+
     return (
         <SessionProvider>
             <DarkModeProvider>
