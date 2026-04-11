@@ -271,4 +271,57 @@ export const submitJobRequisition = async (requisitionData) => {
   }
 };
 
+// LinkedIn integration methods
+export const getLinkedInAuthUrl = async () => {
+  try {
+    console.log('Getting LinkedIn auth URL...');
+    const response = await api.get('/linkedin/url');
+    console.log('LinkedIn auth URL response:', response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('LinkedIn auth URL error:', error);
+    const errorMessage = formatErrorMessage(error);
+    return { success: false, error: errorMessage };
+  }
+};
+
+export const handleLinkedInCallback = async (code) => {
+  try {
+    console.log('Handling LinkedIn callback with code:', code);
+    const response = await api.get(`/linkedin/callback?code=${code}`);
+    console.log('LinkedIn callback response:', response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('LinkedIn callback error:', error);
+    const errorMessage = formatErrorMessage(error);
+    return { success: false, error: errorMessage };
+  }
+};
+
+export const getLinkedInConnectionStatus = async () => {
+  try {
+    console.log('Getting LinkedIn connection status...');
+    const response = await api.get('/linkedin/status');
+    console.log('LinkedIn status response:', response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('LinkedIn status error:', error);
+    const errorMessage = formatErrorMessage(error);
+    return { success: false, error: errorMessage };
+  }
+};
+
+export const disconnectLinkedIn = async () => {
+  try {
+    console.log('Disconnecting LinkedIn...');
+    const response = await api.delete('/linkedin/disconnect');
+    console.log('LinkedIn disconnect response:', response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('LinkedIn disconnect error:', error);
+    const errorMessage = formatErrorMessage(error);
+    return { success: false, error: errorMessage };
+  }
+};
+
 export default api;

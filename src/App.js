@@ -17,6 +17,7 @@ import SignupPage from './pages/auth/SignupPage';
 import Phases from './components/Phases';
 import Navbar from './components/Navbar';
 import Settings from './components/Settings';
+import LinkedInCallback from './components/LinkedInCallback';
 import LearnMore from './components/LearnMore';
 import SemanticAnalysisDetail from './components/features/SemanticAnalysisDetail';
 import TechnicalAssessmentDetail from './components/features/TechnicalAssessmentDetail';
@@ -426,6 +427,9 @@ function RecruitmentSystemContent() {
                     isDarkMode={isDarkMode}
                 />
             )}
+
+            {/* LinkedIn Callback Page */}
+            {currentPage === 'linkedin-callback' && <LinkedInCallback />}
 
             {/* Phases Dashboard */}
             {currentPage === 'phases' && (

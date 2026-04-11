@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { ChevronRight, User, Mail, Building, Phone, Moon, Sun, Lock, Eye, EyeOff } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronRight, User, Mail, Building, Phone, Moon, Sun, Lock, Eye, EyeOff, ExternalLink, Unlink } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useTour } from '../contexts/TourContext';
+import { getLinkedInAuthUrl, getLinkedInConnectionStatus, disconnectLinkedIn } from '../api/authService';
 
 export default function Settings({ currentUser, onBack, onDarkModeToggle, isDarkMode }) {
     const { isDarkMode: contextDarkMode, toggleDarkMode } = useDarkMode();
@@ -21,6 +22,11 @@ export default function Settings({ currentUser, onBack, onDarkModeToggle, isDark
         email: currentUser?.email || 'ahmed@hiretech.com',
         companyName: 'HireTech AI',
         phoneNumber: '+201234567890'
+    });
+    const [linkedInStatus, setLinkedInStatus] = useState({
+        connected: false,
+        loading: true,
+        companyName: null
     });
 
     const showMessage = (msg, type) => {
@@ -69,6 +75,78 @@ export default function Settings({ currentUser, onBack, onDarkModeToggle, isDark
     const handleSavePersonalInfo = () => {
         // In a real app, this would save to database
         showMessage('Personal information updated successfully!', 'success');
+    };
+
+    // Fetch LinkedIn connection status on component mount
+    useEffect(() => {
+        const fetchLinkedInStatus = async () => {
+            try {
+                const result = await getLinkedInConnectionStatus();
+                if (result.success) {
+                    setLinkedInStatus({
+                        connected: result.data.connected || false,
+                        loading: false,
+                        companyName: result.data.company_name || null
+                    });
+                } else {
+                    setLinkedInStatus({
+                        connected: false,
+                        loading: false,
+                        companyName: null
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to fetch LinkedIn status:', error);
+                setLinkedInStatus({
+                    connected: false,
+                    loading: false,
+                    companyName: null
+                });
+            }
+        };
+
+        fetchLinkedInStatus();
+    }, []);
+
+    const handleLinkedInConnect = async () => {
+        try {
+            const result = await getLinkedInAuthUrl();
+            if (result.success) {
+                // Add prompt=login parameter to force new login
+                let authUrl = result.data.authorization_url;
+                if (authUrl.includes('?')) {
+                    authUrl += '&prompt=login';
+                } else {
+                    authUrl += '?prompt=login';
+                }
+                // Open LinkedIn auth URL in new window
+                window.open(authUrl, '_blank', 'width=600,height=600');
+            } else {
+                showMessage(`Failed to get LinkedIn authorization: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('LinkedIn connect error:', error);
+            showMessage('Failed to connect to LinkedIn', 'error');
+        }
+    };
+
+    const handleLinkedInDisconnect = async () => {
+        try {
+            const result = await disconnectLinkedIn();
+            if (result.success) {
+                setLinkedInStatus({
+                    connected: false,
+                    loading: false,
+                    companyName: null
+                });
+                showMessage('LinkedIn disconnected successfully', 'success');
+            } else {
+                showMessage(`Failed to disconnect LinkedIn: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('LinkedIn disconnect error:', error);
+            showMessage('Failed to disconnect LinkedIn', 'error');
+        }
     };
 
     return (
@@ -255,6 +333,70 @@ export default function Settings({ currentUser, onBack, onDarkModeToggle, isDark
                                     Save Changes
                                 </button>
                             </form>
+                        </div>
+
+                        {/* Social Integrations Section */}
+                        <div className={`rounded-xl shadow-sm border transition-colors duration-300 p-6 mb-6 ${contextDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+                            <h2 className={`text-xl font-semibold mb-6 flex items-center transition-colors duration-300 ${contextDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                <ExternalLink className={`w-5 h-5 mr-2 transition-colors duration-300 ${contextDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                                Social Integrations
+                            </h2>
+
+                            <div className="space-y-4">
+                                {/* LinkedIn Integration */}
+                                <div className={`p-4 border rounded-lg transition-colors duration-300 ${contextDarkMode ? 'border-slate-700 bg-slate-700/50' : 'border-gray-200 bg-gray-50'}`}>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-3">
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${contextDarkMode ? 'bg-blue-900' : 'bg-blue-100'}`}>
+                                                <svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h3 className={`font-semibold transition-colors duration-300 ${contextDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                    LinkedIn Company Page
+                                                </h3>
+                                                <p className={`text-sm transition-colors duration-300 ${contextDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                    {linkedInStatus.loading ? 'Checking connection status...' :
+                                                        linkedInStatus.connected ? `Connected to ${linkedInStatus.companyName || 'your company page'}` :
+                                                            'Connect your LinkedIn company page for enhanced recruiting'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            {linkedInStatus.loading ? (
+                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                                            ) : linkedInStatus.connected ? (
+                                                <button
+                                                    onClick={handleLinkedInDisconnect}
+                                                    className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium flex items-center space-x-2 ${contextDarkMode ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-red-600 text-white hover:bg-red-700'}`}
+                                                >
+                                                    <Unlink className="w-4 h-4" />
+                                                    <span>Disconnect LinkedIn</span>
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={handleLinkedInConnect}
+                                                    className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium flex items-center space-x-2 ${contextDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+                                                >
+                                                    <ExternalLink className="w-4 h-4" />
+                                                    <span>Connect LinkedIn</span>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {linkedInStatus.connected && (
+                                        <div className={`mt-3 pt-3 border-t transition-colors duration-300 ${contextDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+                                            <div className="flex items-center space-x-2">
+                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <span className={`text-sm transition-colors duration-300 ${contextDarkMode ? 'text-green-400' : 'text-green-700'}`}>
+                                                    Active connection
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
