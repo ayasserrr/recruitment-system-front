@@ -1,14 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/v1',
 });
 
-export default function ApplyPage() {
-  const [paramsError, setParamsError] = useState(false);
+// ── Job Closed banner ─────────────────────────────────────────────────────────
+function JobClosed({ deadline }) {
+  const formattedDate = deadline
+    ? new Date(deadline).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : null;
 
-  const [fullName, setFullName] = useState('');
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center p-8 max-w-md">
+        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M12 9v2m0 4h.01M6.938 4.938a8 8 0 1 1 11.314 11.314A8 8 0 0 1 6.938 4.938z" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">Position Closed</h2>
+        <p className="text-gray-500">
+          Sorry, this position is no longer accepting applications.
+          {formattedDate && (
+            <> The deadline was <span className="font-medium text-gray-700">{formattedDate}</span>.</>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── Loading spinner ───────────────────────────────────────────────────────────
+function LoadingSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex flex-col items-center gap-4">
+        <svg className="w-10 h-10 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+        </svg>
+        <p className="text-sm text-gray-500">Loading job details…</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+export default function ApplyPage() {
+  const params = new URLSearchParams(window.location.search);
+  const companyId = params.get('cid');
+  const jobId = params.get('jid');   // used as requisition_id throughout
+
+  // Job meta — sourced exclusively from the server
+  const [isLoading, setIsLoading] = useState(true);
+  const [paramsError, setParamsError] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);      // null = not yet fetched
+  const [deadline, setDeadline] = useState(null);  // cv_collection_end_date
+  const [jobTitle, setJobTitle] = useState('');
+
+  // Form state
+  const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [cvFile, setCvFile] = useState(null);
 
@@ -16,16 +73,34 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const companyId = params.get('cid');
-    const jobId = params.get('jid');
+  // ── Fetch job — also called after a 403 to refresh is_open ─────────────────
+  const fetchJob = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await api.get(`/jobs/${jobId}`);
+      const data = res.data ?? {};
+      setIsOpen(data.is_open === true);
+      setDeadline(data.cv_collection_end_date ?? null);
+      setJobTitle(data.job_title ?? '');
+    } catch (err) {
+      console.error('[ApplyPage] Failed to fetch job:', err);
+      setErrorMsg('Could not load job details. Please try again later.');
+      setIsOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [jobId]);
 
+  useEffect(() => {
     if (!companyId || !jobId) {
       setParamsError(true);
+      setIsLoading(false);
+      return;
     }
-  }, []);
+    fetchJob();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type !== 'application/pdf') {
@@ -38,6 +113,11 @@ export default function ApplyPage() {
     setCvFile(file);
   };
 
+  // Re-fetch job and surface the closed banner when the server says APPLICATION_CLOSED
+  const handleApplicationClosed = () => {
+    fetchJob();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -47,28 +127,19 @@ export default function ApplyPage() {
       return;
     }
 
-    // Re-read params directly at submit time — no reliance on state timing
-    const params = new URLSearchParams(window.location.search);
-    const companyId = params.get('cid');
-    const jobId = params.get('jid');
-
-    if (!companyId || !jobId) {
-      setErrorMsg('Application link is invalid. Missing company or job information.');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      // ── Step 1: Register candidate ────────────────────────────────────────
-      const candidateRes = await api.post('/candidates', {
-        full_name: fullName,
-        email: email,
+      // ── Step 1: Register candidate ──────────────────────────────────────────
+      // POST /api/v1/candidates/register
+      // Body: { firstName, email, requisitionId }
+      const candidateRes = await api.post('/candidates/register', {
+        firstName,
+        email,
+        requisitionId: Number(jobId),
       });
 
-      // Log full response so the exact shape is visible during debugging
       console.log('[ApplyPage] Step 1 response data:', candidateRes.data);
 
-      // Support common key names the backend might use
       const responseData = candidateRes.data ?? {};
       const candidateId =
         responseData.candidate_id ??
@@ -84,11 +155,12 @@ export default function ApplyPage() {
         );
       }
 
+      // ── Step 2: Upload CV ───────────────────────────────────────────────────
+      // POST /api/v1/data/upload/{company_id}/{requisition_id}/{candidate_id}
       console.log(
         `[ApplyPage] Step 2 – uploading CV to: /data/upload/${companyId}/${jobId}/${candidateId}`
       );
 
-      // ── Step 2: Upload CV ─────────────────────────────────────────────────
       const formData = new FormData();
       formData.append('file', cvFile);
 
@@ -101,6 +173,17 @@ export default function ApplyPage() {
       setSubmitted(true);
     } catch (err) {
       console.error('[ApplyPage] Submission error:', err);
+
+      // Server signals the job closed while the user was on the page →
+      // re-fetch so the is_open banner reflects the real server state
+      if (
+        err.response?.status === 403 &&
+        err.response?.data?.detail === 'APPLICATION_CLOSED'
+      ) {
+        handleApplicationClosed();
+        return;
+      }
+
       const detail = err.response?.data?.detail;
       if (Array.isArray(detail)) {
         setErrorMsg(detail.map((d) => d.msg || d).join(', '));
@@ -116,24 +199,31 @@ export default function ApplyPage() {
     }
   };
 
-  // ── Invalid / missing params ──────────────────────────────────────────────
+  // ── Render guards ─────────────────────────────────────────────────────────────
+  if (isLoading) return <LoadingSpinner />;
+
   if (paramsError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-8 max-w-md">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
             </svg>
           </div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Invalid Application Link</h2>
-          <p className="text-gray-500">This link is missing required parameters. Please use the link provided in the job posting.</p>
+          <p className="text-gray-500">
+            This link is missing required parameters. Please use the link provided in the job posting.
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── Success state ─────────────────────────────────────────────────────────
+  // is_open comes exclusively from the server — never computed client-side
+  if (isOpen === false) return <JobClosed deadline={deadline} />;
+
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -144,13 +234,16 @@ export default function ApplyPage() {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-3">Application Submitted Successfully!</h2>
-          <p className="text-gray-500 text-base">Thank you for applying. We have received your CV and will be in touch if your profile matches our requirements.</p>
+          <p className="text-gray-500 text-base">
+            Thank you for applying. We have received your CV and will be in touch if your profile
+            matches our requirements.
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── Application form ──────────────────────────────────────────────────────
+  // ── Application form (is_open === true) ───────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
@@ -158,28 +251,31 @@ export default function ApplyPage() {
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-xl overflow-hidden mx-auto mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Submit Your Application</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {jobTitle ? jobTitle : 'Submit Your Application'}
+          </h1>
           <p className="text-gray-500 mt-1 text-sm">Fill in your details and upload your CV to apply</p>
         </div>
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-md p-8">
           <form onSubmit={handleSubmit} noValidate>
-            {/* Full Name */}
+            {/* First Name */}
             <div className="mb-5">
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name <span className="text-red-500">*</span>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                First Name <span className="text-red-500">*</span>
               </label>
               <input
-                id="fullName"
+                id="firstName"
                 type="text"
                 required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. John Smith"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="e.g. John"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               />
             </div>
@@ -205,15 +301,13 @@ export default function ApplyPage() {
               <label htmlFor="cvFile" className="block text-sm font-medium text-gray-700 mb-1">
                 CV / Resume <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <input
-                  id="cvFile"
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer"
-                />
-              </div>
+              <input
+                id="cvFile"
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer"
+              />
               <p className="mt-1 text-xs text-gray-400">PDF format only. Max 10 MB.</p>
             </div>
 
@@ -221,7 +315,8 @@ export default function ApplyPage() {
             {errorMsg && (
               <div className="mb-5 flex items-start gap-2 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
                 <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z" />
                 </svg>
                 <span>{errorMsg}</span>
               </div>
