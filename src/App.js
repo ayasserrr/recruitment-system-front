@@ -31,6 +31,7 @@ import { SessionProvider } from './contexts/SessionContext';
 import TourModal from './components/TourModal';
 import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
 import ApplyPage from './components/ApplyPage';
+import CandidateApplications from './components/CandidateApplications';
 import './App.css';
 
 function RecruitmentSystemContent() {
@@ -582,9 +583,12 @@ function RecruitmentSystemContent() {
 }
 
 export default function RecruitmentSystem() {
-    // Standalone candidate application page — no auth, no dashboard chrome
+    // Standalone candidate-facing pages — no auth, no dashboard chrome
     if (window.location.pathname === '/apply') {
         return <ApplyPage />;
+    }
+    if (window.location.pathname === '/my-applications') {
+        return <CandidateApplications />;
     }
 
     return (

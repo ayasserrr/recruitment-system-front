@@ -2,6 +2,34 @@ import React, { useMemo, useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, Upload, Send, Eye, Users, Briefcase, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
+// ── Requisition-level status helpers (module-scope so PostingProgress can use them) ──
+function getRequisitionStatusBadge(status) {
+    switch (status) {
+        case 'Draft':      return { pill: 'bg-gray-100 text-gray-600',    subText: 'Not published yet' };
+        case 'Active':     return { pill: 'bg-blue-100 text-blue-700',    subText: null };
+        case 'published':  return { pill: 'bg-green-100 text-green-700',  subText: null };
+        case 'ranked':     return { pill: 'bg-purple-100 text-purple-700', subText: 'Top 100 notified' };
+        case 'failed':     return { pill: 'bg-red-100 text-red-700',      subText: 'LinkedIn post failed — contact support' };
+        case 'CV Collection': return { pill: 'bg-indigo-100 text-indigo-700', subText: null };
+        case 'In Progress':   return { pill: 'bg-blue-100 text-blue-700',    subText: null };
+        case 'Final Stage':   return { pill: 'bg-green-100 text-green-700',  subText: null };
+        case 'Closed':        return { pill: 'bg-slate-200 text-slate-600',  subText: null };
+        case 'Posted':        return { pill: 'bg-teal-100 text-teal-700',    subText: null };
+        default:              return { pill: 'bg-slate-100 text-slate-600',  subText: null };
+    }
+}
+
+function getRequisitionStatusLabel(status) {
+    switch (status) {
+        case 'Draft':      return 'Draft';
+        case 'Active':     return 'Scheduled';
+        case 'published':  return 'Live';
+        case 'ranked':     return 'Ranking Complete';
+        case 'failed':     return 'Publishing Failed';
+        default:           return status || 'Submitted';
+    }
+}
+
 export default function JobPost({ applications, onUpdateApplication, onBackToDashboard, onViewCVs, onOpenSemanticAnalysis }) {
     const { isDarkMode } = useDarkMode();
     const [selectedId, setSelectedId] = useState(null);
@@ -92,6 +120,7 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
         if (status === 'active') return 'bg-blue-100 text-blue-700';
         return 'bg-slate-200 text-slate-600';
     };
+
 
     const safePercent = (numerator, denominator) => {
         const d = denominator > 0 ? denominator : 1;
@@ -202,12 +231,33 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                                                 }`}
                                         >
                                             <div className="flex items-start justify-between gap-3">
-                                                <div>
-                                                    <div className={`font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className={`font-bold truncate transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</div>
                                                     <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posted: {app.posted}</div>
                                                 </div>
-                                                <div className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${isDarkMode ? 'bg-slate-600 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
-                                                    {app.status || 'Submitted'}
+                                                <div className="flex-shrink-0">
+                                                    {(() => {
+                                                        const { pill, subText } = getRequisitionStatusBadge(app.status);
+                                                        const label = getRequisitionStatusLabel(app.status);
+                                                        const req = app.requisition || {};
+                                                        const contextDate =
+                                                            app.status === 'Active'    ? req.postingStartDate :
+                                                            app.status === 'published' ? req.postingEndDate   : null;
+                                                        const dateSubText =
+                                                            app.status === 'Active'    && contextDate ? `Will post on ${contextDate}` :
+                                                            app.status === 'published' && contextDate ? `Open until ${contextDate}` :
+                                                            subText;
+                                                        return (
+                                                            <div className="text-right">
+                                                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${isDarkMode ? 'bg-slate-600 text-gray-200' : pill}`}>
+                                                                    {label}
+                                                                </span>
+                                                                {dateSubText && (
+                                                                    <div className={`mt-1 text-xs ${isDarkMode ? 'text-gray-500' : 'text-base-500'}`}>{dateSubText}</div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })()}
                                                 </div>
                                             </div>
 
@@ -301,7 +351,23 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
                 </div>
                 <div className={`border rounded-xl p-4 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-base-200 bg-base-50'}`}>
                     <div className={`text-xs font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posting Status</div>
-                    <div className={`mt-1 font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{application.status || 'Submitted'}</div>
+                    <div className={`mt-1 font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>
+                        {getRequisitionStatusLabel(application.status)}
+                    </div>
+                    {(() => {
+                        const { subText } = getRequisitionStatusBadge(application.status);
+                        const req = application.requisition || {};
+                        const contextDate =
+                            application.status === 'Active'    ? req.postingStartDate :
+                            application.status === 'published' ? req.postingEndDate   : null;
+                        const dateSubText =
+                            application.status === 'Active'    && contextDate ? `Will post on ${contextDate}` :
+                            application.status === 'published' && contextDate ? `Open until ${contextDate}` :
+                            subText;
+                        return dateSubText ? (
+                            <div className={`mt-0.5 text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>{dateSubText}</div>
+                        ) : null;
+                    })()}
                 </div>
             </div>
 

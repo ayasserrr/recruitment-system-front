@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Trophy, Download, TrendingUp, Star, Heart, BarChart, Sparkles, Target, Award, Users, Filter, Briefcase, FileText, CheckCircle, Code, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Trophy, Download, TrendingUp, Star, Heart, BarChart, Sparkles, Target, Award, Users, Filter, Briefcase, FileText, CheckCircle, Code, MessageSquare, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function FinalRanking({ applications, onBack }) {
@@ -24,6 +24,7 @@ export default function FinalRanking({ applications, onBack }) {
     });
     const [finalRanking, setFinalRanking] = useState([]);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
+    const [expandedRows, setExpandedRows] = useState(new Set());
     const finalRankingCacheRef = useRef(new Map());
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
@@ -113,12 +114,35 @@ export default function FinalRanking({ applications, onBack }) {
         }
     };
 
+    // AI label badge — covers both old mock values and new API recommendation values
     const getRecommendationColor = (recommendation) => {
         switch (recommendation) {
+            // New API values (from rank-candidates endpoint)
+            case 'Top Candidate':     return 'bg-gradient-to-r from-yellow-400 to-amber-500 text-white';
+            case 'Strong Runner-Up':  return 'bg-gradient-to-r from-purple-500 to-purple-600 text-white';
+            case 'Strong Hire':       return 'bg-gradient-to-r from-green-500 to-emerald-600 text-white';
+            case 'Hire':              return 'bg-gradient-to-r from-teal-500 to-teal-600 text-white';
+            case 'Maybe':             return 'bg-gradient-to-r from-orange-400 to-orange-500 text-white';
+            case 'No Hire':           return 'bg-gradient-to-r from-red-500 to-red-600 text-white';
+            // Legacy mock values
             case 'Strongly Recommend': return 'bg-gradient-to-r from-green-500 to-emerald-600 text-white';
-            case 'Recommend': return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white';
-            case 'Consider': return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white';
-            default: return 'bg-gradient-to-r from-slate-500 to-slate-600 text-white';
+            case 'Recommend':          return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white';
+            case 'Consider':           return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white';
+            default:                   return 'bg-gradient-to-r from-slate-500 to-slate-600 text-white';
+        }
+    };
+
+    // Application status badge (Shortlisted / Not Shortlisted / Applied)
+    const getApplicationStatusBadge = (applicationStatus) => {
+        switch (applicationStatus) {
+            case 'Shortlisted':
+                return 'bg-green-100 text-green-700 border border-green-200';
+            case 'Not Shortlisted':
+                return 'bg-gray-100 text-gray-600 border border-gray-200';
+            case 'Applied':
+                return 'bg-blue-100 text-blue-700 border border-blue-200';
+            default:
+                return 'bg-slate-100 text-slate-600 border border-slate-200';
         }
     };
 
@@ -185,17 +209,44 @@ export default function FinalRanking({ applications, onBack }) {
             const recommendation = overallScore >= 90 ? 'Strongly Recommend' : overallScore >= 85 ? 'Recommend' : overallScore >= 80 ? 'Consider' : 'Review';
             const status = overallScore >= 90 ? 'Top Candidate' : overallScore >= 85 ? 'Strong Candidate' : overallScore >= 80 ? 'Good Candidate' : 'Needs Review';
             const hireProbability = Math.min(95, Math.round(overallScore - 5 + Math.random() * 10));
+            // Application status driven by score threshold (mirrors backend shortlisting logic)
+            const applicationStatus = overallScore >= 82 ? 'Shortlisted' : 'Not Shortlisted';
+
+            const allStrengths = [
+                ['Strong system design skills', 'Excellent communication', 'Team leadership experience'],
+                ['Deep ML/AI expertise', 'Published research background', 'Strong analytical thinking'],
+                ['Full-stack proficiency', 'Excellent problem-solving', 'Fast learner'],
+                ['Cloud infrastructure experience', 'CI/CD expertise', 'Strong documentation habits'],
+                ['NLP and LLM integration skills', 'RAG pipeline experience', 'Deployment background'],
+            ];
+            const allConcerns = [
+                ['Limited management experience', 'No international exposure'],
+                ['Narrow tech stack focus', 'Limited production deployment history'],
+                ['Junior in distributed systems', 'No formal ML background'],
+                ['Short tenure at previous roles', 'Limited cloud certifications'],
+                ['No team lead experience yet'],
+            ];
+            const allQuestions = [
+                ['Describe your largest ML project end to end.', 'How do you handle model drift in production?', 'Walk us through a system design you are proud of.'],
+                ['How have you applied RAG in a real project?', 'Explain your approach to fine-tuning LLMs.', 'How do you evaluate model quality beyond accuracy?'],
+                ['Tell me about a time you resolved a production incident.', 'How do you balance technical debt vs new features?', 'Describe your code review process.'],
+                ['How do you mentor junior engineers?', 'Describe a project where you drove cross-team alignment.', 'How do you approach architecture decisions under uncertainty?'],
+            ];
+            const idx8 = Math.floor(Math.random() * 8);
 
             candidates.push({
                 id: i + 1,
                 name: names[(i + offset) % names.length],
+                email: `${names[(i + offset) % names.length].toLowerCase().replace(' ', '.')}@email.com`,
                 overallScore: Math.round(overallScore),
+                final_score: Math.round(overallScore),
                 semantic: Math.round(semantic),
                 technical: Math.round(technical),
                 techInterview: parseFloat(techInterview.toFixed(1)),
                 hrInterview: parseFloat(hrInterview.toFixed(1)),
                 recommendation,
                 status,
+                applicationStatus,
                 experience: ['3 years', '4 years', '5 years', '6 years', '7 years', '8 years'][Math.floor(Math.random() * 6)],
                 education: ['Bachelors in CS', 'Masters in CS', 'Bachelors in SE', 'Masters in EE'][Math.floor(Math.random() * 4)],
                 skills: [
@@ -207,7 +258,23 @@ export default function FinalRanking({ applications, onBack }) {
                     ['JavaScript', 'Vue.js', 'MongoDB', 'Docker', 'GraphQL'],
                     ['Go', 'Kubernetes', 'gRPC', 'Prometheus', 'CI/CD'],
                     ['Ruby', 'Rails', 'MySQL', 'Redis', 'Sidekiq']
-                ][Math.floor(Math.random() * 8)],
+                ][idx8],
+                matchedSkills: [
+                    ['Python', 'ML', 'System Design'],
+                    ['NLP', 'LLM', 'FastAPI'],
+                    ['React', 'TypeScript', 'Docker'],
+                    ['Deep Learning', 'PyTorch', 'AWS'],
+                    ['Python', 'PostgreSQL', 'REST APIs'],
+                    ['Computer Vision', 'OpenCV', 'YOLO'],
+                    ['Go', 'Kubernetes', 'CI/CD'],
+                    ['Python', 'Scikit-learn', 'Data Analysis']
+                ][idx8],
+                genaiEvidence: overallScore >= 85
+                    ? { rag: ['faiss', 'chromadb'], llm_usage: ['langchain', 'gpt-4'] }
+                    : null,
+                strengths: allStrengths[Math.floor(Math.random() * allStrengths.length)],
+                concerns: allConcerns[Math.floor(Math.random() * allConcerns.length)],
+                interviewQuestions: allQuestions[Math.floor(Math.random() * allQuestions.length)],
                 notes: [
                     'Exceptional candidate with strong technical and leadership skills. Perfect cultural fit.',
                     'Solid technical skills with good communication. Shows great potential.',
@@ -217,7 +284,7 @@ export default function FinalRanking({ applications, onBack }) {
                     'Well-rounded candidate with good problem-solving abilities.',
                     'Experienced developer with strong architectural understanding.',
                     'Creative problem solver with excellent teamwork skills.'
-                ][Math.floor(Math.random() * 8)],
+                ][idx8],
                 hireProbability
             });
         }
@@ -314,13 +381,16 @@ export default function FinalRanking({ applications, onBack }) {
     const filteredCandidates = useMemo(() => {
         let filtered = finalRanking;
 
-        if (selectedFilter !== 'all') {
-            filtered = filtered.filter(candidate => {
-                if (selectedFilter === 'top') return candidate.recommendation === 'Strongly Recommend';
-                if (selectedFilter === 'recommended') return candidate.recommendation === 'Recommend';
-                if (selectedFilter === 'consider') return candidate.recommendation === 'Consider';
-                return true;
-            });
+        if (selectedFilter === 'shortlisted') {
+            filtered = filtered.filter(c => c.applicationStatus === 'Shortlisted');
+        } else if (selectedFilter === 'not_shortlisted') {
+            filtered = filtered.filter(c => c.applicationStatus === 'Not Shortlisted');
+        } else if (selectedFilter === 'top') {
+            filtered = filtered.filter(c => c.recommendation === 'Strongly Recommend' || c.recommendation === 'Top Candidate');
+        } else if (selectedFilter === 'recommended') {
+            filtered = filtered.filter(c => c.recommendation === 'Recommend' || c.recommendation === 'Strong Hire');
+        } else if (selectedFilter === 'consider') {
+            filtered = filtered.filter(c => c.recommendation === 'Consider' || c.recommendation === 'Hire');
         }
 
         return [...filtered].sort((a, b) => {
@@ -629,27 +699,13 @@ export default function FinalRanking({ applications, onBack }) {
                         </div>
 
                         {/* Header and Controls */}
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                             <div>
                                 <h2 className={`text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>Final Candidates Ranking</h2>
                                 <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Ranked by overall performance across all stages</p>
                             </div>
 
                             <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                                <div className="flex items-center space-x-2">
-                                    <Filter className={`w-5 h-5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`} />
-                                    <select
-                                        value={selectedFilter}
-                                        onChange={(e) => setSelectedFilter(e.target.value)}
-                                        className={`border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors duration-300 ${isDarkMode ? 'border-slate-600 bg-slate-700 text-gray-200' : 'border-base-300 text-base-700'}`}
-                                    >
-                                        <option value="all">All Candidates</option>
-                                        <option value="top">Top Candidates</option>
-                                        <option value="recommended">Recommended</option>
-                                        <option value="consider">Consider</option>
-                                    </select>
-                                </div>
-
                                 <div className="flex items-center space-x-2">
                                     <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Sort by:</span>
                                     <select
@@ -673,6 +729,38 @@ export default function FinalRanking({ applications, onBack }) {
                                     Export Report
                                 </button>
                             </div>
+                        </div>
+
+                        {/* Filter tab bar — All / Shortlisted / Not Shortlisted */}
+                        <div className={`flex flex-wrap gap-2 mb-6 p-1 rounded-xl w-fit ${isDarkMode ? 'bg-slate-700' : 'bg-base-100'}`}>
+                            {[
+                                { key: 'all',             label: 'All',             count: finalRanking.length },
+                                { key: 'shortlisted',     label: 'Shortlisted',     count: finalRanking.filter(c => c.applicationStatus === 'Shortlisted').length },
+                                { key: 'not_shortlisted', label: 'Not Shortlisted', count: finalRanking.filter(c => c.applicationStatus === 'Not Shortlisted').length },
+                            ].map(tab => (
+                                <button
+                                    key={tab.key}
+                                    onClick={() => setSelectedFilter(tab.key)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                        selectedFilter === tab.key
+                                            ? isDarkMode
+                                                ? 'bg-accent-600 text-white shadow'
+                                                : 'bg-white text-accent-700 shadow-sm'
+                                            : isDarkMode
+                                                ? 'text-gray-400 hover:text-gray-200'
+                                                : 'text-base-600 hover:text-base-900'
+                                    }`}
+                                >
+                                    {tab.label}{' '}
+                                    <span className={`ml-1 px-1.5 py-0.5 rounded-full text-xs ${
+                                        selectedFilter === tab.key
+                                            ? isDarkMode ? 'bg-accent-500 text-white' : 'bg-accent-100 text-accent-700'
+                                            : isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-base-200 text-base-600'
+                                    }`}>
+                                        {tab.count}
+                                    </span>
+                                </button>
+                            ))}
                         </div>
 
                         <div className="space-y-6">
@@ -710,12 +798,19 @@ export default function FinalRanking({ applications, onBack }) {
 
                                             <div className="ml-4">
                                                 <h3 className={`text-xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{candidate.name}</h3>
+                                                {candidate.email && (
+                                                    <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>{candidate.email}</p>
+                                                )}
                                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(candidate.status)}`}>
                                                         {candidate.status}
                                                     </span>
                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${getRecommendationColor(candidate.recommendation)}`}>
                                                         {candidate.recommendation}
+                                                    </span>
+                                                    {/* Application status badge */}
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getApplicationStatusBadge(candidate.applicationStatus)}`}>
+                                                        {candidate.applicationStatus ?? 'Applied'}
                                                     </span>
                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${getHireProbabilityColor(candidate.hireProbability)} text-white`}>
                                                         {candidate.hireProbability}% Hire Probability
@@ -807,6 +902,19 @@ export default function FinalRanking({ applications, onBack }) {
                                                 <FileText className="w-5 h-5 mr-2" />
                                                 Full Report
                                             </button>
+                                            {/* Toggle expandable detail drawer */}
+                                            <button
+                                                onClick={() => setExpandedRows(prev => {
+                                                    const next = new Set(prev);
+                                                    next.has(candidate.id) ? next.delete(candidate.id) : next.add(candidate.id);
+                                                    return next;
+                                                })}
+                                                className={`font-semibold flex items-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-base-500 hover:text-base-800'}`}
+                                            >
+                                                {expandedRows.has(candidate.id)
+                                                    ? <><ChevronUp className="w-5 h-5 mr-1" /> Hide Details</>
+                                                    : <><ChevronDown className="w-5 h-5 mr-1" /> View Details</>}
+                                            </button>
                                         </div>
 
                                         <div className="flex items-center space-x-4 mt-4 md:mt-0">
@@ -825,6 +933,115 @@ export default function FinalRanking({ applications, onBack }) {
                                             </button>
                                         </div>
                                     </div>
+
+                                    {/* Expandable detail drawer */}
+                                    {expandedRows.has(candidate.id) && (
+                                        <div className={`mt-6 pt-6 border-t transition-colors duration-300 ${isDarkMode ? 'border-slate-600' : 'border-base-200'}`}>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Score Breakdown */}
+                                                <div>
+                                                    <h4 className={`font-bold mb-3 text-sm uppercase tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Score Breakdown</h4>
+                                                    <div className="space-y-2">
+                                                        {[
+                                                            { label: 'Semantic / AI Ranking', value: candidate.semantic, max: 100 },
+                                                            { label: 'Technical Assessment', value: candidate.technical, max: 100 },
+                                                            { label: 'Technical Interview', value: candidate.techInterview * 10, max: 100 },
+                                                            { label: 'HR Interview', value: candidate.hrInterview * 10, max: 100 },
+                                                        ].map(row => (
+                                                            <div key={row.label}>
+                                                                <div className="flex justify-between text-xs mb-0.5">
+                                                                    <span className={isDarkMode ? 'text-gray-400' : 'text-base-600'}>{row.label}</span>
+                                                                    <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-base-800'}`}>{Math.round(row.value)}</span>
+                                                                </div>
+                                                                <div className={`w-full h-2 rounded-full ${isDarkMode ? 'bg-slate-600' : 'bg-base-200'}`}>
+                                                                    <div
+                                                                        className="h-2 rounded-full bg-gradient-to-r from-base-500 to-accent-500"
+                                                                        style={{ width: `${Math.min(100, row.value)}%` }}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Strengths + Concerns */}
+                                                <div className="space-y-4">
+                                                    {candidate.strengths?.length > 0 && (
+                                                        <div>
+                                                            <h4 className={`font-bold mb-2 text-sm uppercase tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Strengths</h4>
+                                                            <ul className="space-y-1">
+                                                                {candidate.strengths.map((s, si) => (
+                                                                    <li key={si} className={`flex items-start gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                                        <span className="text-green-500 mt-0.5">+</span>{s}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                    {candidate.concerns?.length > 0 && (
+                                                        <div>
+                                                            <h4 className={`font-bold mb-2 text-sm uppercase tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Concerns</h4>
+                                                            <ul className="space-y-1">
+                                                                {candidate.concerns.map((c, ci) => (
+                                                                    <li key={ci} className={`flex items-start gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>
+                                                                        <span className="text-orange-400 mt-0.5">!</span>{c}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Interview Questions */}
+                                            {candidate.interviewQuestions?.length > 0 && (
+                                                <div className="mt-5">
+                                                    <h4 className={`font-bold mb-2 text-sm uppercase tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Suggested Interview Questions</h4>
+                                                    <ol className="space-y-1.5 list-decimal list-inside">
+                                                        {candidate.interviewQuestions.map((q, qi) => (
+                                                            <li key={qi} className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-base-700'}`}>{q}</li>
+                                                        ))}
+                                                    </ol>
+                                                </div>
+                                            )}
+
+                                            {/* Matched Skills */}
+                                            {candidate.matchedSkills?.length > 0 && (
+                                                <div className="mt-5">
+                                                    <h4 className={`font-bold mb-2 text-sm uppercase tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Matched Skills</h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {candidate.matchedSkills.map((skill, si) => (
+                                                            <span
+                                                                key={si}
+                                                                className={`px-3 py-1 rounded-full text-xs font-medium ${isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'}`}
+                                                            >
+                                                                ✓ {skill}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* GenAI Evidence */}
+                                            {candidate.genaiEvidence && Object.keys(candidate.genaiEvidence).length > 0 && (
+                                                <div className={`mt-5 p-4 rounded-xl ${isDarkMode ? 'bg-slate-700 border border-slate-600' : 'bg-amber-50 border border-amber-200'}`}>
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <Zap className="w-4 h-4 text-amber-500" />
+                                                        <h4 className={`font-bold text-sm ${isDarkMode ? 'text-amber-300' : 'text-amber-800'}`}>AI/ML Evidence Detected</h4>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {Object.entries(candidate.genaiEvidence).flatMap(([cat, terms]) =>
+                                                            terms.map(t => (
+                                                                <span key={`${cat}-${t}`} className={`px-2 py-0.5 rounded text-xs font-medium ${isDarkMode ? 'bg-amber-900 text-amber-200' : 'bg-amber-100 text-amber-700'}`}>
+                                                                    {t}
+                                                                </span>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

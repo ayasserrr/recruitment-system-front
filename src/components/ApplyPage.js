@@ -5,35 +5,14 @@ const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/v1',
 });
 
-// ── Job Closed banner ─────────────────────────────────────────────────────────
-function JobClosed({ deadline }) {
-  const formattedDate = deadline
-    ? new Date(deadline).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : null;
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center p-8 max-w-md">
-        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M12 9v2m0 4h.01M6.938 4.938a8 8 0 1 1 11.314 11.314A8 8 0 0 1 6.938 4.938z" />
-          </svg>
-        </div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">Position Closed</h2>
-        <p className="text-gray-500">
-          Sorry, this position is no longer accepting applications.
-          {formattedDate && (
-            <> The deadline was <span className="font-medium text-gray-700">{formattedDate}</span>.</>
-          )}
-        </p>
-      </div>
-    </div>
-  );
+// ── Date formatter ─────────────────────────────────────────────────────────────
+function formatDate(dateStr) {
+  if (!dateStr) return null;
+  return new Date(dateStr).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 // ── Loading spinner ───────────────────────────────────────────────────────────
@@ -55,13 +34,14 @@ function LoadingSpinner() {
 export default function ApplyPage() {
   const params = new URLSearchParams(window.location.search);
   const companyId = params.get('cid');
-  const jobId = params.get('jid');   // used as requisition_id throughout
+  const jobId = params.get('jid');
 
   // Job meta — sourced exclusively from the server
   const [isLoading, setIsLoading] = useState(true);
   const [paramsError, setParamsError] = useState(false);
-  const [isOpen, setIsOpen] = useState(null);      // null = not yet fetched
-  const [deadline, setDeadline] = useState(null);  // cv_collection_end_date
+  const [isOpen, setIsOpen] = useState(null);          // null = not yet fetched
+  const [deadline, setDeadline] = useState(null);      // cv_collection_end_date
+  const [postingStartDate, setPostingStartDate] = useState(null);
   const [jobTitle, setJobTitle] = useState('');
 
   // Form state
@@ -73,7 +53,7 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // ── Fetch job — also called after a 403 to refresh is_open ─────────────────
+  // ── Fetch job ──────────────────────────────────────────────────────────────
   const fetchJob = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -81,6 +61,7 @@ export default function ApplyPage() {
       const data = res.data ?? {};
       setIsOpen(data.is_open === true);
       setDeadline(data.cv_collection_end_date ?? null);
+      setPostingStartDate(data.posting_start_date ?? null);
       setJobTitle(data.job_title ?? '');
     } catch (err) {
       console.error('[ApplyPage] Failed to fetch job:', err);
@@ -100,11 +81,23 @@ export default function ApplyPage() {
     fetchJob();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Handlers ─────────────────────────────────────────────────────────────────
+  // ── Derive button state from dates ────────────────────────────────────────
+  const today = new Date().toISOString().split('T')[0];
+  const notOpenYet = postingStartDate && today < postingStartDate;
+  const isClosed   = deadline && today >= deadline;
+
+  // ── Handlers ──────────────────────────────────────────────────────────────
+  const ALLOWED_TYPES = ['application/pdf', 'text/plain'];
+  const ALLOWED_EXTENSIONS = ['.pdf', '.txt'];
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type !== 'application/pdf') {
-      setErrorMsg('Only PDF files are accepted.');
+    if (!file) return;
+
+    const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    const typeOk = ALLOWED_TYPES.includes(file.type) || ALLOWED_EXTENSIONS.includes(ext);
+    if (!typeOk) {
+      setErrorMsg('Only PDF or TXT files are accepted.');
       setCvFile(null);
       e.target.value = '';
       return;
@@ -113,32 +106,23 @@ export default function ApplyPage() {
     setCvFile(file);
   };
 
-  // Re-fetch job and surface the closed banner when the server says APPLICATION_CLOSED
-  const handleApplicationClosed = () => {
-    fetchJob();
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
     if (!cvFile) {
-      setErrorMsg('Please upload your CV as a PDF.');
+      setErrorMsg('Please upload your CV (PDF or TXT).');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      // ── Step 1: Register candidate ──────────────────────────────────────────
-      // POST /api/v1/candidates/register
-      // Body: { firstName, email, requisitionId }
+      // Step 1: Register candidate
       const candidateRes = await api.post('/candidates/register', {
         firstName,
         email,
         requisitionId: Number(jobId),
       });
-
-      console.log('[ApplyPage] Step 1 response data:', candidateRes.data);
 
       const responseData = candidateRes.data ?? {};
       const candidateId =
@@ -148,19 +132,13 @@ export default function ApplyPage() {
         null;
 
       if (!candidateId && candidateId !== 0) {
-        console.error('[ApplyPage] Could not extract candidate_id from response:', responseData);
         throw new Error(
           `Server response did not include a candidate ID. ` +
           `Received keys: ${Object.keys(responseData).join(', ') || '(none)'}`
         );
       }
 
-      // ── Step 2: Upload CV ───────────────────────────────────────────────────
-      // POST /api/v1/data/upload/{company_id}/{requisition_id}/{candidate_id}
-      console.log(
-        `[ApplyPage] Step 2 – uploading CV to: /data/upload/${companyId}/${jobId}/${candidateId}`
-      );
-
+      // Step 2: Upload CV
       const formData = new FormData();
       formData.append('file', cvFile);
 
@@ -174,17 +152,38 @@ export default function ApplyPage() {
     } catch (err) {
       console.error('[ApplyPage] Submission error:', err);
 
-      // Server signals the job closed while the user was on the page →
-      // re-fetch so the is_open banner reflects the real server state
-      if (
-        err.response?.status === 403 &&
-        err.response?.data?.detail === 'APPLICATION_CLOSED'
-      ) {
-        handleApplicationClosed();
+      const status = err.response?.status;
+      const detail = err.response?.data?.detail;
+      const signal = err.response?.data?.signal;
+
+      if (status === 403 && detail === 'NOT_YET_OPEN') {
+        // Re-fetch to sync server state, which will update button state
+        fetchJob();
+        setErrorMsg('This job is not accepting applications yet.');
         return;
       }
 
-      const detail = err.response?.data?.detail;
+      if (status === 403 && detail === 'APPLICATION_CLOSED') {
+        fetchJob();
+        setErrorMsg('The application deadline for this position has passed.');
+        return;
+      }
+
+      if (status === 409) {
+        setErrorMsg('You have already applied for this position.');
+        return;
+      }
+
+      if (status === 400 && (signal === 'FILE_TYPE_NOT_ALLOWED' || detail === 'FILE_TYPE_NOT_ALLOWED')) {
+        setErrorMsg('Only PDF or TXT files are accepted.');
+        return;
+      }
+
+      if (status === 400 && (signal === 'FILE_SIZE_EXCEEDS_LIMIT' || detail === 'FILE_SIZE_EXCEEDS_LIMIT')) {
+        setErrorMsg('Your file is too large. Please upload a smaller file.');
+        return;
+      }
+
       if (Array.isArray(detail)) {
         setErrorMsg(detail.map((d) => d.msg || d).join(', '));
       } else if (typeof detail === 'string') {
@@ -199,7 +198,7 @@ export default function ApplyPage() {
     }
   };
 
-  // ── Render guards ─────────────────────────────────────────────────────────────
+  // ── Render guards ──────────────────────────────────────────────────────────
   if (isLoading) return <LoadingSpinner />;
 
   if (paramsError) {
@@ -221,9 +220,6 @@ export default function ApplyPage() {
     );
   }
 
-  // is_open comes exclusively from the server — never computed client-side
-  if (isOpen === false) return <JobClosed deadline={deadline} />;
-
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -235,15 +231,42 @@ export default function ApplyPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-3">Application Submitted Successfully!</h2>
           <p className="text-gray-500 text-base">
-            Thank you for applying. We have received your CV and will be in touch if your profile
-            matches our requirements.
+            Your CV has been submitted. You will hear from us soon.
           </p>
         </div>
       </div>
     );
   }
 
-  // ── Application form (is_open === true) ───────────────────────────────────
+  // ── Derive submit button appearance ──────────────────────────────────────
+  // notOpenYet / isClosed / open — driven by client-side date math + server is_open
+  const buttonDisabled = isSubmitting || Boolean(notOpenYet) || Boolean(isClosed) || isOpen === false;
+
+  let buttonStatusText = null;
+  if (notOpenYet) {
+    buttonStatusText = (
+      <p className="mt-2 text-sm text-gray-500 text-center">
+        Applications open on{' '}
+        <span className="font-medium text-gray-700">{formatDate(postingStartDate)}</span>
+      </p>
+    );
+  } else if (isClosed || isOpen === false) {
+    buttonStatusText = (
+      <p className="mt-2 text-sm text-gray-500 text-center">
+        Applications closed on{' '}
+        <span className="font-medium text-gray-700">{formatDate(deadline)}</span>
+      </p>
+    );
+  } else if (deadline) {
+    buttonStatusText = (
+      <p className="mt-2 text-sm text-green-600 text-center">
+        Apply before{' '}
+        <span className="font-medium">{formatDate(deadline)}</span>
+      </p>
+    );
+  }
+
+  // ── Application form ──────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
@@ -276,7 +299,8 @@ export default function ApplyPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="e.g. John"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                disabled={buttonDisabled && !isSubmitting}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
 
@@ -292,7 +316,8 @@ export default function ApplyPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. john@example.com"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                disabled={buttonDisabled && !isSubmitting}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
 
@@ -304,11 +329,12 @@ export default function ApplyPage() {
               <input
                 id="cvFile"
                 type="file"
-                accept="application/pdf"
+                accept=".pdf,.txt,application/pdf,text/plain"
                 onChange={handleFileChange}
-                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer"
+                disabled={buttonDisabled && !isSubmitting}
+                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
-              <p className="mt-1 text-xs text-gray-400">PDF format only. Max 10 MB.</p>
+              <p className="mt-1 text-xs text-gray-400">PDF or TXT format. Max 10 MB.</p>
             </div>
 
             {/* Error message */}
@@ -322,24 +348,48 @@ export default function ApplyPage() {
               </div>
             )}
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg text-sm transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                  </svg>
-                  Submitting…
-                </>
-              ) : (
-                'Submit Application'
-              )}
-            </button>
+            {/* Submit button — three states */}
+            {notOpenYet || (isOpen === false && isClosed !== true) ? (
+              /* State 1: Not open yet */
+              <button
+                type="button"
+                disabled
+                className="w-full py-3 px-6 bg-gray-300 text-gray-500 font-semibold rounded-lg text-sm cursor-not-allowed flex items-center justify-center"
+              >
+                Submit Application
+              </button>
+            ) : isClosed || isOpen === false ? (
+              /* State 3: Closed */
+              <button
+                type="button"
+                disabled
+                className="w-full py-3 px-6 bg-gray-300 text-gray-500 font-semibold rounded-lg text-sm cursor-not-allowed flex items-center justify-center"
+              >
+                Submit Application
+              </button>
+            ) : (
+              /* State 2: Open */
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 px-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg text-sm transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    Submitting…
+                  </>
+                ) : (
+                  'Submit Application'
+                )}
+              </button>
+            )}
+
+            {/* Date context text below the button */}
+            {buttonStatusText}
           </form>
         </div>
 
