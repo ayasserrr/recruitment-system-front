@@ -32,6 +32,7 @@ import TourModal from './components/TourModal';
 import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
 import ApplyPage from './components/ApplyPage';
 import CandidateApplications from './components/CandidateApplications';
+import AssessmentPage from './components/AssessmentPage';
 import './App.css';
 
 function RecruitmentSystemContent() {
@@ -589,6 +590,9 @@ export default function RecruitmentSystem() {
     }
     if (window.location.pathname === '/my-applications') {
         return <CandidateApplications />;
+    }
+    if (window.location.pathname.startsWith('/assessment/')) {
+        return <AssessmentPage />;
     }
 
     return (
