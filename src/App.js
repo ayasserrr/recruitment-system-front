@@ -34,6 +34,7 @@ import ApplyPage from './components/ApplyPage';
 import CandidateApplications from './components/CandidateApplications';
 import AssessmentPage from './components/AssessmentPage';
 import ToolManager from './components/ToolManager';
+import KnowledgeGapReport from './components/KnowledgeGapReport';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 
@@ -590,6 +591,17 @@ function RecruitmentSystemContent() {
                     setCurrentPage('phases');
                     window.history.pushState({ page: 'phases' }, '', '#phases');
                 }} />
+            )}
+
+            {/* Knowledge Gap Report */}
+            {currentPage === 'knowledge-gap' && (
+                <KnowledgeGapReport
+                    onBack={() => {
+                        setCurrentPage('phases');
+                        window.history.pushState({ page: 'phases' }, '', '#phases');
+                    }}
+                    onNavigateToPhase={handleNavigateToPhase}
+                />
             )}
         </div>
     );

@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun, BookOpen } from 'lucide-react';
+import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun, BookOpen, Wrench, TrendingUp } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Navbar({ currentUser, onLogout, onNavigateHome, onNavigateToPhase }) {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isKnowledgeOpen, setIsKnowledgeOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const knowledgeRef = useRef(null);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    // Close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
+            }
+            if (knowledgeRef.current && !knowledgeRef.current.contains(event.target)) {
+                setIsKnowledgeOpen(false);
             }
         };
 
@@ -46,13 +51,36 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
 
                     {/* Navigation Items */}
                     <div className="flex items-center space-x-6">
-                        <button
-                            onClick={() => onNavigateToPhase('knowledge-tools')}
-                            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-300 hover:text-accent-400' : 'text-base-600 hover:text-accent-600'}`}
-                        >
-                            <BookOpen className="w-4 h-4" />
-                            Knowledge
-                        </button>
+                        {/* Knowledge dropdown */}
+                        <div className="relative" ref={knowledgeRef}>
+                            <button
+                                onClick={() => setIsKnowledgeOpen(o => !o)}
+                                className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-300 hover:text-accent-400' : 'text-base-600 hover:text-accent-600'}`}
+                            >
+                                <BookOpen className="w-4 h-4" />
+                                Knowledge
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isKnowledgeOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {isKnowledgeOpen && (
+                                <div className={`absolute top-full left-0 mt-2 w-48 rounded-lg shadow-lg border py-1 z-50 ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-white border-base-200'}`}>
+                                    <button
+                                        onClick={() => { onNavigateToPhase('knowledge-tools'); setIsKnowledgeOpen(false); }}
+                                        className={`w-full flex items-center gap-2 px-4 py-2 text-sm transition-colors ${isDarkMode ? 'text-gray-300 hover:bg-slate-600' : 'text-base-700 hover:bg-base-50'}`}
+                                    >
+                                        <Wrench className="w-4 h-4" />
+                                        Tool Manager
+                                    </button>
+                                    <button
+                                        onClick={() => { onNavigateToPhase('knowledge-gap'); setIsKnowledgeOpen(false); }}
+                                        className={`w-full flex items-center gap-2 px-4 py-2 text-sm transition-colors ${isDarkMode ? 'text-gray-300 hover:bg-slate-600' : 'text-base-700 hover:bg-base-50'}`}
+                                    >
+                                        <TrendingUp className="w-4 h-4" />
+                                        Gap Report
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* User Menu */}

@@ -25,3 +25,19 @@ export const deleteTool = (id) => knowledge.delete(`/tools/${id}/`);
 export const createConcept = (data) => knowledge.post('/concepts/', data).then(r => r.data);
 export const updateConcept = (id, data) => knowledge.put(`/concepts/${id}/`, data).then(r => r.data);
 export const deleteConcept = (id) => knowledge.delete(`/concepts/${id}/`);
+
+// ─── Admin endpoints ─────────────────────────────────────────────────────────
+const admin = axios.create({
+  baseURL: 'http://localhost:8000/api/v1/admin',
+  headers: { 'Content-Type': 'application/json' },
+});
+
+admin.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  const tokenType = localStorage.getItem('token_type') || 'Bearer';
+  if (token) config.headers.Authorization = `${tokenType} ${token}`;
+  return config;
+});
+
+export const getMissingKnowledge = () =>
+  admin.get('/system-health/missing-knowledge').then(r => r.data);
