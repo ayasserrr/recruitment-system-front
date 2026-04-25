@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun } from 'lucide-react';
+import { Zap, Home, Briefcase, User, LogOut, Settings, ChevronDown, Moon, Sun, BookOpen } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
 export default function Navbar({ currentUser, onLogout, onNavigateHome, onNavigateToPhase }) {
@@ -46,6 +46,13 @@ export default function Navbar({ currentUser, onLogout, onNavigateHome, onNaviga
 
                     {/* Navigation Items */}
                     <div className="flex items-center space-x-6">
+                        <button
+                            onClick={() => onNavigateToPhase('knowledge-tools')}
+                            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-300 hover:text-accent-400' : 'text-base-600 hover:text-accent-600'}`}
+                        >
+                            <BookOpen className="w-4 h-4" />
+                            Knowledge
+                        </button>
                     </div>
 
                     {/* User Menu */}

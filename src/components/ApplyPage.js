@@ -81,10 +81,8 @@ export default function ApplyPage() {
     fetchJob();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Derive button state from dates ────────────────────────────────────────
+  // today used only to distinguish NOT_YET_OPEN from APPLICATION_CLOSED display
   const today = new Date().toISOString().split('T')[0];
-  const notOpenYet = postingStartDate && today < postingStartDate;
-  const isClosed   = deadline && today >= deadline;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const ALLOWED_TYPES = ['application/pdf', 'text/plain'];
@@ -239,24 +237,27 @@ export default function ApplyPage() {
   }
 
   // ── Derive submit button appearance ──────────────────────────────────────
-  // notOpenYet / isClosed / open — driven by client-side date math + server is_open
-  const buttonDisabled = isSubmitting || Boolean(notOpenYet) || Boolean(isClosed) || isOpen === false;
+  // Trust is_open from the API — never compute open/closed from dates on the client
+  const buttonDisabled = isSubmitting || isOpen === false;
 
   let buttonStatusText = null;
-  if (notOpenYet) {
-    buttonStatusText = (
-      <p className="mt-2 text-sm text-gray-500 text-center">
-        Applications open on{' '}
-        <span className="font-medium text-gray-700">{formatDate(postingStartDate)}</span>
-      </p>
-    );
-  } else if (isClosed || isOpen === false) {
-    buttonStatusText = (
-      <p className="mt-2 text-sm text-gray-500 text-center">
-        Applications closed on{' '}
-        <span className="font-medium text-gray-700">{formatDate(deadline)}</span>
-      </p>
-    );
+  if (isOpen === false) {
+    if (postingStartDate && postingStartDate > today) {
+      // Job hasn't opened yet
+      buttonStatusText = (
+        <p className="mt-2 text-sm text-gray-500 text-center">
+          Applications open on{' '}
+          <span className="font-medium text-gray-700">{formatDate(postingStartDate)}</span>
+        </p>
+      );
+    } else {
+      // Deadline has passed
+      buttonStatusText = (
+        <p className="mt-2 text-sm text-gray-500 text-center">
+          Applications for this position are now closed.
+        </p>
+      );
+    }
   } else if (deadline) {
     buttonStatusText = (
       <p className="mt-2 text-sm text-green-600 text-center">
@@ -299,7 +300,7 @@ export default function ApplyPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="e.g. John"
-                disabled={buttonDisabled && !isSubmitting}
+                disabled={isOpen === false}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
@@ -316,7 +317,7 @@ export default function ApplyPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. john@example.com"
-                disabled={buttonDisabled && !isSubmitting}
+                disabled={isOpen === false}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
@@ -331,7 +332,7 @@ export default function ApplyPage() {
                 type="file"
                 accept=".pdf,.txt,application/pdf,text/plain"
                 onChange={handleFileChange}
-                disabled={buttonDisabled && !isSubmitting}
+                disabled={isOpen === false}
                 className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <p className="mt-1 text-xs text-gray-400">PDF or TXT format. Max 10 MB.</p>
@@ -348,18 +349,8 @@ export default function ApplyPage() {
               </div>
             )}
 
-            {/* Submit button — three states */}
-            {notOpenYet || (isOpen === false && isClosed !== true) ? (
-              /* State 1: Not open yet */
-              <button
-                type="button"
-                disabled
-                className="w-full py-3 px-6 bg-gray-300 text-gray-500 font-semibold rounded-lg text-sm cursor-not-allowed flex items-center justify-center"
-              >
-                Submit Application
-              </button>
-            ) : isClosed || isOpen === false ? (
-              /* State 3: Closed */
+            {/* Submit button — enabled only when is_open === true */}
+            {isOpen === false ? (
               <button
                 type="button"
                 disabled
@@ -368,7 +359,6 @@ export default function ApplyPage() {
                 Submit Application
               </button>
             ) : (
-              /* State 2: Open */
               <button
                 type="submit"
                 disabled={isSubmitting}

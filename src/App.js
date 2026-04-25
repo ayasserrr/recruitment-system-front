@@ -33,6 +33,8 @@ import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
 import ApplyPage from './components/ApplyPage';
 import CandidateApplications from './components/CandidateApplications';
 import AssessmentPage from './components/AssessmentPage';
+import ToolManager from './components/ToolManager';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 function RecruitmentSystemContent() {
@@ -342,6 +344,8 @@ function RecruitmentSystemContent() {
 
     return (
         <div>
+            <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+
             {/* Tour Modal */}
             <TourModal
                 isOpen={showTour}
@@ -575,6 +579,14 @@ function RecruitmentSystemContent() {
             {/* Analytics Page */}
             {currentPage === 'analytics' && (
                 <Analytics onBack={() => {
+                    setCurrentPage('phases');
+                    window.history.pushState({ page: 'phases' }, '', '#phases');
+                }} />
+            )}
+
+            {/* Knowledge Tool Manager */}
+            {currentPage === 'knowledge-tools' && (
+                <ToolManager onBack={() => {
                     setCurrentPage('phases');
                     window.history.pushState({ page: 'phases' }, '', '#phases');
                 }} />
