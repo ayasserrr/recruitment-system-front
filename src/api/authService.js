@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios instance with base URL
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1/auth',
+  baseURL: 'http://127.0.0.1:8000/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -66,33 +66,40 @@ const formatErrorMessage = (error) => {
 // Signup function
 export const signup = async (userData) => {
   try {
-    console.log('Sending signup data:', userData);
-    const response = await api.post('/signup', userData);
-    console.log('Signup response:', response.data);
+    const body = {
+      name: userData.companyName || userData.name || '',
+      email: userData.email,
+      password: userData.password,
+      first_name: userData.firstName || userData.first_name || '',
+      last_name: userData.lastName || userData.last_name || '',
+      phone: userData.phone || '',
+      industry: userData.industry || '',
+      website: userData.website || '',
+      address: userData.address || '',
+      role: userData.role || '',
+      bio: userData.bio || '',
+      profile_picture: userData.profilePicture || userData.profile_picture || ''
+    };
+    const response = await api.post('/auth/signup', body);
 
-    // Store token and company data (assuming same response structure as login)
-    const { access_token, token_type, company } = response.data;
+    const { access_token, token_type = 'Bearer', company } = response.data;
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('token_type', token_type);
     localStorage.setItem('company_info', JSON.stringify(company));
 
-    // Set default header for future calls
     api.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
 
     return { success: true, data: response.data };
   } catch (error) {
-    console.log('Signup error:', error);
     const errorMessage = formatErrorMessage(error);
     return { success: false, error: errorMessage };
   }
 };
 
-// Login function
+// Login function for company
 export const login = async (credentials) => {
   try {
-    console.log('Sending login data:', credentials);
-    const response = await api.post('/login', credentials);
-    console.log('Login response:', response.data);
+    const response = await api.post('/auth/login', credentials);
 
     // Store token and company data
     const { access_token, token_type, company } = response.data;
@@ -117,11 +124,40 @@ export const login = async (credentials) => {
   }
 };
 
+// Login function for recruiter
+export const recruiterLogin = async (credentials) => {
+  try {
+    const response = await api.post('/recruiters/login', credentials);
+
+    // Store token and recruiter data
+    const { access_token, token_type, recruiter } = response.data;
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('token_type', token_type);
+    localStorage.setItem('recruiter_info', JSON.stringify(recruiter));
+
+    // Set session start time for timeout tracking
+    localStorage.setItem('session_start', Date.now().toString());
+
+    // Set default header for future calls
+    api.defaults.headers.common['Authorization'] = `${token_type} ${access_token}`;
+
+    // Start session timeout monitoring
+    startSessionTimeout();
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('Recruiter login error:', error);
+    const errorMessage = formatErrorMessage(error);
+    return { success: false, error: errorMessage };
+  }
+};
+
 // Logout function
 export const logout = (showMessage = false) => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('token_type');
   localStorage.removeItem('company_info');
+  localStorage.removeItem('recruiter_info');
   localStorage.removeItem('session_start');
   delete api.defaults.headers.common['Authorization'];
 
@@ -275,7 +311,7 @@ export const submitJobRequisition = async (requisitionData) => {
 export const getLinkedInAuthUrl = async () => {
   try {
     console.log('Getting LinkedIn auth URL...');
-    const response = await api.get('/linkedin/url');
+    const response = await api.get('/auth/linkedin/url');
     console.log('LinkedIn auth URL response:', response.data);
     return { success: true, data: response.data };
   } catch (error) {
@@ -285,10 +321,10 @@ export const getLinkedInAuthUrl = async () => {
   }
 };
 
-export const handleLinkedInCallback = async (code) => {
+export const handleLinkedInCallback = async (code, state) => {
   try {
-    console.log('Handling LinkedIn callback with code:', code);
-    const response = await api.get(`/linkedin/callback?code=${code}`);
+    console.log('Handling LinkedIn callback with code:', code, 'state:', state);
+    const response = await api.get(`/auth/linkedin/callback?code=${code}&state=${state}`);
     console.log('LinkedIn callback response:', response.data);
     return { success: true, data: response.data };
   } catch (error) {
@@ -301,7 +337,7 @@ export const handleLinkedInCallback = async (code) => {
 export const getLinkedInConnectionStatus = async () => {
   try {
     console.log('Getting LinkedIn connection status...');
-    const response = await api.get('/linkedin/status');
+    const response = await api.get('/auth/linkedin/status');
     console.log('LinkedIn status response:', response.data);
     return { success: true, data: response.data };
   } catch (error) {
@@ -314,7 +350,7 @@ export const getLinkedInConnectionStatus = async () => {
 export const disconnectLinkedIn = async () => {
   try {
     console.log('Disconnecting LinkedIn...');
-    const response = await api.delete('/linkedin/disconnect');
+    const response = await api.delete('/auth/linkedin/disconnect');
     console.log('LinkedIn disconnect response:', response.data);
     return { success: true, data: response.data };
   } catch (error) {

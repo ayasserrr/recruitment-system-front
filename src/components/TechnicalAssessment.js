@@ -644,9 +644,9 @@ export default function TechnicalAssessment({ applications, onBack }) {
                                             } else {
                                                 const note = prompt(`Add a note for ${showCVModal?.name || 'this candidate'} (optional):`, '') || '';
                                                 addToShortlist({
-                                                    candidate_id: showCVModal.id,
-                                                    job_id: selectedAppId,
-                                                    phase: 'Technical Assessment',
+                                                    candidateId: showCVModal.id,
+                                                    jobId: selectedAppId,
+                                                    shortlistedFrom: 'Assessment',
                                                     note,
                                                 })
                                                     .then(() => loadShortlistedIds(selectedAppId))

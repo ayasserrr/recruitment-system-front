@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { CheckCircle, Clock, AlertCircle, Upload, Send, Eye, Users, Briefcase, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { getPipelineStages } from '../api/jobService';
 
 // ── Requisition-level status helpers (module-scope so PostingProgress can use them) ──
 function getRequisitionStatusBadge(status) {
@@ -33,6 +34,18 @@ function getRequisitionStatusLabel(status) {
 export default function JobPost({ applications, onUpdateApplication, onBackToDashboard, onViewCVs, onOpenSemanticAnalysis }) {
     const { isDarkMode } = useDarkMode();
     const [selectedId, setSelectedId] = useState(null);
+    const pipelineCache = useRef({});
+
+    useEffect(() => {
+        if (!selectedId) return;
+        getPipelineStages(selectedId)
+            .then((data) => {
+                if (Array.isArray(data?.stages)) {
+                    pipelineCache.current[selectedId] = data.stages;
+                }
+            })
+            .catch(() => {});
+    }, [selectedId]);
 
     const platformLabel = (id) => {
         if (id === 'linkedin') return 'LinkedIn';
@@ -136,6 +149,8 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
     };
 
     const ensureProgress = (app) => {
+        // Prefer API-fetched pipeline stages
+        if (pipelineCache.current[app.id]) return pipelineCache.current[app.id];
         if (Array.isArray(app.postingProgress) && app.postingProgress.length) return app.postingProgress;
         const next = buildDefaultProgress(app);
         if (typeof onUpdateApplication === 'function') {

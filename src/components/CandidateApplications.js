@@ -72,14 +72,8 @@ export default function CandidateApplications() {
     setIsLoading(true);
     setErrorMsg('');
     try {
-      // Endpoint: GET /api/v1/candidates/{candidate_id}/applications
-      // or GET /api/v1/candidates/applications?email=...
-      const endpoint = candidateId
-        ? `/candidates/${candidateId}/applications`
-        : `/candidates/applications?email=${encodeURIComponent(email ?? '')}`;
-
-      const res = await api.get(endpoint);
-      setApplications(Array.isArray(res.data) ? res.data : res.data?.applications ?? []);
+      const res = await api.get(`/candidates/my-applications?email=${encodeURIComponent(email ?? '')}`);
+      setApplications(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error('[CandidateApplications] fetch error:', err);
       setErrorMsg('Could not load your applications. Please try again later.');

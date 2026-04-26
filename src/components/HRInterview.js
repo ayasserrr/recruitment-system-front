@@ -693,9 +693,9 @@ export default function HRInterview({ applications, onBack }) {
                                             } else {
                                                 const note = prompt(`Add a note for ${showCVModal?.name || 'this candidate'} (optional):`, '') || '';
                                                 addToShortlist({
-                                                    candidate_id: showCVModal.id,
-                                                    job_id: selectedAppId,
-                                                    phase: 'HR Interview',
+                                                    candidateId: showCVModal.id,
+                                                    jobId: selectedAppId,
+                                                    shortlistedFrom: 'Final Ranking',
                                                     note,
                                                 })
                                                     .then(() => loadShortlistedIds(selectedAppId))

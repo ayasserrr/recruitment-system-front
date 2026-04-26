@@ -419,9 +419,9 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                         } else {
                                                             const note = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
                                                             addToShortlist({
-                                                                candidate_id: candidate.id,
-                                                                job_id: selectedAppId,
-                                                                phase: 'Semantic Analysis',
+                                                                candidateId: candidate.id,
+                                                                jobId: selectedAppId,
+                                                                shortlistedFrom: 'Semantic Analysis',
                                                                 note,
                                                             })
                                                                 .then(() => loadShortlistedIds(selectedAppId))

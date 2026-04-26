@@ -210,7 +210,7 @@ function InterviewUI({ roomName, statusData, elapsed, onLeave }) {
     : participants.filter(p => !p.isLocal).length > 0;
 
   function handleLeave() {
-    room.disconnect();
+    if (room) room.disconnect();
     onLeave();
   }
 
@@ -288,10 +288,10 @@ function ResultsView({ results }) {
   const recStyle = getRecommendationStyle(hr_card?.recommendation);
 
   const scoreRows = [
-    { label: 'CV Semantic Score', value: scores.cv_semantic_score, max: 100 },
-    { label: 'Interview Score', value: scores.interview_overall_score, max: 100 },
-    { label: 'Centroid Match', value: scores.centroid_math_score * 100, max: 100 },
-    { label: 'Depth Boost', value: scores.depth_boost * 100, max: 100 },
+    { label: 'CV Semantic Score', value: scores.cv_semantic_score ?? 0, max: 100 },
+    { label: 'Interview Score', value: scores.interview_overall_score ?? 0, max: 100 },
+    { label: 'Centroid Match', value: (scores.centroid_math_score ?? 0) * 100, max: 100 },
+    { label: 'Depth Boost', value: (scores.depth_boost ?? 0) * 100, max: 100 },
   ];
 
   return (
@@ -501,16 +501,13 @@ function PreInterviewScreen({ language, persona, countdown, onLanguageChange, on
           </div>
         </div>
 
-        {/* Countdown + start button */}
+        {/* Countdown (informational) + start button */}
         <div className="space-y-3">
-          {countdown > 0 ? (
-            <p className="text-center text-sm text-slate-500">
-              Auto-starting in{' '}
-              <span className="text-accent-400 font-bold">{countdown}s</span>
-            </p>
-          ) : (
-            <p className="text-center text-sm text-slate-500">Ready when you are</p>
-          )}
+          <p className="text-center text-sm text-slate-500">
+            {countdown > 0
+              ? <>Take your time — interview ready in <span className="text-accent-400 font-bold">{countdown}s</span></>
+              : 'Ready when you are'}
+          </p>
           <button
             onClick={onStart}
             className="w-full py-4 flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-white font-semibold text-lg rounded-2xl transition-colors shadow-[0_0_24px_rgba(146,187,232,0.2)]"
@@ -524,12 +521,29 @@ function PreInterviewScreen({ language, persona, countdown, onLanguageChange, on
   );
 }
 
+// ── URL param parser — accepts multiple naming conventions ────────────────────
+
+function parseUrlParams() {
+  const p = new URLSearchParams(window.location.search);
+
+  // Accept requisition_id / jr_id / job_id
+  const rawReq  = p.get('requisition_id') ?? p.get('jr_id') ?? p.get('job_id');
+  // Accept candidate_id / applicant_id
+  const rawCand = p.get('candidate_id') ?? p.get('applicant_id');
+
+  const requisitionId = rawReq  ? Number(rawReq)  : NaN;
+  const candidateId   = rawCand ? Number(rawCand) : NaN;
+
+  const isValid = Number.isFinite(requisitionId) && requisitionId > 0
+               && Number.isFinite(candidateId)   && candidateId   > 0;
+
+  return { requisitionId, candidateId, isValid, raw: Object.fromEntries(p) };
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function InterviewRoom() {
-  const params = new URLSearchParams(window.location.search);
-  const requisitionId = Number(params.get('requisition_id'));
-  const candidateId = Number(params.get('candidate_id'));
+  const { requisitionId, candidateId, isValid, raw } = parseUrlParams();
 
   // ── State ────────────────────────────────────────────────────────────────
   const [phase, setPhase] = useState('pre-interview');
@@ -545,7 +559,7 @@ export default function InterviewRoom() {
   const [statusData, setStatusData] = useState(null);
   const [elapsed, setElapsed] = useState(0);
   const [results, setResults] = useState(null);
-  const [error, setError] = useState(null); // { message, canRetry }
+  const [error, setError] = useState(null); // { message, canRetry, debug }
 
   // Refs for stable access inside callbacks
   const sessionRef = useRef(null);
@@ -556,20 +570,27 @@ export default function InterviewRoom() {
   useEffect(() => { sessionRef.current = session; }, [session]);
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
-  // ── Pre-interview countdown ───────────────────────────────────────────────
+  // ── Validate URL params immediately on mount ──────────────────────────────
+  useEffect(() => {
+    if (!isValid) {
+      const received = Object.keys(raw).length
+        ? JSON.stringify(raw)
+        : '(no query parameters)';
+      setError({
+        message: 'Invalid interview link — required parameters are missing.',
+        detail: `Expected ?requisition_id=N&candidate_id=N. Received: ${received}`,
+        canRetry: false,
+      });
+      setPhase('error');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Pre-interview countdown (visual only — never auto-starts) ────────────
   useEffect(() => {
     if (phase !== 'pre-interview' || countdown <= 0) return;
     const t = setTimeout(() => setCountdown(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [phase, countdown]);
-
-  // Countdown hits 0 → auto-start
-  useEffect(() => {
-    if (phase === 'pre-interview' && countdown === 0) {
-      handleStart();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countdown]);
 
   // ── Local elapsed timer (1-sec tick, synced from poll) ───────────────────
   useEffect(() => {
@@ -600,6 +621,13 @@ export default function InterviewRoom() {
         } else if (status.status === 'Failed') {
           stopPolling();
           recoverFromCrash();
+        } else if (status.status === 'No-show') {
+          stopPolling();
+          setError({
+            message: 'This session was marked as no-show. Please contact HR to reschedule.',
+            canRetry: false,
+          });
+          setPhase('error');
         }
       } catch {
         // silent — don't interrupt the interview on a failed poll
@@ -620,48 +648,94 @@ export default function InterviewRoom() {
 
   // ── Start interview ───────────────────────────────────────────────────────
   async function handleStart() {
-    setPhase('starting');
-    try {
-      const resp = await interviewApi.startInterview({
-        requisition_id: requisitionId,
-        candidate_id: candidateId,
-        language,
-        mode: 'technical',
-        persona,
+    // Guard: never call the API with invalid IDs
+    if (!isValid) {
+      setError({
+        message: 'Invalid interview link — required parameters are missing.',
+        detail: `Received params: ${JSON.stringify(raw)}`,
+        canRetry: false,
       });
+      setPhase('error');
+      return;
+    }
+
+    setPhase('starting');
+
+    const payload = {
+      requisition_id: requisitionId,
+      candidate_id:   candidateId,
+      language,
+      mode: 'technical',
+      persona,
+    };
+
+    console.info('[InterviewRoom] calling /start with payload:', payload);
+
+    try {
+      const resp = await interviewApi.startInterview(payload);
+
+      console.info('[InterviewRoom] /start success:', resp);
+
       elapsedRef.current = 0;
       setElapsed(0);
       setSession({
-        session_id: resp.session_id,
-        room_name: resp.room_name,
+        session_id:   resp.session_id,
+        room_name:    resp.room_name,
         access_token: resp.access_token,
-        livekit_url: resp.livekit_url,
+        livekit_url:  resp.livekit_url,
       });
       setPhase('in-room');
     } catch (err) {
       const status = err.response?.status;
-      const body = err.response?.data;
+      const body   = err.response?.data;
+
+      // Always log the full backend response for debugging
+      console.error('[InterviewRoom] /start error', {
+        status,
+        body,
+        payload,
+        url: window.location.href,
+      });
 
       if (status === 409) {
-        // Already completed — jump straight to results
         const sid = body?.session_id;
         if (sid) {
           await loadResults(sid);
         } else {
-          setError({ message: 'This interview has already been completed.', canRetry: false });
+          setError({
+            message: 'This interview has already been completed.',
+            detail: body?.detail,
+            canRetry: false,
+          });
           setPhase('error');
         }
       } else if (status === 400) {
         setError({
           message: 'Your application is still being processed. CV screening has not been completed yet.',
+          detail: body?.detail,
           canRetry: false,
         });
         setPhase('error');
       } else if (status === 404) {
-        setError({ message: 'Application not found. Please check your interview link.', canRetry: false });
+        setError({
+          message: 'Application not found. Please check your interview link.',
+          detail: `Backend responded: ${JSON.stringify(body)} | Payload sent: ${JSON.stringify(payload)}`,
+          canRetry: false,
+        });
+        setPhase('error');
+      } else if (status === 500) {
+        setError({
+          message: 'Server error. Please try again.',
+          detail: body?.detail,
+          canRetry: true,
+        });
         setPhase('error');
       } else {
-        setError({ message: body?.detail || 'Server error. Please try again.', canRetry: true });
+        setError({
+          message: body?.detail || 'Could not start interview. Please try again.',
+          detail: `HTTP ${status ?? 'network error'}`,
+          canRetry: true,
+        });
         setPhase('error');
       }
     }
@@ -709,7 +783,16 @@ export default function InterviewRoom() {
       setResults(data);
       setPhase('results');
     } catch (err) {
-      setError({ message: 'Could not load your results. Please contact support.', canRetry: false });
+      console.error('[InterviewRoom] /results error', {
+        sessionId,
+        status: err.response?.status,
+        body:   err.response?.data,
+      });
+      setError({
+        message: 'Could not load your results. Please contact support.',
+        detail: `Session ID: ${sessionId} | HTTP ${err.response?.status ?? 'network error'}`,
+        canRetry: false,
+      });
       setPhase('error');
     }
   }
@@ -742,9 +825,15 @@ export default function InterviewRoom() {
         <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center">
           <AlertTriangle className="w-8 h-8 text-red-400" />
         </div>
-        <div className="text-center max-w-sm space-y-2">
+        <div className="text-center max-w-lg space-y-2">
           <h2 className="text-xl font-semibold text-white">Something went wrong</h2>
           <p className="text-slate-400 text-sm leading-relaxed">{error?.message}</p>
+          {/* Debug detail — visible in all envs so support can read it */}
+          {error?.detail && (
+            <p className="mt-3 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-500 font-mono text-left break-all">
+              {error.detail}
+            </p>
+          )}
         </div>
         {error?.canRetry && (
           <button

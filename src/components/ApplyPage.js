@@ -1,21 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const api = axios.create({
+const publicApi = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/v1',
 });
 
-// ── Date formatter ─────────────────────────────────────────────────────────────
 function formatDate(dateStr) {
   if (!dateStr) return null;
   return new Date(dateStr).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: 'numeric', month: 'long', day: 'numeric',
   });
 }
 
-// ── Loading spinner ───────────────────────────────────────────────────────────
 function LoadingSpinner() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -30,50 +26,53 @@ function LoadingSpinner() {
   );
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
+const ALLOWED_TYPES = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+
 export default function ApplyPage() {
   const params = new URLSearchParams(window.location.search);
-  const companyId = params.get('cid');
   const jobId = params.get('jid');
 
-  // Job meta — sourced exclusively from the server
   const [isLoading, setIsLoading] = useState(true);
   const [paramsError, setParamsError] = useState(false);
-  const [isOpen, setIsOpen] = useState(null);          // null = not yet fetched
-  const [deadline, setDeadline] = useState(null);      // cv_collection_end_date
-  const [postingStartDate, setPostingStartDate] = useState(null);
-  const [jobTitle, setJobTitle] = useState('');
+  const [job, setJob] = useState(null);
 
-  // Form state
-  const [firstName, setFirstName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [cvFile, setCvFile] = useState(null);
+  const [coverLetter, setCoverLetter] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // ── Fetch job ──────────────────────────────────────────────────────────────
   const fetchJob = useCallback(async () => {
     setIsLoading(true);
+    setErrorMsg('');
     try {
-      const res = await api.get(`/jobs/${jobId}`);
-      const data = res.data ?? {};
-      setIsOpen(data.is_open === true);
-      setDeadline(data.cv_collection_end_date ?? null);
-      setPostingStartDate(data.posting_start_date ?? null);
-      setJobTitle(data.job_title ?? '');
+      const res = await publicApi.get(`/public/jobs/${jobId}`);
+      setJob(res.data ?? {});
     } catch (err) {
       console.error('[ApplyPage] Failed to fetch job:', err);
-      setErrorMsg('Could not load job details. Please try again later.');
-      setIsOpen(false);
+      if (err.response?.status === 404) {
+        setErrorMsg('This job posting could not be found.');
+      } else {
+        setErrorMsg('Could not load job details. Please try again later.');
+      }
+      setJob({ isOpen: false });
     } finally {
       setIsLoading(false);
     }
   }, [jobId]);
 
   useEffect(() => {
-    if (!companyId || !jobId) {
+    if (!jobId) {
       setParamsError(true);
       setIsLoading(false);
       return;
@@ -81,21 +80,21 @@ export default function ApplyPage() {
     fetchJob();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // today used only to distinguish NOT_YET_OPEN from APPLICATION_CLOSED display
   const today = new Date().toISOString().split('T')[0];
-
-  // ── Handlers ──────────────────────────────────────────────────────────────
-  const ALLOWED_TYPES = ['application/pdf', 'text/plain'];
-  const ALLOWED_EXTENSIONS = ['.pdf', '.txt'];
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
     const typeOk = ALLOWED_TYPES.includes(file.type) || ALLOWED_EXTENSIONS.includes(ext);
     if (!typeOk) {
-      setErrorMsg('Only PDF or TXT files are accepted.');
+      setErrorMsg('Only PDF, DOC, or DOCX files are accepted.');
+      setCvFile(null);
+      e.target.value = '';
+      return;
+    }
+    if (file.size > MAX_FILE_BYTES) {
+      setErrorMsg('File is too large. Maximum size is 10 MB.');
       setCvFile(null);
       e.target.value = '';
       return;
@@ -108,86 +107,38 @@ export default function ApplyPage() {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!cvFile) {
-      setErrorMsg('Please upload your CV (PDF or TXT).');
-      return;
-    }
+    if (!fullName.trim()) { setErrorMsg('Please enter your full name.'); return; }
+    if (!email.trim())    { setErrorMsg('Please enter your email address.'); return; }
+    if (!phone.trim())    { setErrorMsg('Please enter your phone number.'); return; }
+    if (!cvFile)          { setErrorMsg('Please upload your CV (PDF, DOC, or DOCX).'); return; }
 
     setIsSubmitting(true);
     try {
-      // Step 1: Register candidate
-      const candidateRes = await api.post('/candidates/register', {
-        firstName,
-        email,
-        requisitionId: Number(jobId),
-      });
-
-      const responseData = candidateRes.data ?? {};
-      const candidateId =
-        responseData.candidate_id ??
-        responseData.id ??
-        responseData.candidateId ??
-        null;
-
-      if (!candidateId && candidateId !== 0) {
-        throw new Error(
-          `Server response did not include a candidate ID. ` +
-          `Received keys: ${Object.keys(responseData).join(', ') || '(none)'}`
-        );
-      }
-
-      // Step 2: Upload CV
       const formData = new FormData();
-      formData.append('file', cvFile);
+      formData.append('fullName', fullName.trim());
+      formData.append('email', email.trim());
+      formData.append('phone', phone.trim());
+      formData.append('cvFile', cvFile);
+      if (coverLetter.trim()) formData.append('coverLetter', coverLetter.trim());
 
-      await api.post(
-        `/data/upload/${companyId}/${jobId}/${candidateId}`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+      await publicApi.post(`/apply/${jobId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
       setSubmitted(true);
     } catch (err) {
       console.error('[ApplyPage] Submission error:', err);
-
       const status = err.response?.status;
       const detail = err.response?.data?.detail;
-      const signal = err.response?.data?.signal;
-
-      if (status === 403 && detail === 'NOT_YET_OPEN') {
-        // Re-fetch to sync server state, which will update button state
-        fetchJob();
-        setErrorMsg('This job is not accepting applications yet.');
-        return;
-      }
-
-      if (status === 403 && detail === 'APPLICATION_CLOSED') {
-        fetchJob();
-        setErrorMsg('The application deadline for this position has passed.');
-        return;
-      }
 
       if (status === 409) {
         setErrorMsg('You have already applied for this position.');
-        return;
-      }
-
-      if (status === 400 && (signal === 'FILE_TYPE_NOT_ALLOWED' || detail === 'FILE_TYPE_NOT_ALLOWED')) {
-        setErrorMsg('Only PDF or TXT files are accepted.');
-        return;
-      }
-
-      if (status === 400 && (signal === 'FILE_SIZE_EXCEEDS_LIMIT' || detail === 'FILE_SIZE_EXCEEDS_LIMIT')) {
-        setErrorMsg('Your file is too large. Please upload a smaller file.');
-        return;
-      }
-
-      if (Array.isArray(detail)) {
+      } else if (status === 404) {
+        setErrorMsg('This job is no longer accepting applications.');
+      } else if (Array.isArray(detail)) {
         setErrorMsg(detail.map((d) => d.msg || d).join(', '));
       } else if (typeof detail === 'string') {
         setErrorMsg(detail);
-      } else if (err.message) {
-        setErrorMsg(err.message);
       } else {
         setErrorMsg('Something went wrong. Please try again.');
       }
@@ -196,7 +147,6 @@ export default function ApplyPage() {
     }
   };
 
-  // ── Render guards ──────────────────────────────────────────────────────────
   if (isLoading) return <LoadingSpinner />;
 
   if (paramsError) {
@@ -227,23 +177,23 @@ export default function ApplyPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">Application Submitted Successfully!</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">Application Submitted!</h2>
           <p className="text-gray-500 text-base">
-            Your CV has been submitted. You will hear from us soon.
+            Your application has been received. We'll be in touch soon.
           </p>
         </div>
       </div>
     );
   }
 
-  // ── Derive submit button appearance ──────────────────────────────────────
-  // Trust is_open from the API — never compute open/closed from dates on the client
-  const buttonDisabled = isSubmitting || isOpen === false;
+  const isOpen = job?.isOpen === true;
+  const jobTitle = job?.jobTitle || '';
+  const deadline = job?.deadline || job?.postingEndDate || null;
+  const postingStartDate = job?.postingStartDate || null;
 
   let buttonStatusText = null;
-  if (isOpen === false) {
+  if (!isOpen) {
     if (postingStartDate && postingStartDate > today) {
-      // Job hasn't opened yet
       buttonStatusText = (
         <p className="mt-2 text-sm text-gray-500 text-center">
           Applications open on{' '}
@@ -251,7 +201,6 @@ export default function ApplyPage() {
         </p>
       );
     } else {
-      // Deadline has passed
       buttonStatusText = (
         <p className="mt-2 text-sm text-gray-500 text-center">
           Applications for this position are now closed.
@@ -267,11 +216,9 @@ export default function ApplyPage() {
     );
   }
 
-  // ── Application form ──────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-xl overflow-hidden mx-auto mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -280,27 +227,28 @@ export default function ApplyPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {jobTitle ? jobTitle : 'Submit Your Application'}
+            {jobTitle || 'Submit Your Application'}
           </h1>
-          <p className="text-gray-500 mt-1 text-sm">Fill in your details and upload your CV to apply</p>
+          {job?.company && (
+            <p className="text-gray-500 mt-1 text-sm">{job.company}</p>
+          )}
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-md p-8">
           <form onSubmit={handleSubmit} noValidate>
-            {/* First Name */}
+            {/* Full Name */}
             <div className="mb-5">
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                First Name <span className="text-red-500">*</span>
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
-                id="firstName"
+                id="fullName"
                 type="text"
                 required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="e.g. John"
-                disabled={isOpen === false}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="e.g. John Smith"
+                disabled={!isOpen}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
@@ -317,25 +265,58 @@ export default function ApplyPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. john@example.com"
-                disabled={isOpen === false}
+                disabled={!isOpen}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="mb-5">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="e.g. +1 555 123 4567"
+                disabled={!isOpen}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400"
               />
             </div>
 
             {/* CV Upload */}
-            <div className="mb-6">
+            <div className="mb-5">
               <label htmlFor="cvFile" className="block text-sm font-medium text-gray-700 mb-1">
                 CV / Resume <span className="text-red-500">*</span>
               </label>
               <input
                 id="cvFile"
                 type="file"
-                accept=".pdf,.txt,application/pdf,text/plain"
+                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileChange}
-                disabled={isOpen === false}
+                disabled={!isOpen}
                 className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
-              <p className="mt-1 text-xs text-gray-400">PDF or TXT format. Max 10 MB.</p>
+              <p className="mt-1 text-xs text-gray-400">PDF, DOC, or DOCX. Max 10 MB.</p>
+            </div>
+
+            {/* Cover Letter (optional) */}
+            <div className="mb-6">
+              <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 mb-1">
+                Cover Letter <span className="text-gray-400 font-normal">(optional)</span>
+              </label>
+              <textarea
+                id="coverLetter"
+                rows={4}
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
+                placeholder="Tell us why you're a great fit for this role…"
+                disabled={!isOpen}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition disabled:bg-gray-50 disabled:text-gray-400 resize-none"
+              />
             </div>
 
             {/* Error message */}
@@ -349,8 +330,7 @@ export default function ApplyPage() {
               </div>
             )}
 
-            {/* Submit button — enabled only when is_open === true */}
-            {isOpen === false ? (
+            {!isOpen ? (
               <button
                 type="button"
                 disabled
@@ -372,13 +352,10 @@ export default function ApplyPage() {
                     </svg>
                     Submitting…
                   </>
-                ) : (
-                  'Submit Application'
-                )}
+                ) : 'Submit Application'}
               </button>
             )}
 
-            {/* Date context text below the button */}
             {buttonStatusText}
           </form>
         </div>

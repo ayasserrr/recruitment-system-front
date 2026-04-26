@@ -32,8 +32,16 @@ export const getShortlist = (page = 1, pageSize = 50, jobId = null) => {
     });
 };
 
-export const addToShortlist = (data) =>
-  apiClient.post('/shortlist', data).then((r) => r.data);
+export const addToShortlist = (data) => {
+  // Transform camelCase to snake_case for backend
+  const backendData = {
+    job_id: data.jobId || data.job_id,
+    candidate_id: data.candidateId || data.candidate_id,
+    shortlisted_from: data.shortlistedFrom || data.shortlisted_from,
+    note: data.note
+  };
+  return apiClient.post('/shortlist', backendData).then((r) => r.data);
+};
 
 export const removeFromShortlist = (candidateId, jobId = null) => {
   const params = jobId ? { job_id: jobId } : {};

@@ -696,9 +696,9 @@ export default function TechnicalInterview({ applications, onBack }) {
                                             } else {
                                                 const note = prompt(`Add a note for ${showCVModal?.name || 'this candidate'} (optional):`, '') || '';
                                                 addToShortlist({
-                                                    candidate_id: showCVModal.id,
-                                                    job_id: selectedAppId,
-                                                    phase: 'Technical Interview',
+                                                    candidateId: showCVModal.id,
+                                                    jobId: selectedAppId,
+                                                    shortlistedFrom: 'Technical Interview',
                                                     note,
                                                 })
                                                     .then(() => loadShortlistedIds(selectedAppId))
