@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Star, Download, Users, Eye, X, Briefcase, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { getShortlist, removeFromShortlist as apiRemove } from '../api/shortlistService';
 
 export default function Shortlist({ applications, onBack }) {
     const { isDarkMode } = useDarkMode();
@@ -8,73 +9,45 @@ export default function Shortlist({ applications, onBack }) {
     const [showCVModal, setShowCVModal] = useState(null);
     const [shortlistedApplications, setShortlistedApplications] = useState([]);
 
-    // Load shortlisted CVs from localStorage
-    useEffect(() => {
-        const loadShortlistedCVs = () => {
-            const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
-
-            // Group CVs by phase first, then by application
-            const groupedByPhase = shortlistData.reduce((acc, cv) => {
-                const phaseName = cv.shortlistedFrom || 'General Application';
-
-                if (!acc[phaseName]) {
-                    acc[phaseName] = {
-                        phaseName: phaseName,
-                        applications: {}
-                    };
-                }
-
-                // Extract application name from CV data or use default
-                // Try multiple fields that might contain the application name
-                const appName = cv.jobTitle || cv.applicationName || cv.position ||
-                    (cv.applicationTitle) || (cv.role) || 'Senior AI Engineer';
-
-                if (!acc[phaseName].applications[appName]) {
-                    acc[phaseName].applications[appName] = {
-                        id: appName,
-                        jobTitle: appName,
-                        posted: cv.shortlistedDate || new Date().toISOString().slice(0, 10),
-                        shortlistedCVs: []
-                    };
-                }
-
-                acc[phaseName].applications[appName].shortlistedCVs.push(cv);
-                return acc;
-            }, {});
-
-            // Convert to array format
-            const phasesData = Object.values(groupedByPhase).map(phase => ({
-                ...phase,
-                applications: Object.values(phase.applications)
-            }));
-
-            setShortlistedApplications(phasesData);
-
-            // Reset selected application if it no longer exists
-            if (selectedApplication && !phasesData.find(phase =>
-                phase.applications.some(app => app.id === selectedApplication)
-            )) {
-                setSelectedApplication(null);
+    const groupByPhase = (entries) => {
+        const byPhase = entries.reduce((acc, cv) => {
+            const phaseName = cv.shortlistedFrom || 'General Application';
+            if (!acc[phaseName]) acc[phaseName] = { phaseName, applications: {} };
+            const appName = cv.jobTitle || 'Unknown Position';
+            if (!acc[phaseName].applications[appName]) {
+                acc[phaseName].applications[appName] = {
+                    id: appName,
+                    jobTitle: appName,
+                    posted: cv.shortlistedDate || '',
+                    shortlistedCVs: [],
+                };
             }
-        };
+            acc[phaseName].applications[appName].shortlistedCVs.push(cv);
+            return acc;
+        }, {});
+        return Object.values(byPhase).map((phase) => ({
+            ...phase,
+            applications: Object.values(phase.applications),
+        }));
+    };
 
-        loadShortlistedCVs();
-
-        // Listen for storage changes to update in real-time
-        const handleStorageChange = () => {
-            loadShortlistedCVs();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-
-        // Also check for changes every 2 seconds as a fallback
-        const interval = setInterval(handleStorageChange, 2000);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-            clearInterval(interval);
-        };
+    const loadShortlist = useCallback(() => {
+        getShortlist()
+            .then((entries) => {
+                const grouped = groupByPhase(entries);
+                setShortlistedApplications(grouped);
+                if (selectedApplication && !grouped.find((p) =>
+                    p.applications.some((a) => a.id === selectedApplication)
+                )) {
+                    setSelectedApplication(null);
+                }
+            })
+            .catch(() => setShortlistedApplications([]));
     }, [selectedApplication]);
+
+    useEffect(() => {
+        loadShortlist();
+    }, []);
 
     const getScoreColor = (score) => {
         if (score >= 90) return isDarkMode ? 'text-green-400' : 'text-green-600';
@@ -121,20 +94,11 @@ export default function Shortlist({ applications, onBack }) {
         linkElement.click();
     };
 
-    const removeFromShortlist = (appId, cvId) => {
-        // Remove from localStorage
-        const shortlistData = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        const updatedShortlist = shortlistData.filter(cv => cv.id !== cvId);
-        localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
-
-        // Update state
-        setShortlistedApplications(prev =>
-            prev.map(app =>
-                app.id === appId
-                    ? { ...app, shortlistedCVs: app.shortlistedCVs.filter(cv => cv.id !== cvId) }
-                    : app
-            )
-        );
+    const removeFromShortlist = (appId, cv) => {
+        const candidateId = cv.candidateId ?? cv.id;
+        apiRemove(candidateId, cv.jobId)
+            .then(() => loadShortlist())
+            .catch(() => loadShortlist());
     };
 
     const totalShortlisted = shortlistedApplications.reduce((acc, phase) =>
@@ -270,7 +234,7 @@ export default function Shortlist({ applications, onBack }) {
                                                 </button>
                                             </div>
                                             <button
-                                                onClick={() => removeFromShortlist(foundApplication.id, cv.id)}
+                                                onClick={() => removeFromShortlist(foundApplication.id, cv)}
                                                 className={`font-semibold flex items-center text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-base-600 hover:text-base-800'}`}
                                             >
                                                 <X className="w-4 h-4 mr-1" />

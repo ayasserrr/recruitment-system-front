@@ -3,7 +3,10 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
+    "@livekit/components-react": "^2.9.20",
+    "@livekit/components-styles": "^1.2.0",
     "axios": "^1.13.6",
+    "livekit-client": "^2.18.6",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

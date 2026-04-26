@@ -1,4 +1,6 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { getSemanticData } from '../api/semanticService';
+import { getShortlist, addToShortlist, removeFromShortlist as apiRemoveFromShortlist } from '../api/shortlistService';
 import { ArrowLeft, Brain, Download, Eye, EyeOff, Filter, TrendingUp, Users, CheckCircle, FileText, Star, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -8,32 +10,18 @@ export default function SemanticAnalysis({ applications, onBack }) {
     const [showCVModal, setShowCVModal] = useState(null);
     const [showReportModal, setShowReportModal] = useState(null);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
-    const candidatesCacheRef = useRef(new Map());
+    const [candidates, setCandidates] = useState([]);
+    const [stats, setStats] = useState({ totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 });
+    const [loading, setLoading] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
-    const getCandidateShortlistKey = (cv) => {
-        const name = cv?.name || '';
-        const email = cv?.email || '';
-        return `${name}::${email}`;
-    };
-
-    const loadShortlistedKeys = () => {
-        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        setShortlistedKeys(new Set(existingShortlist.map(getCandidateShortlistKey)));
-    };
-
-    useEffect(() => {
-        loadShortlistedKeys();
-
-        const handleStorageChange = () => {
-            loadShortlistedKeys();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
+    const loadShortlistedIds = useCallback((jobId) => {
+        if (!jobId) { setShortlistedKeys(new Set()); return; }
+        getShortlist(1, 200, jobId)
+            .then((entries) => setShortlistedKeys(new Set(entries.map((e) => e.candidateId))))
+            .catch(() => setShortlistedKeys(new Set()));
     }, []);
 
     const downloadFullReport = () => {
@@ -74,74 +62,29 @@ export default function SemanticAnalysis({ applications, onBack }) {
         linkElement.click();
     };
 
-    // Mock candidate generator per application
-    const generateCandidates = (app) => {
-        const totalCandidates = app.cvs || 0;
-        const processed = Math.min(totalCandidates, Math.floor(totalCandidates * 0.9));
-        const highMatch = Math.floor(processed * 0.27);
-        const mediumMatch = Math.floor(processed * 0.4);
-        const lowMatch = processed - highMatch - mediumMatch;
-
-        const jobTitle = String(app?.jobTitle || '').toLowerCase();
-        const isData = jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics');
-
-        const firstNames = isData
-            ? ['Aya', 'Jomana', 'Tarneed', 'Salma', 'Eman', 'Ahmed', 'Yasser', 'Khaled', 'Nour', 'Mariam', 'Omar', 'Hany', 'Mostafa', 'Heba', 'Menna', 'Hossam']
-            : ['Aya', 'Jomana', 'Tarneed', 'Salma', 'Eman', 'Ahmed', 'Yasser', 'Khaled', 'Nour', 'Mariam', 'Omar', 'Hany', 'Mostafa', 'Heba', 'Menna', 'Hossam'];
-        const lastNames = isData
-            ? ['Abdelrahman', 'Mostafa', 'Younes', 'Kamel', 'Hassan', 'Saeed', 'Ali', 'Mahmoud', 'Ibrahim', 'Gamal', 'Nabil', 'Farag', 'Hegazy', 'Shahin', 'Fathy', 'Samir']
-            : ['Yasser', 'Ahmed', 'Khaled', 'Omar', 'Hassan', 'Ali', 'Mahmoud', 'Ibrahim', 'Fathy', 'Saeed', 'Gamal', 'Nabil', 'Farag', 'Samir', 'Hegazy', 'Shahin'];
-
-        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
-        let offset = 0;
-        for (let i = 0; i < raw.length; i++) {
-            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
-            offset |= 0;
+    useEffect(() => {
+        if (!selectedAppId) {
+            setCandidates([]);
+            setStats({ totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 });
+            setShortlistedKeys(new Set());
+            return;
         }
-        offset = Math.abs(offset);
-
-        const skillPools = [
-            ['Python', 'ML', 'Data Analysis', 'TensorFlow', 'SQL'],
-            ['Java', 'Spring', 'Microservices', 'Kubernetes', 'AWS'],
-            ['React', 'Node.js', 'AWS', 'TypeScript', 'Docker'],
-            ['C++', 'Algorithms', 'DSA', 'System Design', 'Python'],
-            ['JavaScript', 'Vue.js', 'MongoDB', 'Express', 'REST API'],
-            ['Python', 'Django', 'PostgreSQL', 'Redis', 'Celery'],
-            ['Go', 'Docker', 'Kubernetes', 'gRPC', 'PostgreSQL'],
-            ['Ruby', 'Rails', 'MySQL', 'Sidekiq', 'AWS'],
-            ['PHP', 'Laravel', 'MySQL', 'Redis', 'Vue.js'],
-            ['Swift', 'iOS', 'Xcode', 'Core Data', 'SwiftUI']
-        ];
-
-        const candidates = [];
-        for (let i = 0; i < Math.min(highMatch + mediumMatch, 12); i++) {
-            const name = `${firstNames[(i + offset) % firstNames.length]} ${lastNames[(i + offset) % lastNames.length]}`;
-            const isHigh = i < highMatch;
-            const score = isHigh ? 92 - Math.floor(Math.random() * 8) : 78 - Math.floor(Math.random() * 8);
-            const skills = skillPools[i % skillPools.length];
-            const match = isHigh ? (score >= 90 ? 'Excellent' : 'Very Good') : 'Good';
-
-            candidates.push({ name, score, skills, match });
-        }
-
-        return {
-            candidates: candidates.sort((a, b) => b.score - a.score),
-            stats: { totalCandidates, processed, highMatch, mediumMatch, lowMatch, avgScore: processed > 0 ? 82.5 : 0 }
-        };
-    };
-
-    const { candidates, stats } = useMemo(() => {
-        if (!selectedAppId || !selectedApp) {
-            return { candidates: [], stats: { totalCandidates: 0, processed: 0, highMatch: 0, mediumMatch: 0, lowMatch: 0, avgScore: 0 } };
-        }
-
-        // Clear cache to ensure sorted data is used
-        candidatesCacheRef.current.delete(selectedAppId);
-
-        const generated = generateCandidates(selectedApp);
-        candidatesCacheRef.current.set(selectedAppId, generated);
-        return generated;
-    }, [selectedAppId, selectedApp]);
+        setLoading(true);
+        setFetchError(null);
+        Promise.all([
+            getSemanticData(selectedAppId),
+            getShortlist(1, 200, selectedAppId).catch(() => []),
+        ])
+            .then(([data, shortlistEntries]) => {
+                setCandidates(data.candidates || []);
+                setStats(data.stats || {});
+                setShortlistedKeys(new Set(shortlistEntries.map((e) => e.candidateId)));
+            })
+            .catch((err) => {
+                setFetchError(err.response?.data?.detail || err.message || 'Failed to load semantic analysis');
+            })
+            .finally(() => setLoading(false));
+    }, [selectedAppId]);
 
     const getScoreColor = (score) => {
         if (score >= 90) return 'text-green-600';
@@ -186,16 +129,12 @@ export default function SemanticAnalysis({ applications, onBack }) {
 
     const mockCV = {
         name: showCVModal?.name || '',
-        email: `${showCVModal?.name?.toLowerCase().replace(' ', '.')}@email.com`,
-        phone: '+1 (555) 123-4567',
-        experience: '5+ years',
-        education: 'Bachelor\'s in Computer Science',
-        summary: 'Experienced software engineer with strong technical skills and a proven track record of delivering high-quality solutions.',
-        projects: [
-            'Led development of microservices architecture serving 1M+ users',
-            'Implemented machine learning pipeline reducing processing time by 40%',
-            'Built real-time analytics dashboard with React and Node.js'
-        ]
+        email: showCVModal?.email || `${(showCVModal?.name || '').toLowerCase().replace(' ', '.')}@email.com`,
+        phone: showCVModal?.phone || '',
+        experience: showCVModal?.experience || '',
+        education: showCVModal?.education || '',
+        summary: showCVModal?.summary || '',
+        projects: showCVModal?.projects || [],
     };
 
     // Download report functionality
@@ -331,7 +270,20 @@ export default function SemanticAnalysis({ applications, onBack }) {
                     </div>
                 </div>
 
-                {selectedApp ? (
+                {selectedApp && loading && (
+                    <div className="text-center py-16">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-500 mx-auto mb-4" />
+                        <p className={isDarkMode ? 'text-gray-400' : 'text-base-600'}>Loading analysis data…</p>
+                    </div>
+                )}
+
+                {selectedApp && fetchError && !loading && (
+                    <div className={`rounded-xl p-6 mb-6 text-center ${isDarkMode ? 'bg-red-900 text-red-300' : 'bg-red-50 text-red-600'}`}>
+                        {fetchError}
+                    </div>
+                )}
+
+                {selectedApp && !loading ? (
                     <>
                         {/* Analysis Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -367,21 +319,25 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                     <h2 className={`text-2xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{selectedApp.jobTitle}</h2>
                                     <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Analysis completed on {new Date().toISOString().split('T')[0]}</p>
                                 </div>
-                                <div className={`px-4 py-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
-                                    Processed in 2.5 seconds
-                                </div>
+                                {stats.processingTime && (
+                                    <div className={`px-4 py-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
+                                        Processed in {stats.processingTime}
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="mb-6">
-                                <h3 className={`text-lg font-semibold mb-3 transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Required Skills:</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {['Python', 'Java', 'System Design', 'AWS', 'Docker', 'SQL', 'Algorithms'].map((skill, index) => (
-                                        <span key={index} className={`px-4 py-2 rounded-full font-medium transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
-                                            {skill}
-                                        </span>
-                                    ))}
+                            {(selectedApp.requiredSkills || []).length > 0 && (
+                                <div className="mb-6">
+                                    <h3 className={`text-lg font-semibold mb-3 transition-colors ${isDarkMode ? 'text-gray-200' : 'text-base-700'}`}>Required Skills:</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {(selectedApp.requiredSkills || []).map((skill, index) => (
+                                            <span key={index} className={`px-4 py-2 rounded-full font-medium transition-colors ${isDarkMode ? 'bg-slate-700 text-gray-200' : 'bg-gradient-to-r from-base-100 to-accent-100 text-base-700'}`}>
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             <div className={`p-4 rounded-lg border transition-colors ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gradient-to-r from-base-50 to-accent-50 border-base-200'}`}>
                                 <div className="flex items-center">
@@ -455,44 +411,30 @@ export default function SemanticAnalysis({ applications, onBack }) {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        const shortlistEmail = `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`;
-                                                        const candidateKey = getCandidateShortlistKey({ name: candidate.name, email: shortlistEmail });
-                                                        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-                                                        const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
-
-                                                        if (updatedShortlist.length !== existingShortlist.length) {
-                                                            localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
-                                                            loadShortlistedKeys();
-                                                            return;
+                                                        const isShortlisted = shortlistedKeys.has(candidate.id);
+                                                        if (isShortlisted) {
+                                                            apiRemoveFromShortlist(candidate.id, selectedAppId)
+                                                                .then(() => loadShortlistedIds(selectedAppId))
+                                                                .catch(() => loadShortlistedIds(selectedAppId));
+                                                        } else {
+                                                            const note = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
+                                                            addToShortlist({
+                                                                candidate_id: candidate.id,
+                                                                job_id: selectedAppId,
+                                                                phase: 'Semantic Analysis',
+                                                                note,
+                                                            })
+                                                                .then(() => loadShortlistedIds(selectedAppId))
+                                                                .catch(() => loadShortlistedIds(selectedAppId));
                                                         }
-
-                                                        const shortlistData = {
-                                                            ...candidate,
-                                                            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-                                                            email: shortlistEmail,
-                                                            phone: '+1 (555) 123-4567',
-                                                            experience: '5+ years',
-                                                            education: "Bachelor's in Computer Science",
-                                                            summary: 'Experienced software engineer with strong technical skills and a proven track record of delivering high-quality solutions.',
-                                                            projects: [
-                                                                'Led development of microservices architecture serving 1M+ users',
-                                                                'Implemented machine learning pipeline reducing processing time by 40%',
-                                                                'Built real-time analytics dashboard with React and Node.js'
-                                                            ],
-                                                            shortlistedFrom: 'Semantic Analysis',
-                                                            shortlistedDate: new Date().toISOString().slice(0, 10)
-                                                        };
-                                                        const shortlistNote = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
-                                                        localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
-                                                        loadShortlistedKeys();
                                                     }}
                                                     className="bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white px-5 py-3 rounded-lg font-semibold flex items-center transition-colors"
                                                 >
                                                     <Star
                                                         className="w-5 h-5 mr-2"
-                                                        fill={shortlistedKeys.has(getCandidateShortlistKey({ name: candidate.name, email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com` })) ? 'currentColor' : 'none'}
+                                                        fill={shortlistedKeys.has(candidate.id) ? 'currentColor' : 'none'}
                                                     />
-                                                    {shortlistedKeys.has(getCandidateShortlistKey({ name: candidate.name, email: `${candidate.name.toLowerCase().replace(' ', '.')}@email.com` })) ? 'Remove from Shortlist' : 'Add to Shortlist'}
+                                                    {shortlistedKeys.has(candidate.id) ? 'Remove from Shortlist' : 'Add to Shortlist'}
                                                 </button>
                                             </div>
                                         </div>
@@ -581,7 +523,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                             </div>
                         </div>
                     </>
-                ) : (
+                ) : !selectedApp ? (
                     <div className={`rounded-2xl shadow-lg p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                         <div className={`flex items-center justify-center w-20 h-20 rounded-lg mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-r from-base-100 to-accent-100'}`}>
                             <Brain className={`w-10 h-10 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`} />
@@ -589,7 +531,7 @@ export default function SemanticAnalysis({ applications, onBack }) {
                         <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-700'}`}>Select an Application</h3>
                         <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Choose an application from the list above to view semantic analysis results</p>
                     </div>
-                )}
+                ) : null}
 
                 {/* CV Modal */}
                 {showCVModal && (

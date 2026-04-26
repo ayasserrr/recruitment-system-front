@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronRight, Plus, Share2, Brain, ClipboardCheck, Video, Award, List, BarChart3, Star } from 'lucide-react';
 import MultiStepForm from './components/MultiStepForm';
 import Applications from './components/Applications';
@@ -30,11 +30,13 @@ import { TourProvider, useTour } from './contexts/TourContext';
 import { SessionProvider } from './contexts/SessionContext';
 import TourModal from './components/TourModal';
 import { isAuthenticated, getCompanyInfo, logout } from './api/authService';
+import { getJobs } from './api/jobService';
 import ApplyPage from './components/ApplyPage';
 import CandidateApplications from './components/CandidateApplications';
 import AssessmentPage from './components/AssessmentPage';
 import ToolManager from './components/ToolManager';
 import KnowledgeGapReport from './components/KnowledgeGapReport';
+import InterviewRoom from './components/InterviewRoom';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 
@@ -78,80 +80,23 @@ function RecruitmentSystemContent() {
         }
     }, []); // Empty dependency array means this runs only once on mount
 
-    const [applications, setApplications] = useState([
-        {
-            id: 1,
-            jobTitle: 'Senior Software Engineer',
-            posted: '2025-10-15',
-            cvs: 45,
-            newToday: 8,
-            semantic: 30,
-            assessment: 22,
-            techInterview: 10,
-            hrInterview: 7,
-            finalCandidates: 3,
-            status: 'In Progress',
-            requisition: {
-                selectedPlatforms: ['LinkedIn', 'Indeed'],
-                postingStartDate: '2025-10-15',
-                postingEndDate: '2025-10-30',
-            },
-        },
-        {
-            id: 2,
-            jobTitle: 'Data Scientist',
-            posted: '2025-10-01',
-            cvs: 32,
-            newToday: 3,
-            semantic: 25,
-            assessment: 25,
-            techInterview: 8,
-            hrInterview: 5,
-            finalCandidates: 2,
-            status: 'Final Stage',
-            requisition: {
-                selectedPlatforms: ['LinkedIn'],
-                postingStartDate: '2025-10-01',
-                postingEndDate: '2025-10-18',
-            },
-        },
-        {
-            id: 3,
-            jobTitle: 'Product Designer',
-            posted: '2025-11-20',
-            cvs: 18,
-            newToday: 4,
-            semantic: 18,
-            assessment: 0,
-            techInterview: 0,
-            hrInterview: 0,
-            finalCandidates: 0,
-            status: 'CV Collection',
-            requisition: {
-                selectedPlatforms: ['LinkedIn', 'Glassdoor'],
-                postingStartDate: '2025-11-20',
-                postingEndDate: '2025-12-05',
-            },
-        },
-        {
-            id: 4,
-            jobTitle: 'DevOps Engineer',
-            posted: '2025-11-28',
-            cvs: 0,
-            newToday: 0,
-            semantic: 0,
-            assessment: 0,
-            techInterview: 0,
-            hrInterview: 0,
-            finalCandidates: 0,
-            status: 'Submitted',
-            requisition: {
-                selectedPlatforms: ['Indeed'],
-                postingStartDate: '2025-11-28',
-                postingEndDate: '2025-12-10',
-            },
-        },
-    ]);
+    const [applications, setApplications] = useState([]);
+
+    const fetchJobs = useCallback(async () => {
+        if (!isAuthenticated()) return;
+        try {
+            const jobs = await getJobs();
+            setApplications(jobs);
+        } catch (err) {
+            console.error('Failed to load jobs:', err);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchJobs();
+        }
+    }, [isLoggedIn, fetchJobs]);
 
     const menuItems = [
         { id: 'job-requisition', icon: Plus, label: 'Create Job Requisition', color: 'bg-gradient-to-r from-base-500 to-accent-500', description: 'Capture requisition requirements' },
@@ -315,32 +260,13 @@ function RecruitmentSystemContent() {
         );
     };
 
-    const handleRequisitionSubmitted = (requisition) => {
-        const today = new Date();
-        const posted = String(requisition?.postingStartDate || '').trim()
-            ? requisition.postingStartDate
-            : today.toISOString().slice(0, 10);
-
-        setApplications((prev) => [
-            {
-                id: Date.now(),
-                jobTitle: requisition?.jobTitle || 'Untitled Role',
-                posted,
-                cvs: 0,
-                semantic: 0,
-                assessment: 0,
-                techInterview: 0,
-                hrInterview: 0,
-                finalCandidates: 0,
-                status: 'CV Collection',
-                requisition,
-            },
-            ...prev,
-        ]);
+    const handleRequisitionSubmitted = async () => {
+        await fetchJobs();
     };
 
     const handleUpdateApplication = (id, patch) => {
         setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+        // Optimistic update — no blocking API call needed for local UI state
     };
 
     return (
@@ -617,6 +543,9 @@ export default function RecruitmentSystem() {
     }
     if (window.location.pathname.startsWith('/assessment/')) {
         return <AssessmentPage />;
+    }
+    if (window.location.pathname === '/interview') {
+        return <InterviewRoom />;
     }
 
     return (

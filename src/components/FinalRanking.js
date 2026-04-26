@@ -1,4 +1,6 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { getFinalRanking, shortlistCandidate, sendOffer } from '../api/finalRankingService';
+import { getShortlist, removeFromShortlist as apiRemoveFromShortlist } from '../api/shortlistService';
 import { ArrowLeft, Trophy, Download, TrendingUp, Star, Heart, BarChart, Sparkles, Target, Award, Users, Filter, Briefcase, FileText, CheckCircle, Code, MessageSquare, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -25,7 +27,8 @@ export default function FinalRanking({ applications, onBack }) {
     const [finalRanking, setFinalRanking] = useState([]);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
     const [expandedRows, setExpandedRows] = useState(new Set());
-    const finalRankingCacheRef = useRef(new Map());
+    const [loading, setLoading] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
@@ -44,58 +47,26 @@ export default function FinalRanking({ applications, onBack }) {
         return 85 + offset;
     };
 
-    const getCandidateEmailForShortlist = (candidate) => {
-        if (candidate?.email) return candidate.email;
-        if (!candidate?.name) return '';
-        return `${candidate.name.toLowerCase().replace(' ', '.')}@email.com`;
-    };
-
-    const getCandidateShortlistKey = (cv) => {
-        const name = cv?.name || '';
-        const email = cv?.email || '';
-        return `${name}::${email}`;
-    };
-
-    const loadShortlistedKeys = () => {
-        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        setShortlistedKeys(new Set(existingShortlist.map(getCandidateShortlistKey)));
-    };
-
-    useEffect(() => {
-        loadShortlistedKeys();
-
-        const handleStorageChange = () => {
-            loadShortlistedKeys();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
+    const loadShortlistedIds = useCallback((jobId) => {
+        if (!jobId) { setShortlistedKeys(new Set()); return; }
+        getShortlist(1, 200, jobId)
+            .then((entries) => setShortlistedKeys(new Set(entries.map((e) => e.candidateId))))
+            .catch(() => setShortlistedKeys(new Set()));
     }, []);
 
     const toggleCandidateShortlist = (candidate) => {
-        const email = getCandidateEmailForShortlist(candidate);
-        const shortlistData = {
-            ...candidate,
-            jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-            email,
-            shortlistedFrom: 'Final Ranking',
-            shortlistedDate: new Date().toISOString().slice(0, 10)
-        };
-
-        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        const candidateKey = getCandidateShortlistKey({ name: candidate?.name, email });
-        const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
-
-        if (updatedShortlist.length === existingShortlist.length) {
-            const shortlistNote = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
-            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
+        if (!candidate?.id || !selectedAppId) return;
+        const isShortlisted = shortlistedKeys.has(candidate.id);
+        if (isShortlisted) {
+            apiRemoveFromShortlist(candidate.id, selectedAppId)
+                .then(() => loadShortlistedIds(selectedAppId))
+                .catch(() => loadShortlistedIds(selectedAppId));
         } else {
-            localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
+            const note = prompt(`Add a note for ${candidate?.name || 'this candidate'} (optional):`, '') || '';
+            shortlistCandidate(selectedAppId, candidate.id, note)
+                .then(() => loadShortlistedIds(selectedAppId))
+                .catch(() => loadShortlistedIds(selectedAppId));
         }
-
-        loadShortlistedKeys();
     };
 
     const getScoreColor = (score) => {
@@ -153,162 +124,25 @@ export default function FinalRanking({ applications, onBack }) {
         return 'bg-gradient-to-r from-yellow-500 to-yellow-600';
     };
 
-    const generateFinalRanking = (app) => {
-        const candidates = [];
-        const getNamePoolForApp = () => {
-            const jobTitle = String(app?.jobTitle || '').toLowerCase();
-
-            const softwarePool = [
-                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
-                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
-                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
-                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
-            ];
-
-            const dataSciencePool = [
-                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
-                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
-                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
-                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
-            ];
-
-            const aiPool = [
-                'Aya Hassan', 'Jomana Ibrahim', 'Tarneed Saeed', 'Salma Ali',
-                'Eman Mahmoud', 'Ahmed Abdelrahman', 'Yasser Mostafa', 'Khaled Gamal',
-                'Nour Nabil', 'Mariam Farag', 'Omar Kamel', 'Hany Shahin',
-                'Mostafa Hegazy', 'Heba Samir', 'Menna Younes', 'Hossam Fathy'
-            ];
-
-            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
-            if (jobTitle.includes('ai') || jobTitle.includes('ml') || jobTitle.includes('machine')) return aiPool;
-            return softwarePool;
-        };
-
-        const names = getNamePoolForApp();
-
-        const getAppOffset = () => {
-            const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
-            let hash = 0;
-            for (let i = 0; i < raw.length; i++) {
-                hash = ((hash << 5) - hash) + raw.charCodeAt(i);
-                hash |= 0;
-            }
-            return Math.abs(hash);
-        };
-
-        const offset = getAppOffset();
-        const count = Math.min(app.hrInterview || 0, 8);
-
-        for (let i = 0; i < count; i++) {
-            const semantic = 75 + Math.random() * 20;
-            const technical = 75 + Math.random() * 20;
-            const techInterview = 7 + Math.random() * 3;
-            const hrInterview = 7.5 + Math.random() * 2.5;
-            const overallScore = (semantic * 0.25 + technical * 0.25 + (techInterview * 10) * 0.25 + (hrInterview * 10) * 0.25);
-
-            const recommendation = overallScore >= 90 ? 'Strongly Recommend' : overallScore >= 85 ? 'Recommend' : overallScore >= 80 ? 'Consider' : 'Review';
-            const status = overallScore >= 90 ? 'Top Candidate' : overallScore >= 85 ? 'Strong Candidate' : overallScore >= 80 ? 'Good Candidate' : 'Needs Review';
-            const hireProbability = Math.min(95, Math.round(overallScore - 5 + Math.random() * 10));
-            // Application status driven by score threshold (mirrors backend shortlisting logic)
-            const applicationStatus = overallScore >= 82 ? 'Shortlisted' : 'Not Shortlisted';
-
-            const allStrengths = [
-                ['Strong system design skills', 'Excellent communication', 'Team leadership experience'],
-                ['Deep ML/AI expertise', 'Published research background', 'Strong analytical thinking'],
-                ['Full-stack proficiency', 'Excellent problem-solving', 'Fast learner'],
-                ['Cloud infrastructure experience', 'CI/CD expertise', 'Strong documentation habits'],
-                ['NLP and LLM integration skills', 'RAG pipeline experience', 'Deployment background'],
-            ];
-            const allConcerns = [
-                ['Limited management experience', 'No international exposure'],
-                ['Narrow tech stack focus', 'Limited production deployment history'],
-                ['Junior in distributed systems', 'No formal ML background'],
-                ['Short tenure at previous roles', 'Limited cloud certifications'],
-                ['No team lead experience yet'],
-            ];
-            const allQuestions = [
-                ['Describe your largest ML project end to end.', 'How do you handle model drift in production?', 'Walk us through a system design you are proud of.'],
-                ['How have you applied RAG in a real project?', 'Explain your approach to fine-tuning LLMs.', 'How do you evaluate model quality beyond accuracy?'],
-                ['Tell me about a time you resolved a production incident.', 'How do you balance technical debt vs new features?', 'Describe your code review process.'],
-                ['How do you mentor junior engineers?', 'Describe a project where you drove cross-team alignment.', 'How do you approach architecture decisions under uncertainty?'],
-            ];
-            const idx8 = Math.floor(Math.random() * 8);
-
-            candidates.push({
-                id: i + 1,
-                name: names[(i + offset) % names.length],
-                email: `${names[(i + offset) % names.length].toLowerCase().replace(' ', '.')}@email.com`,
-                overallScore: Math.round(overallScore),
-                final_score: Math.round(overallScore),
-                semantic: Math.round(semantic),
-                technical: Math.round(technical),
-                techInterview: parseFloat(techInterview.toFixed(1)),
-                hrInterview: parseFloat(hrInterview.toFixed(1)),
-                recommendation,
-                status,
-                applicationStatus,
-                experience: ['3 years', '4 years', '5 years', '6 years', '7 years', '8 years'][Math.floor(Math.random() * 6)],
-                education: ['Bachelors in CS', 'Masters in CS', 'Bachelors in SE', 'Masters in EE'][Math.floor(Math.random() * 4)],
-                skills: [
-                    ['Python', 'ML', 'AWS', 'System Design', 'Leadership'],
-                    ['Java', 'Spring', 'Microservices', 'Kubernetes', 'Docker'],
-                    ['React', 'Node.js', 'TypeScript', 'AWS', 'Agile'],
-                    ['C++', 'Algorithms', 'Embedded Systems', 'Python', 'Linux'],
-                    ['Python', 'Django', 'PostgreSQL', 'Docker', 'REST APIs'],
-                    ['JavaScript', 'Vue.js', 'MongoDB', 'Docker', 'GraphQL'],
-                    ['Go', 'Kubernetes', 'gRPC', 'Prometheus', 'CI/CD'],
-                    ['Ruby', 'Rails', 'MySQL', 'Redis', 'Sidekiq']
-                ][idx8],
-                matchedSkills: [
-                    ['Python', 'ML', 'System Design'],
-                    ['NLP', 'LLM', 'FastAPI'],
-                    ['React', 'TypeScript', 'Docker'],
-                    ['Deep Learning', 'PyTorch', 'AWS'],
-                    ['Python', 'PostgreSQL', 'REST APIs'],
-                    ['Computer Vision', 'OpenCV', 'YOLO'],
-                    ['Go', 'Kubernetes', 'CI/CD'],
-                    ['Python', 'Scikit-learn', 'Data Analysis']
-                ][idx8],
-                genaiEvidence: overallScore >= 85
-                    ? { rag: ['faiss', 'chromadb'], llm_usage: ['langchain', 'gpt-4'] }
-                    : null,
-                strengths: allStrengths[Math.floor(Math.random() * allStrengths.length)],
-                concerns: allConcerns[Math.floor(Math.random() * allConcerns.length)],
-                interviewQuestions: allQuestions[Math.floor(Math.random() * allQuestions.length)],
-                notes: [
-                    'Exceptional candidate with strong technical and leadership skills. Perfect cultural fit.',
-                    'Solid technical skills with good communication. Shows great potential.',
-                    'Excellent communicator with strong frontend skills. Quick learner.',
-                    'Strong in low-level programming. Could grow into the role with mentorship.',
-                    'Good foundation, shows enthusiasm. Would benefit from additional training.',
-                    'Well-rounded candidate with good problem-solving abilities.',
-                    'Experienced developer with strong architectural understanding.',
-                    'Creative problem solver with excellent teamwork skills.'
-                ][idx8],
-                hireProbability
-            });
-        }
-
-        return candidates.sort((a, b) => b.overallScore - a.overallScore);
-    };
-
     useEffect(() => {
         if (!selectedAppId) {
             setFinalRanking([]);
+            setShortlistedKeys(new Set());
             return;
         }
-
-        // Clear cache to ensure sorted data is used
-        finalRankingCacheRef.current.delete(selectedAppId);
-
-        if (selectedApp) {
-            const generated = generateFinalRanking(selectedApp);
-            finalRankingCacheRef.current.set(selectedAppId, generated);
-            setFinalRanking(generated);
-        } else {
-            setFinalRanking([]);
-        }
-    }, [selectedAppId, selectedApp]);
+        setLoading(true);
+        setFetchError(null);
+        Promise.all([
+            getFinalRanking(selectedAppId),
+            getShortlist(1, 200, selectedAppId).catch(() => []),
+        ])
+            .then(([data, shortlistEntries]) => {
+                setFinalRanking(data);
+                setShortlistedKeys(new Set(shortlistEntries.map((e) => e.candidateId)));
+            })
+            .catch((err) => setFetchError(err.response?.data?.detail || err.message || 'Failed to load final ranking'))
+            .finally(() => setLoading(false));
+    }, [selectedAppId]);
 
     const hiringStats = useMemo(() => {
         if (finalRanking.length === 0) {
@@ -590,7 +424,20 @@ export default function FinalRanking({ applications, onBack }) {
                     </div>
                 </div>
 
-                {selectedApp ? (
+                {selectedApp && loading && (
+                    <div className="text-center py-16">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-500 mx-auto mb-4" />
+                        <p className={isDarkMode ? 'text-gray-400' : 'text-base-600'}>Loading final ranking…</p>
+                    </div>
+                )}
+
+                {selectedApp && fetchError && !loading && (
+                    <div className={`rounded-xl p-6 mb-6 text-center ${isDarkMode ? 'bg-red-900 text-red-300' : 'bg-red-50 text-red-600'}`}>
+                        {fetchError}
+                    </div>
+                )}
+
+                {selectedApp && !loading ? (
                     <div>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -884,9 +731,9 @@ export default function FinalRanking({ applications, onBack }) {
                                             >
                                                 <Star
                                                     className="w-5 h-5 mr-2"
-                                                    fill={shortlistedKeys.has(getCandidateShortlistKey({ name: candidate?.name, email: getCandidateEmailForShortlist(candidate) })) ? 'currentColor' : 'none'}
+                                                    fill={shortlistedKeys.has(candidate?.id) ? 'currentColor' : 'none'}
                                                 />
-                                                {shortlistedKeys.has(getCandidateShortlistKey({ name: candidate?.name, email: getCandidateEmailForShortlist(candidate) })) ? 'Remove from Shortlist' : 'Add to Shortlist'}
+                                                {shortlistedKeys.has(candidate?.id) ? 'Remove from Shortlist' : 'Add to Shortlist'}
                                             </button>
                                             <button
                                                 onClick={() => setShowCVModal(candidate)}
@@ -1131,13 +978,13 @@ export default function FinalRanking({ applications, onBack }) {
                             </button>
                         </div>
                     </div>
-                ) : (
+                ) : !selectedApp ? (
                     <div className={`text-center py-16 rounded-2xl shadow-lg transition-colors ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                         <Trophy className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                         <h3 className={`text-2xl font-bold mb-2 transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>No Application Selected</h3>
                         <p className={`transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Please select an application to view the final ranking</p>
                     </div>
-                )}
+                ) : null}
             </div>
 
             {/* CV Modal */}
@@ -1463,17 +1310,10 @@ export default function FinalRanking({ applications, onBack }) {
 
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                // Handle form submission
-                                const offerDetails = {
-                                    candidate: showOfferModal.name,
-                                    ...offerFormData,
-                                    sentDate: new Date().toISOString()
-                                };
-
-                                // Store offer in localStorage
-                                const existingOffers = JSON.parse(localStorage.getItem('offers') || '[]');
-                                localStorage.setItem('offers', JSON.stringify([...existingOffers, offerDetails]));
-
+                                const candidateId = showOfferModal?.id;
+                                if (candidateId && selectedAppId) {
+                                    sendOffer(selectedAppId, candidateId, offerFormData).catch(console.error);
+                                }
                                 alert(`Offer successfully sent to ${showOfferModal.name}!`);
                                 setShowOfferModal(null);
                                 setOfferFormData({

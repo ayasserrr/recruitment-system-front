@@ -1,93 +1,34 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, BarChart3, TrendingUp, Users, Briefcase, Clock, Target, Award, FileText, Brain, Calendar, Download, Filter, ChevronRight } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { getAnalyticsOverview } from '../api/analyticsService';
+
+const EMPTY_ANALYTICS = {
+    overview: { totalApplications: 0, activeApplications: 0, completedProcesses: 0, averageTimeToHire: 0, totalHires: 0, offerAcceptanceRate: 0, costPerHire: 0, hrEfficiencyScore: 0 },
+    applications: { submitted: 0, underReview: 0, shortlisted: 0, rejected: 0, conversionRate: 0, averageScore: 0, topPerformingSource: '', sourceBreakdown: {} },
+    assessments: { sent: 0, completed: 0, pending: 0, averageScore: 0, passRate: 0, averageCompletionTime: 0, technicalScore: 0, theoryScore: 0 },
+    interviews: { technical: 0, hr: 0, completed: 0, scheduled: 0, averageScore: 0, averageDuration: 0, noShowRate: 0, satisfactionScore: 0 },
+    hiring: { totalHires: 0, timeToHire: 0, offerAcceptanceRate: 0, averageSalary: 0, retentionRate: 0, diversityScore: 0, qualityOfHire: 0, departmentBreakdown: {} },
+    efficiency: { timeSaved: 0, automationRate: 0, manualTasksReduced: 0, processImprovement: 0, hrProductivity: 0, candidateExperience: 0, complianceScore: 0 },
+    trends: { monthlyApplications: [], monthlyHires: [], satisfactionScores: [], efficiencyGains: [] },
+};
 
 export default function Analytics({ applications, onBack }) {
     const { isDarkMode } = useDarkMode();
     const [selectedPeriod, setSelectedPeriod] = useState('30days');
     const [selectedMetric, setSelectedMetric] = useState('overview');
+    const [loading, setLoading] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
+    const [analyticsData, setAnalyticsData] = useState(EMPTY_ANALYTICS);
 
-    // Mock data for analytics - in real app this would come from API
-    const analyticsData = useMemo(() => ({
-        overview: {
-            totalApplications: 156,
-            activeApplications: 3,
-            completedProcesses: 153,
-            averageTimeToHire: 24, // days
-            totalHires: 12,
-            offerAcceptanceRate: 83,
-            costPerHire: 3200,
-            hrEfficiencyScore: 78
-        },
-        applications: {
-            submitted: 156,
-            underReview: 23,
-            shortlisted: 18,
-            rejected: 115,
-            conversionRate: 11.5,
-            averageScore: 68,
-            topPerformingSource: 'LinkedIn',
-            sourceBreakdown: {
-                'LinkedIn': 58,
-                'Company Website': 42,
-                'Referrals': 31,
-                'Job Boards': 18,
-                'Other': 7
-            }
-        },
-        assessments: {
-            sent: 89,
-            completed: 76,
-            pending: 13,
-            averageScore: 62,
-            passRate: 58,
-            averageCompletionTime: 38, // minutes
-            technicalScore: 65,
-            theoryScore: 59,
-            topPerformingRole: 'Software Engineer'
-        },
-        interviews: {
-            technical: 28,
-            hr: 15,
-            completed: 43,
-            scheduled: 3,
-            averageScore: 7.2, // out of 10
-            averageDuration: 45, // minutes
-            noShowRate: 12,
-            satisfactionScore: 4.1 // out of 5
-        },
-        hiring: {
-            totalHires: 12,
-            timeToHire: 24,
-            offerAcceptanceRate: 83,
-            averageSalary: 72000,
-            retentionRate: 89,
-            diversityScore: 72,
-            qualityOfHire: 76,
-            departmentBreakdown: {
-                'Engineering': 7,
-                'Product': 2,
-                'Design': 1,
-                'Marketing': 1,
-                'Sales': 1
-            }
-        },
-        efficiency: {
-            timeSaved: 45, // hours per month
-            automationRate: 65,
-            manualTasksReduced: 28,
-            processImprovement: 18,
-            hrProductivity: 78,
-            candidateExperience: 4.1,
-            complianceScore: 92
-        },
-        trends: {
-            monthlyApplications: [8, 12, 9, 14, 15, 18, 16, 22, 19, 24, 26, 28],
-            monthlyHires: [0, 1, 1, 0, 2, 2, 1, 2, 1, 3, 2, 3],
-            satisfactionScores: [3.8, 3.9, 4.0, 4.1, 4.0, 4.2, 4.1, 4.3, 4.2, 4.4, 4.1, 4.1],
-            efficiencyGains: [45, 48, 52, 55, 58, 62, 65, 68, 71, 75, 78, 78]
-        }
-    }), []);
+    useEffect(() => {
+        setLoading(true);
+        setFetchError(null);
+        getAnalyticsOverview(selectedPeriod)
+            .then((data) => setAnalyticsData({ ...EMPTY_ANALYTICS, ...data }))
+            .catch((err) => setFetchError(err.response?.data?.detail || err.message || 'Failed to load analytics'))
+            .finally(() => setLoading(false));
+    }, [selectedPeriod]);
 
     const formatNumber = (num) => {
         return new Intl.NumberFormat().format(num);
@@ -503,6 +444,16 @@ export default function Analytics({ applications, onBack }) {
     return (
         <div className={`min-h-screen transition-colors duration-300 p-8 ${isDarkMode ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-base-50 via-base-100 to-accent-50'}`}>
             <div className="max-w-7xl mx-auto">
+                {loading && (
+                    <div className={`mb-4 p-4 rounded-xl text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-700 text-gray-300' : 'bg-white text-base-600'}`}>
+                        Loading analytics data...
+                    </div>
+                )}
+                {fetchError && (
+                    <div className="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
+                        {fetchError}
+                    </div>
+                )}
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">

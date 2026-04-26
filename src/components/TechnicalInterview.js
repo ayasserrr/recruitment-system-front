@@ -1,4 +1,6 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { getTechnicalInterview, getTechnicalInterviewCandidates } from '../api/technicalInterviewService';
+import { getShortlist, addToShortlist, removeFromShortlist as apiRemoveFromShortlist } from '../api/shortlistService';
 import { ArrowLeft, Video, Download, TrendingUp, Users, Calendar, CheckCircle, Clock, MessageSquare, FileText, ChevronRight, Star } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 
@@ -8,148 +10,47 @@ export default function TechnicalInterview({ applications, onBack }) {
     const [showFeedbackModal, setShowFeedbackModal] = useState(null);
     const [showCVModal, setShowCVModal] = useState(null);
     const [shortlistedKeys, setShortlistedKeys] = useState(new Set());
-    const candidateResultsCacheRef = useRef(new Map());
+    const [loading, setLoading] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
 
     const selectedApp = useMemo(() => applications.find(a => a.id === selectedAppId), [applications, selectedAppId]);
 
-    const getCandidateShortlistKey = (cv) => {
-        const name = cv?.name || '';
-        const email = cv?.email || '';
-        return `${name}::${email}`;
-    };
-
-    const loadShortlistedKeys = () => {
-        const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-        setShortlistedKeys(new Set(existingShortlist.map(getCandidateShortlistKey)));
-    };
-
-    useEffect(() => {
-        loadShortlistedKeys();
-
-        const handleStorageChange = () => {
-            loadShortlistedKeys();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
+    const loadShortlistedIds = useCallback((jobId) => {
+        if (!jobId) { setShortlistedKeys(new Set()); return; }
+        getShortlist(1, 200, jobId)
+            .then((entries) => setShortlistedKeys(new Set(entries.map((e) => e.candidateId))))
+            .catch(() => setShortlistedKeys(new Set()));
     }, []);
 
-    // Generate interview data per application
-    const generateInterviewData = (app) => {
-        const totalCandidates = app.assessment || 0;
-        const scheduled = Math.min(totalCandidates, Math.floor(totalCandidates * 0.9));
-        const completed = Math.floor(scheduled * 0.75);
-        const pending = scheduled - completed;
-        const status = totalCandidates > 0 && completed < scheduled ? 'active' : totalCandidates > 0 ? 'completed' : 'pending';
-        const avgScore = completed > 0 ? 7.5 + Math.random() * 1.5 : 0;
+    const [interviewData, setInterviewData] = useState([]);
 
-        return {
-            id: app.id,
-            jobTitle: app.jobTitle,
-            scheduled,
-            completed,
-            pending,
-            avgScore: parseFloat(avgScore.toFixed(1)),
-            nextInterview: completed < scheduled ? new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] + ' ' + (10 + Math.floor(Math.random() * 8)) + ':00' : 'Completed',
-            interviewers: ['John Smith', 'Sarah Lee', 'David Kim'].slice(0, 1 + Math.floor(Math.random() * 2)),
-            duration: '45 minutes',
-            passingScore: 7.5,
-            status
-        };
-    };
-
-    const [interviewData, setInterviewData] = useState(() => {
-        return applications.map(app => generateInterviewData(app));
-    });
-
-    // Generate candidate results per selected application
-    const generateCandidateResults = (app) => {
-        const candidates = [];
-        const getNamePoolForApp = () => {
-            const jobTitle = String(app?.jobTitle || '').toLowerCase();
-
-            const softwarePool = [
-                'Aya Yasser', 'Jomana Ahmed', 'Tarneed Khaled', 'Salma Omar',
-                'Eman Hassan', 'Ahmed Ali', 'Yasser Mahmoud', 'Khaled Ibrahim',
-                'Nour Fathy', 'Mariam Saeed', 'Omar Gamal', 'Hany Nabil',
-                'Mostafa Farag', 'Heba Samir', 'Menna Hegazy', 'Hossam Shahin'
-            ];
-
-            const dataSciencePool = [
-                'Aya Abdelrahman', 'Jomana Mostafa', 'Tarneed Younes', 'Salma Kamel',
-                'Eman Hassan', 'Ahmed Saeed', 'Yasser Ali', 'Khaled Mahmoud',
-                'Nour Ibrahim', 'Mariam Gamal', 'Omar Nabil', 'Hany Farag',
-                'Mostafa Hegazy', 'Heba Shahin', 'Menna Fathy', 'Hossam Samir'
-            ];
-
-            if (jobTitle.includes('data') || jobTitle.includes('science') || jobTitle.includes('analytics')) return dataSciencePool;
-            return softwarePool;
-        };
-
-        const names = getNamePoolForApp();
-        const raw = `${app?.id ?? ''}-${app?.jobTitle ?? ''}`;
-        let offset = 0;
-        for (let i = 0; i < raw.length; i++) {
-            offset = ((offset << 5) - offset) + raw.charCodeAt(i);
-            offset |= 0;
-        }
-        offset = Math.abs(offset);
-        const count = Math.min(app.assessment || 0, 8);
-
-        for (let i = 0; i < count; i++) {
-            const technicalScore = 6 + Math.random() * 4;
-            const problemSolving = 6 + Math.random() * 4;
-            const systemDesign = 6 + Math.random() * 4;
-            const coding = 6 + Math.random() * 4;
-            const communication = 6 + Math.random() * 4;
-            const overall = (technicalScore + problemSolving + systemDesign + coding + communication) / 5;
-
-            candidates.push({
-                id: i + 1,
-                name: names[(i + offset) % names.length],
-                technicalScore: parseFloat(technicalScore.toFixed(1)),
-                problemSolving: parseFloat(problemSolving.toFixed(1)),
-                systemDesign: parseFloat(systemDesign.toFixed(1)),
-                coding: parseFloat(coding.toFixed(1)),
-                communication: parseFloat(communication.toFixed(1)),
-                overall: parseFloat(overall.toFixed(1)),
-                status: Math.random() > 0.3 ? 'Completed' : 'Scheduled',
-                interviewer: ['John Smith', 'Sarah Lee', 'David Kim'][Math.floor(Math.random() * 3)],
-                date: new Date(Date.now() - Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-                feedback: Math.random() > 0.3
-                    ? 'Strong technical skills and problem-solving abilities'
-                    : 'Scheduled for technical interview'
-            });
-        }
-
-        return candidates.sort((a, b) => b.overall - a.overall);
-    };
+    useEffect(() => {
+        if (!applications.length) return;
+        Promise.all(applications.map((app) => getTechnicalInterview(app.id).catch(() => null)))
+            .then((results) => setInterviewData(results.filter(Boolean)));
+    }, [applications]);
 
     const [candidateResults, setCandidateResults] = useState([]);
 
-    // Update candidate results when app changes
     useEffect(() => {
         if (!selectedAppId) {
             setCandidateResults([]);
+            setShortlistedKeys(new Set());
             return;
         }
-
-        const cached = candidateResultsCacheRef.current.get(selectedAppId);
-        if (cached) {
-            setCandidateResults(cached);
-            return;
-        }
-
-        if (selectedApp) {
-            const generated = generateCandidateResults(selectedApp);
-            candidateResultsCacheRef.current.set(selectedAppId, generated);
-            setCandidateResults(generated);
-        } else {
-            setCandidateResults([]);
-        }
-    }, [selectedAppId, selectedApp]);
+        setLoading(true);
+        setFetchError(null);
+        Promise.all([
+            getTechnicalInterviewCandidates(selectedAppId),
+            getShortlist(1, 200, selectedAppId).catch(() => []),
+        ])
+            .then(([data, shortlistEntries]) => {
+                setCandidateResults(Array.isArray(data) ? data : (data.results || []));
+                setShortlistedKeys(new Set(shortlistEntries.map((e) => e.candidateId)));
+            })
+            .catch((err) => setFetchError(err.response?.data?.detail || err.message || 'Failed to load candidates'))
+            .finally(() => setLoading(false));
+    }, [selectedAppId]);
 
     const interviewStats = useMemo(() => {
         const total = interviewData.length;
@@ -361,7 +262,20 @@ export default function TechnicalInterview({ applications, onBack }) {
                     </div>
                 </div>
 
-                {selectedApp ? (
+                {selectedApp && loading && (
+                    <div className="text-center py-16">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-500 mx-auto mb-4" />
+                        <p className={isDarkMode ? 'text-gray-400' : 'text-base-600'}>Loading interview data…</p>
+                    </div>
+                )}
+
+                {selectedApp && fetchError && !loading && (
+                    <div className={`rounded-xl p-6 mb-6 text-center ${isDarkMode ? 'bg-red-900 text-red-300' : 'bg-red-50 text-red-600'}`}>
+                        {fetchError}
+                    </div>
+                )}
+
+                {selectedApp && !loading ? (
                     <>
                         {/* Stats Overview */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
@@ -575,7 +489,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                             </div>
                         )}
                     </>
-                ) : (
+                ) : !selectedApp ? (
                     <div className={`rounded-2xl shadow-lg p-12 text-center transition-colors duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900' : 'bg-white shadow-base-200'}`}>
                         <div className={`flex items-center justify-center w-20 h-20 rounded-lg mx-auto mb-4 transition-colors duration-300 ${isDarkMode ? 'bg-slate-700' : 'bg-gradient-to-r from-base-100 to-accent-100'}`}>
                             <Video className={`w-10 h-10 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-400'}`} />
@@ -583,7 +497,7 @@ export default function TechnicalInterview({ applications, onBack }) {
                         <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-base-700'}`}>Select an Application</h3>
                         <p className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-base-500'}`}>Choose an application from the list above to view technical interview results</p>
                     </div>
-                )}
+                ) : null}
 
                 {/* Feedback Modal */}
                 {showFeedbackModal && (
@@ -774,33 +688,30 @@ export default function TechnicalInterview({ applications, onBack }) {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            const candidateKey = getCandidateShortlistKey(mockCV);
-                                            const shortlistData = {
-                                                ...mockCV,
-                                                jobTitle: selectedApp?.jobTitle || 'Unknown Application',
-                                                shortlistedFrom: 'Technical Interview',
-                                                shortlistedDate: new Date().toISOString().slice(0, 10)
-                                            };
-                                            const existingShortlist = JSON.parse(localStorage.getItem('shortlist') || '[]');
-
-                                            const updatedShortlist = existingShortlist.filter(cv => getCandidateShortlistKey(cv) !== candidateKey);
-                                            if (updatedShortlist.length !== existingShortlist.length) {
-                                                localStorage.setItem('shortlist', JSON.stringify(updatedShortlist));
-                                                loadShortlistedKeys();
-                                                return;
+                                            const isShortlisted = shortlistedKeys.has(showCVModal?.id);
+                                            if (isShortlisted) {
+                                                apiRemoveFromShortlist(showCVModal.id, selectedAppId)
+                                                    .then(() => loadShortlistedIds(selectedAppId))
+                                                    .catch(() => loadShortlistedIds(selectedAppId));
+                                            } else {
+                                                const note = prompt(`Add a note for ${showCVModal?.name || 'this candidate'} (optional):`, '') || '';
+                                                addToShortlist({
+                                                    candidate_id: showCVModal.id,
+                                                    job_id: selectedAppId,
+                                                    phase: 'Technical Interview',
+                                                    note,
+                                                })
+                                                    .then(() => loadShortlistedIds(selectedAppId))
+                                                    .catch(() => loadShortlistedIds(selectedAppId));
                                             }
-
-                                            const shortlistNote = prompt(`Add a note for ${mockCV?.name || 'this candidate'} (optional):`, '') || '';
-                                            localStorage.setItem('shortlist', JSON.stringify([...existingShortlist, { ...shortlistData, shortlistNote }]));
-                                            loadShortlistedKeys();
                                         }}
                                         className="px-6 py-3 bg-gradient-to-r from-base-500 to-accent-500 hover:from-base-600 hover:to-accent-600 text-white rounded-lg font-semibold transition-colors"
                                     >
                                         <Star
                                             className="w-5 h-5 mr-2"
-                                            fill={shortlistedKeys.has(getCandidateShortlistKey(mockCV)) ? 'currentColor' : 'none'}
+                                            fill={shortlistedKeys.has(showCVModal?.id) ? 'currentColor' : 'none'}
                                         />
-                                        {shortlistedKeys.has(getCandidateShortlistKey(mockCV)) ? 'Remove from Shortlist' : 'Add to Shortlist'}
+                                        {shortlistedKeys.has(showCVModal?.id) ? 'Remove from Shortlist' : 'Add to Shortlist'}
                                     </button>
                                     <button
                                         onClick={downloadCV}

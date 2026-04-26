@@ -45,8 +45,15 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
         const req = app.requisition || {};
         const platforms = Array.isArray(req.selectedPlatforms) ? req.selectedPlatforms.map(platformLabel) : [];
         const endDate = String(req.postingEndDate || '').trim();
+        const today = new Date().toISOString().split('T')[0];
 
-        const receivingStatus = app.status === 'CV Collection' || app.status === 'In Progress' ? 'active' : 'pending';
+        // Auto-close if the posting end date has already passed
+        const isExpired = endDate && endDate < today;
+        const isClosed = app.status === 'Closed' || isExpired;
+
+        const receivingStatus = isClosed ? 'completed'
+            : (app.status === 'CV Collection' || app.status === 'In Progress') ? 'active'
+            : 'pending';
 
         return [
             {
@@ -83,16 +90,17 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                 ...(app.cvs > 0 ? { count: app.cvs } : {}),
                 ...(app.newToday > 0 ? { newToday: app.newToday } : {}),
                 date: app.posted || '',
-                time: receivingStatus === 'active' ? 'Ongoing' : '',
+                time: receivingStatus === 'active' ? 'Ongoing' : receivingStatus === 'completed' ? 'Completed' : '',
             },
             {
                 id: 5,
                 step: 'Closed',
-                status: app.status === 'Closed' ? 'completed' : 'pending',
+                status: isClosed ? 'completed' : 'pending',
                 icon: Clock,
-                scheduledDate: endDate || '',
-                date: app.status === 'Closed' ? endDate : '',
-                time: app.status === 'Closed' ? 'Closed' : '',
+                // Only show "Scheduled for:" when the date is still in the future
+                scheduledDate: !isClosed && endDate ? endDate : '',
+                date: isClosed ? endDate : '',
+                time: isClosed ? 'Closed' : '',
             },
         ];
     };
