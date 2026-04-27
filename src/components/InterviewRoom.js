@@ -3,11 +3,10 @@ import {
   LiveKitRoom,
   RoomAudioRenderer,
   useParticipants,
-  useRoomContext,
 } from '@livekit/components-react';
 import '@livekit/components-styles';
 import {
-  Mic, MicOff, PhoneOff, Clock, AlertTriangle, CheckCircle2,
+  Mic, MicOff, Clock, AlertTriangle, CheckCircle2,
   Brain, Loader2, RefreshCw, Settings, ChevronRight, Volume2,
   TrendingUp, Award, ShieldAlert,
 } from 'lucide-react';
@@ -38,18 +37,24 @@ function getRecommendationStyle(rec) {
 
 function RadarChart({ scores }) {
   const {
-    cv_semantic_score = 0,
-    interview_overall_score = 0,
-    depth_boost = 0,
-    centroid_math_score = 0,
-  } = scores;
+    cv_semantic_score,
+    interview_overall_score,
+    depth_boost,
+    centroid_math_score,
+  } = scores ?? {};
+
+  // Coerce null/undefined → 0 so .toFixed() never throws
+  const cvScore       = cv_semantic_score      ?? 0;
+  const interviewScore = interview_overall_score ?? 0;
+  const depth         = depth_boost            ?? 0;
+  const centroid      = centroid_math_score    ?? 0;
 
   // Normalise all values to 0–1
   const axes = [
-    { label: 'CV Score', sub: `${cv_semantic_score.toFixed(0)}`, value: cv_semantic_score / 100 },
-    { label: 'Interview', sub: `${interview_overall_score.toFixed(0)}`, value: interview_overall_score / 100 },
-    { label: 'Depth', sub: `${(depth_boost * 100).toFixed(0)}%`, value: depth_boost },
-    { label: 'Centroid', sub: `${(centroid_math_score * 100).toFixed(0)}%`, value: centroid_math_score },
+    { label: 'CV Score', sub: `${cvScore.toFixed(0)}`,            value: cvScore / 100 },
+    { label: 'Interview', sub: `${interviewScore.toFixed(0)}`,    value: interviewScore / 100 },
+    { label: 'Depth',    sub: `${(depth * 100).toFixed(0)}%`,     value: depth },
+    { label: 'Centroid', sub: `${(centroid * 100).toFixed(0)}%`,  value: centroid },
   ];
 
   const N = axes.length;
@@ -202,17 +207,12 @@ function MicMeter() {
 
 // ── InterviewUI — must be a child of <LiveKitRoom> ────────────────────────────
 
-function InterviewUI({ roomName, statusData, elapsed, onLeave }) {
-  const { room } = useRoomContext();
+function InterviewUI({ roomName, statusData, elapsed }) {
   const participants = useParticipants();
   const agentPresent = statusData
     ? statusData.is_agent_present
     : participants.filter(p => !p.isLocal).length > 0;
-
-  function handleLeave() {
-    if (room) room.disconnect();
-    onLeave();
-  }
+  const agentSpeaking = participants.filter(p => !p.isLocal).some(p => p.isSpeaking);
 
   return (
     <div className="flex flex-col h-full p-6 gap-6">
@@ -269,14 +269,11 @@ function InterviewUI({ roomName, statusData, elapsed, onLeave }) {
         </div>
       )}
 
-      {/* Leave button */}
-      <button
-        onClick={handleLeave}
-        className="flex items-center justify-center gap-2 w-full py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/60 text-red-400 font-medium rounded-xl transition-all"
-      >
-        <PhoneOff className="w-5 h-5" />
-        Leave Interview
-      </button>
+      {/* Info bar — interview is agent-controlled, no manual exit */}
+      <div className="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/60 border border-slate-700 text-slate-400 text-sm rounded-xl">
+        <Volume2 className={`w-4 h-4 ${agentSpeaking ? 'text-accent-400 animate-pulse' : 'text-slate-600'}`} />
+        The interview will end automatically when the AI interviewer concludes
+      </div>
     </div>
   );
 }
@@ -285,13 +282,15 @@ function InterviewUI({ roomName, statusData, elapsed, onLeave }) {
 
 function ResultsView({ results }) {
   const { candidate_name, job_title, hr_card, scores, red_flag, red_flag_reason } = results;
+  const safeScores = scores ?? {};
+  const scoresReady = scores != null;
   const recStyle = getRecommendationStyle(hr_card?.recommendation);
 
   const scoreRows = [
-    { label: 'CV Semantic Score', value: scores.cv_semantic_score ?? 0, max: 100 },
-    { label: 'Interview Score', value: scores.interview_overall_score ?? 0, max: 100 },
-    { label: 'Centroid Match', value: (scores.centroid_math_score ?? 0) * 100, max: 100 },
-    { label: 'Depth Boost', value: (scores.depth_boost ?? 0) * 100, max: 100 },
+    { label: 'CV Semantic Score', value: safeScores.cv_semantic_score ?? 0, max: 100 },
+    { label: 'Interview Score', value: safeScores.interview_overall_score ?? 0, max: 100 },
+    { label: 'Centroid Match', value: (safeScores.centroid_math_score ?? 0) * 100, max: 100 },
+    { label: 'Depth Boost', value: (safeScores.depth_boost ?? 0) * 100, max: 100 },
   ];
 
   return (
@@ -320,40 +319,47 @@ function ResultsView({ results }) {
         )}
 
         {/* Scores row: radar + breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Radar */}
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col items-center gap-4">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Performance Profile</h3>
-            <RadarChart scores={scores} />
+        {!scoresReady ? (
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-10 flex flex-col items-center justify-center gap-4">
+            <Loader2 className="w-8 h-8 text-accent-400 animate-spin" />
+            <p className="text-slate-400 text-sm">Calculating scores…</p>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Radar */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col items-center gap-4">
+              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Performance Profile</h3>
+              <RadarChart scores={safeScores} />
+            </div>
 
-          {/* Score breakdown */}
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-5">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Score Breakdown</h3>
-            {scoreRows.map(({ label, value, max }) => (
-              <div key={label} className="space-y-1.5">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">{label}</span>
-                  <span className="text-accent-400 font-semibold tabular-nums">
-                    {value.toFixed(1)}
-                  </span>
+            {/* Score breakdown */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-5">
+              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Score Breakdown</h3>
+              {scoreRows.map(({ label, value, max }) => (
+                <div key={label} className="space-y-1.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">{label}</span>
+                    <span className="text-accent-400 font-semibold tabular-nums">
+                      {value.toFixed(1)}
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-accent-700 to-accent-400 transition-all duration-700"
+                      style={{ width: `${Math.min(100, (value / max) * 100)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-accent-700 to-accent-400 transition-all duration-700"
-                    style={{ width: `${Math.min(100, (value / max) * 100)}%` }}
-                  />
-                </div>
+              ))}
+              <div className="pt-4 border-t border-slate-700 flex items-center justify-between">
+                <span className="text-sm font-semibold text-white">Combined Score</span>
+                <span className="text-3xl font-bold text-accent-300 tabular-nums">
+                  {(safeScores.combined_score ?? 0).toFixed(1)}
+                </span>
               </div>
-            ))}
-            <div className="pt-4 border-t border-slate-700 flex items-center justify-between">
-              <span className="text-sm font-semibold text-white">Combined Score</span>
-              <span className="text-3xl font-bold text-accent-300 tabular-nums">
-                {scores.combined_score.toFixed(1)}
-              </span>
             </div>
           </div>
-        </div>
+        )}
 
         {/* HR card */}
         {hr_card && (
@@ -698,17 +704,8 @@ export default function InterviewRoom() {
       });
 
       if (status === 409) {
-        const sid = body?.session_id;
-        if (sid) {
-          await loadResults(sid);
-        } else {
-          setError({
-            message: 'This interview has already been completed.',
-            detail: body?.detail,
-            canRetry: false,
-          });
-          setPhase('error');
-        }
+        // Interview already completed — just show the submitted screen
+        setPhase('submitted');
       } else if (status === 400) {
         setError({
           message: 'Your application is still being processed. CV screening has not been completed yet.',
@@ -743,11 +740,7 @@ export default function InterviewRoom() {
 
   // ── Completion flow ───────────────────────────────────────────────────────
   function triggerCompletion() {
-    setPhase('processing');
-    const s = sessionRef.current;
-    setTimeout(async () => {
-      if (s?.session_id) await loadResults(s.session_id);
-    }, 3000);
+    setPhase('submitted');
   }
 
   // Called by LiveKitRoom when connection drops
@@ -755,12 +748,6 @@ export default function InterviewRoom() {
     stopPolling();
     if (phaseRef.current === 'in-room') triggerCompletion();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Called by user clicking "Leave"
-  function handleLeave() {
-    stopPolling();
-    triggerCompletion();
-  }
 
   // ── Agent crash recovery ──────────────────────────────────────────────────
   async function recoverFromCrash() {
@@ -799,8 +786,24 @@ export default function InterviewRoom() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  if (phase === 'results' && results) {
-    return <ResultsView results={results} />;
+  if (phase === 'submitted') {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-8 px-6">
+        <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
+          <CheckCircle2 className="w-10 h-10 text-green-400" />
+        </div>
+        <div className="text-center space-y-3 max-w-md">
+          <h2 className="text-2xl font-bold text-white">Interview Submitted</h2>
+          <p className="text-slate-400 leading-relaxed">
+            Thank you for completing the interview. Your responses have been recorded
+            and our team will review your performance.
+          </p>
+          <p className="text-slate-500 text-sm">
+            You will be notified of the next steps via email. You may close this window.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (phase === 'processing') {
@@ -889,7 +892,6 @@ export default function InterviewRoom() {
               roomName={session.room_name}
               statusData={statusData}
               elapsed={elapsed}
-              onLeave={handleLeave}
             />
           </LiveKitRoom>
         </div>
