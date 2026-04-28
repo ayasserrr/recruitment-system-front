@@ -1,38 +1,43 @@
 import apiClient from './apiClient';
 
-const normalizeCandidate = (c) => ({
-  ...c,
-  // Map API field names to what the component expects
-  semantic: c.semanticScore ?? c.semantic ?? 0,
-  technical: c.assessmentScore ?? c.technical ?? 0,
-  techInterview: c.technicalScore ?? c.techInterview ?? 0,
-  hrInterview: c.cultureFitScore ?? c.hrInterview ?? 0,
-  final_score: c.overallScore ?? c.final_score ?? 0,
-  // Derive status label from recommendation when not provided
-  status: c.status || (
-    c.recommendation === 'Top Candidate' ? 'Top Candidate' :
-    c.recommendation === 'Strong Hire' ? 'Strong Candidate' :
-    c.recommendation === 'Strong Runner-Up' ? 'Strong Candidate' :
-    c.recommendation === 'Hire' ? 'Good Candidate' : 'Needs Review'
-  ),
-  strengths: c.strengths || [],
-  concerns: c.concerns || [],
-  interviewQuestions: c.interviewQuestions || [],
-  notes: c.notes || '',
-  genaiEvidence: c.genaiEvidence || null,
-  experience: c.experience || '',
-  education: c.education || '',
-  skills: c.skills || [],
-  matchedSkills: c.matchedSkills || [],
-});
-
 export const getFinalRanking = (jobId) =>
   apiClient
     .get(`/jobs/${jobId}/final-ranking`)
     .then((r) => {
       const list = Array.isArray(r.data) ? r.data : (r.data.results || []);
-      return list.map(normalizeCandidate);
+      return list.map((c) => ({
+        ...c,
+        // Safe defaults for optional array / object fields
+        skills:            c.skills            || [],
+        projects:          c.projects          || [],
+        strengths:         c.strengths         || [],
+        concerns:          c.concerns          || [],
+        interviewQuestions:c.interviewQuestions|| [],
+        matchedSkills:     c.matchedSkills     || [],
+        notes:             c.notes             || '',
+        genaiEvidence:     c.genaiEvidence     || null,
+        // Guarantee red-flag fields exist (never undefined)
+        redFlag:           c.redFlag           ?? false,
+        redFlagReason:     c.redFlagReason     ?? null,
+        shapSummary:       c.shapSummary       ?? null,
+        // Stage scores — all 0-100, straight from the DB (DO NOT re-weight here)
+        semanticScore:     c.semanticScore     ?? null,
+        assessmentScore:   c.assessmentScore   ?? null,
+        technicalScore:    c.technicalScore    ?? null,
+        hrScore:           c.hrScore           ?? null,
+        overallScore:      c.overallScore      ?? 0,
+      }));
     });
+
+export const triggerRanking = (jobId) =>
+  apiClient
+    .post(`/jobs/${jobId}/trigger-ranking`)
+    .then((r) => r.data);
+
+export const getSHAPReport = (jobId, candidateId) =>
+  apiClient
+    .get(`/jobs/${jobId}/final-ranking/${candidateId}/shap-report`)
+    .then((r) => r.data);
 
 export const shortlistCandidate = (jobId, candidateId, note = '') =>
   apiClient
