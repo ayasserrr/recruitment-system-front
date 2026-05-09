@@ -58,7 +58,7 @@ export default function JobDetailsForm({ formData, updateFormData }) {
         // Parse both commas and newlines as separators
         if (typeof value === 'string') {
             return value
-                .split(/[,\\n]/)
+                .split(/[,\n]/)
                 .map((item) => item.trim())
                 .filter((item) => item);
         }

@@ -214,10 +214,42 @@ function InterviewUI({ roomName, statusData, elapsed }) {
     : participants.filter(p => !p.isLocal).length > 0;
   const agentSpeaking = participants.filter(p => !p.isLocal).some(p => p.isSpeaking);
 
+  // Browser autoplay unlock — shown once until the user clicks it.
+  // Browsers suspend AudioContext until a direct user gesture on an audio element.
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
+
+  const unlockAudio = async () => {
+    // Play a silent buffer — this user gesture satisfies the browser autoplay
+    // policy and allows LiveKit's internal AudioContext to resume playback.
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') await ctx.resume();
+      const buf = ctx.createBuffer(1, 1, 22050);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.start(0);
+      await new Promise(r => setTimeout(r, 100));
+      ctx.close();
+    } catch (_) {}
+    setAudioUnlocked(true);
+  };
+
   return (
     <div className="flex flex-col h-full p-6 gap-6">
       {/* Audio from the room (plays AI agent voice) */}
       <RoomAudioRenderer />
+
+      {/* Audio unlock prompt — disappears after first click */}
+      {!audioUnlocked && (
+        <button
+          onClick={unlockAudio}
+          className="flex items-center justify-center gap-2 px-4 py-3 bg-accent-500/15 border border-accent-500/40 rounded-xl text-accent-300 text-sm hover:bg-accent-500/25 transition-colors"
+        >
+          <Volume2 className="w-4 h-4" />
+          Click here to enable audio — required by your browser
+        </button>
+      )}
 
       {/* Agent-waiting banner */}
       {!agentPresent && (

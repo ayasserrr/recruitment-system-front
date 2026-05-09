@@ -37,6 +37,7 @@ import AssessmentPage from './components/AssessmentPage';
 import ToolManager from './components/ToolManager';
 import KnowledgeGapReport from './components/KnowledgeGapReport';
 import InterviewRoom from './components/InterviewRoom';
+import HRInterviewRoom from './components/HRInterviewRoom';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 
@@ -546,6 +547,9 @@ export default function RecruitmentSystem() {
     }
     if (window.location.pathname === '/interview') {
         return <InterviewRoom />;
+    }
+    if (window.location.pathname === '/hr-interview') {
+        return <HRInterviewRoom />;
     }
 
     return (
