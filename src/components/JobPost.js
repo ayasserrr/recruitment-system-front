@@ -63,8 +63,11 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
         // Auto-close if the posting end date has already passed
         const isExpired = endDate && endDate < today;
         const isClosed = app.status === 'Closed' || isExpired;
+        // 'Posted' = DB Draft (submitted, not yet live) — platforms step still pending
+        const isPostedOrBeyond = isClosed || ['CV Collection', 'In Progress', 'Final Stage'].includes(app.status);
 
-        const receivingStatus = isClosed ? 'completed'
+        const receivingStatus =
+            (isClosed || app.status === 'Final Stage') ? 'completed'
             : (app.status === 'CV Collection' || app.status === 'In Progress') ? 'active'
             : 'pending';
 
@@ -89,7 +92,7 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
             {
                 id: 3,
                 step: 'Posted to Platforms',
-                status: platforms.length ? 'completed' : 'pending',
+                status: isPostedOrBeyond ? 'completed' : 'pending',
                 icon: Send,
                 platforms,
                 date: app.posted || '',
@@ -151,7 +154,16 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
     const ensureProgress = (app) => {
         // Prefer API-fetched pipeline stages
         if (pipelineCache.current[app.id]) return pipelineCache.current[app.id];
-        if (Array.isArray(app.postingProgress) && app.postingProgress.length) return app.postingProgress;
+        if (Array.isArray(app.postingProgress) && app.postingProgress.length) {
+            const cached = app.postingProgress;
+            const postedStep = cached.find((p) => p.id === 3);
+            // 'Posted' = DB Draft = not yet live, so it does NOT imply platforms step is done
+            const statusImpliesPosted = ['CV Collection', 'In Progress', 'Final Stage', 'Closed'].includes(app.status);
+            // Stale cache: job is live but step 3 wasn't marked complete yet
+            if (!(statusImpliesPosted && postedStep?.status === 'pending')) {
+                return cached;
+            }
+        }
         const next = buildDefaultProgress(app);
         if (typeof onUpdateApplication === 'function') {
             onUpdateApplication(app.id, { postingProgress: next });
@@ -256,7 +268,7 @@ export default function JobPost({ applications, onUpdateApplication, onBackToDas
                                             <div className="flex items-start justify-between gap-3">
                                                 <div className="flex-1 min-w-0">
                                                     <div className={`font-bold truncate transition-colors ${isDarkMode ? 'text-white' : 'text-base-900'}`}>{app.jobTitle}</div>
-                                                    <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posted: {app.posted}</div>
+                                                    <div className={`text-sm transition-colors ${isDarkMode ? 'text-gray-400' : 'text-base-600'}`}>Posted: {app.requisition?.postingStartDate || app.posted}</div>
                                                 </div>
                                                 <div className="flex-shrink-0">
                                                     {(() => {
@@ -343,7 +355,7 @@ function PostingProgress({ application, ensureProgress, onStepClick, getStatusIc
     const platformText = platforms.length ? platforms.map((p) => (typeof p === 'string' ? p : String(p))).join(', ') : 'Not set';
     const windowText = `${req.postingStartDate || '—'} to ${req.postingEndDate || '—'}`;
 
-    const started = application.posted || (req.postingStartDate || '—');
+    const started = req.postingStartDate || application.posted || '—';
 
     const completion = safePercent(
         progress.filter((p) => p.status === 'completed').length,

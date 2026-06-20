@@ -205,6 +205,7 @@ const phaseDetails = {
     }
 };
 
+
 export default function PhaseExplanationModal({ phase, isOpen, onClose, onNavigateToPhase, onNavigateToFeatureFromPhases }) {
     const { isDarkMode } = useDarkMode();
     const modalRef = useRef(null);
